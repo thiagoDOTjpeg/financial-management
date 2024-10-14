@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
+import Invoice from "./Invoice";
 
 const Card = sequelize.define("cartao", {
   id_cartao: {
@@ -33,6 +34,10 @@ const Card = sequelize.define("cartao", {
 }, {
   tableName: "cartao",
   timestamps: false
+});
+
+Card.hasMany(Invoice, {
+  foreignKey: "id_cartao"
 });
 
 export default Card;

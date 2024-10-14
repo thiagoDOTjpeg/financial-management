@@ -1,6 +1,7 @@
 import sequelize from "../config/db";
 import { Request, Response } from "express";
 import Card from "../models/Card";
+import Invoice from "../models/Invoice";
 
 class CardController {
   async getAllCards(req: Request, res: Response) {

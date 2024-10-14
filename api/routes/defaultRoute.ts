@@ -1,6 +1,7 @@
 import Transactions from "../controllers/TransactionController";
 import Accounts from "../controllers/accountsController";
 import Card from "../controllers/cardController";
+import Invoice from "../controllers/invoiceController";
 import { Router } from "express"
 
 const router = Router();
@@ -44,6 +45,19 @@ router.delete("/cards/:id", (req, res) => Card.deleteCard(req, res));
 router.post("/cards", (req, res) => Card.createCard(req, res));
 
 
+
+
+
+// Invoice routes
+router.get("/invoices", (req, res) => Invoice.getAllInvoices(req, res));
+
+router.get("/invoices", (req, res) => Invoice.getInvoiceById(req, res));
+
+router.put("/invoices", (req, res) => Invoice.updateInvoice(req, res));
+
+router.delete("/invoices", (req, res) => Invoice.deleteInvoice(req, res));
+
+router.post("/invoices", (req, res) => Invoice.createInvoice(req, res));
 
 
 export default router;
