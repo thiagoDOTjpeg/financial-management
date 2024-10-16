@@ -1,11 +1,11 @@
-import sequelize from "../config/db";
 import { Request, Response } from "express";
-import Invoice from "../models/Invoice";
+import models from "../models/index";
+
 
 class InvoiceController {
   async getAllInvoices(req: Request, res: Response) {
     try {
-      const invoices = await Invoice.findAll();
+      const invoices = await models.Invoice.findAll();
       res.status(200).json(invoices);
     } catch (error) {
       res.status(500).json({ "message": "Ocorreu um erro ao buscar os dados", "error": error })
@@ -14,7 +14,7 @@ class InvoiceController {
 
   async getInvoiceById(req: Request, res: Response) {
     try {
-      const invoice = await Invoice.findByPk(req.params.id);
+      const invoice = await models.Invoice.findByPk(req.params.id);
       if (invoice === null) {
         res.status(404).json({ "message": "Fatura não encontrada" });
       } else {
@@ -27,7 +27,7 @@ class InvoiceController {
 
   async createInvoice(req: Request, res: Response) {
     try {
-      const invoice = await Invoice.create(req.body);
+      const invoice = await models.Invoice.create(req.body);
       res.status(201).json(invoice);
     } catch (error) {
       res.status(500).json({ "message": "Ocorreu um erro ao criar a fatura", "error": error })
@@ -36,7 +36,7 @@ class InvoiceController {
 
   async updateInvoice(req: Request, res: Response) {
     try {
-      const invoice = await Invoice.findByPk(req.params.id);
+      const invoice = await models.Invoice.findByPk(req.params.id);
       if (invoice === null) {
         res.status(404).json({ "message": "Fatura não encontrada" });
       } else {
@@ -53,7 +53,7 @@ class InvoiceController {
 
   async deleteInvoice(req: Request, res: Response) {
     try {
-      const invoice = await Invoice.findByPk(req.params.id);
+      const invoice = await models.Invoice.findByPk(req.params.id);
       if (invoice === null) {
         res.status(404).json({ "message": "Fatura não encontrada" });
       } else {
@@ -64,6 +64,21 @@ class InvoiceController {
       res.status(500).json({
         "message": "Ocorreu um erro ao deletar a fatura", "error": error
       })
+    }
+  }
+
+  async getInvoicesByCard(req: Request, res: Response) {
+    try {
+      const cardInvoice = await models.Invoice.findByPk(req.params.id, {
+        include: models.Card
+      });
+      if (cardInvoice === null) {
+        res.status(404).json({ "message": "Fatura do cartão não encontrado" });
+      } else {
+        res.status(200).json(cardInvoice);
+      }
+    } catch (error) {
+      res.status(500).json({ "message": "Ocorreu um erro ao buscar as faturas", "error": error })
     }
   }
 }

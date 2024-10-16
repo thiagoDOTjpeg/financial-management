@@ -1,12 +1,11 @@
-import sequelize from "../config/db";
 import { Request, Response } from "express";
-import Card from "../models/Card";
-import Invoice from "../models/Invoice";
+import models from "../models/index";
+
 
 class CardController {
   async getAllCards(req: Request, res: Response) {
     try {
-      const cards = await Card.findAll();
+      const cards = await models.Card.findAll();
       res.status(200).json(cards);
     } catch (error) {
       res.status(500).json({ "message": "Ocorreu um erro ao buscar os dados", "error": error })
@@ -15,7 +14,7 @@ class CardController {
 
   async getCardById(req: Request, res: Response) {
     try {
-      const card = await Card.findByPk(req.params.id);
+      const card = await models.Card.findByPk(req.params.id);
       if (card === null) {
         res.status(404).json({ "message": "Cartão não encontrado" });
       } else {
@@ -28,7 +27,7 @@ class CardController {
 
   async createCard(req: Request, res: Response) {
     try {
-      const card = await Card.create(req.body);
+      const card = await models.Card.create(req.body);
       res.status(201).json(card);
     } catch (error) {
       res.status(500).json({ "message": "Ocorreu um erro ao criar o cartão", "error": error })
@@ -37,7 +36,7 @@ class CardController {
 
   async updateCard(req: Request, res: Response) {
     try {
-      const card = await Card.findByPk(req.params.id);
+      const card = await models.Card.findByPk(req.params.id);
       if (card === null) {
         res.status(404).json({ "message": "Cartão não encontrado" });
       } else {
@@ -54,7 +53,7 @@ class CardController {
 
   async deleteCard(req: Request, res: Response) {
     try {
-      const card = await Card.findByPk(req.params.id);
+      const card = await models.Card.findByPk(req.params.id);
       if (card === null) {
         res.status(404).json({ "message": "Cartão não encontrado" });
       } else {

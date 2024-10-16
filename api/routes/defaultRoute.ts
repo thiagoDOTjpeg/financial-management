@@ -48,6 +48,8 @@ router.post("/cards", (req, res) => Card.createCard(req, res));
 
 
 
+
+
 // Invoice routes
 router.get("/invoices", (req, res) => Invoice.getAllInvoices(req, res));
 
@@ -58,6 +60,8 @@ router.put("/invoices", (req, res) => Invoice.updateInvoice(req, res));
 router.delete("/invoices", (req, res) => Invoice.deleteInvoice(req, res));
 
 router.post("/invoices", (req, res) => Invoice.createInvoice(req, res));
+
+router.get("/invoices/cards/:id", (req, res) => Invoice.getInvoicesByCard(req, res));
 
 
 export default router;
