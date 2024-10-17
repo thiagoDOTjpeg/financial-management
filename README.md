@@ -7,7 +7,7 @@
 
 # API ROUTES
 
-## Accounts:
+### Accounts:
   GET: /accounts
       /accounts/:id
 
@@ -17,7 +17,7 @@
 
   POST: /accounts
 
-## Transactions:
+### Transactions:
   GET: /transactions
        /transactions/:id
 
@@ -27,7 +27,7 @@ DELETE: /transactions/:id
 
 POST: /transactions
 
-## Cards:
+### Cards:
   GET: /cards
        /cards/:id
        /cards/invoices/:id
@@ -38,7 +38,7 @@ DELETE: /cards/:id
 
 POST: /cards
 
-## Invoices:
+### Invoices:
   GET: /invoices
        /invoices/:id
        /invoices/transactions/:id
