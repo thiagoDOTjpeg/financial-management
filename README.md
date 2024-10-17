@@ -1,7 +1,7 @@
 # FINANCIAL MANAGEMENT BACKEND API
 
   API sendo criada utilizando as tecnologias:
-    MYSQL: <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngwing.com%2Fen%2Fsearch%3Fq%3Dmysql%2BLogo&psig=AOvVaw1JyGvn4WSSUSGzI4e09coG&ust=1729255921403000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMDR8Y66lYkDFQAAAAAdAAAAABAS">
+    MYSQL: <img src="https://banner2.cleanpng.com/20180614/bgj/aa7ffc9id.webp">
     SEQUELIZE
     EXPRESS
 
