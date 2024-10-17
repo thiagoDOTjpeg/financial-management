@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
-import Transaction from "../models/transaction"
+import models from "../models/index"
 
 class TransactionController {
   async getAllTransaction(req: Request, res: Response) {
     try {
-      const transaction = await Transaction.findAll();
+      const transaction = await models.Transaction.findAll();
       res.status(200).json(transaction);
     } catch (error) {
       res.status(500).json({ "message": "Ocorreu um erro ao buscar os dados", "error": error })
@@ -13,7 +13,7 @@ class TransactionController {
 
   async getTransactionById(req: Request, res: Response) {
     try {
-      const transaction = await Transaction.findByPk(req.params.id);
+      const transaction = await models.Transaction.findByPk(req.params.id);
       if (transaction === null) {
         res.status(404).json({ "message": "Transação não encontrada" });
       } else {
@@ -26,7 +26,7 @@ class TransactionController {
 
   async createTransaction(req: Request, res: Response) {
     try {
-      const transaction = await Transaction.create(req.body);
+      const transaction = await models.Transaction.create(req.body);
       res.status(201).json(transaction);
     } catch (error) {
       res.status(500).json({ "message": "Ocorreu um erro ao criar a transação", "error": error })
@@ -35,7 +35,7 @@ class TransactionController {
 
   async updateTransaction(req: Request, res: Response) {
     try {
-      const transaction = await Transaction.findByPk(req.params.id);
+      const transaction = await models.Transaction.findByPk(req.params.id);
       if (transaction === null) {
         res.status(404).json({ "message": "Transação não encontrada" });
       } else {
@@ -52,7 +52,7 @@ class TransactionController {
 
   async deleteTransaction(req: Request, res: Response) {
     try {
-      const transaction = await Transaction.findByPk(req.params.id);
+      const transaction = await models.Transaction.findByPk(req.params.id);
       if (transaction === null) {
         res.status(404).json({ "message": "Transação não encontrada" });
       } else {

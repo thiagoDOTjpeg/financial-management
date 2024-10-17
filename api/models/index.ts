@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize"
 import dotenv from "dotenv";
 import { Card } from "./Card";
 import { Invoice } from "./Invoice";
-import { Transaction } from "./Transaction";
+import { Transaction } from "./transaction";
 import { Account } from "./Account";
 
 dotenv.config();
@@ -38,6 +38,14 @@ Card.hasMany(Invoice, {
 
 Invoice.belongsTo(Card, {
   foreignKey: "id_cartao",
+});
+
+Invoice.hasMany(Transaction, {
+  foreignKey: "id_fatura",
+});
+
+Transaction.belongsTo(Invoice, {
+  foreignKey: "id_fatura",
 });
 
 export default { sequelize, Card, Invoice, Transaction, Account };

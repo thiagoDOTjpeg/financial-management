@@ -66,6 +66,22 @@ class CardController {
       })
     }
   }
+
+  async getCardInvoices(req: Request, res: Response) {
+    try {
+      const cardInvoice = await models.Card.findByPk(req.params.id, {
+        include: models.Invoice
+      });
+      if (cardInvoice === null) {
+        res.status(404).json({ "message": "Fatura do cartão não encontrado" });
+      } else {
+        res.status(200).json(cardInvoice);
+      }
+    } catch (error) {
+      res.status(500).json({ "message": "Ocorreu um erro ao buscar as faturas", "error": error })
+    }
+  }
+
 }
 
 export default new CardController();

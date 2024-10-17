@@ -44,6 +44,9 @@ router.delete("/cards/:id", (req, res) => Card.deleteCard(req, res));
 
 router.post("/cards", (req, res) => Card.createCard(req, res));
 
+router.get("/cards/invoices/:id", (req, res) => Card.getCardInvoices(req, res));
+
+
 
 
 
@@ -61,7 +64,7 @@ router.delete("/invoices", (req, res) => Invoice.deleteInvoice(req, res));
 
 router.post("/invoices", (req, res) => Invoice.createInvoice(req, res));
 
-router.get("/invoices/cards/:id", (req, res) => Invoice.getInvoicesByCard(req, res));
+router.get("/invoices/transactions/:id", (req, res) => Invoice.getInvoicesTransactions(req, res));
 
 
 export default router;

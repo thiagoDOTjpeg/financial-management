@@ -67,18 +67,20 @@ class InvoiceController {
     }
   }
 
-  async getInvoicesByCard(req: Request, res: Response) {
+
+
+  async getInvoicesTransactions(req: Request, res: Response) {
     try {
       const cardInvoice = await models.Invoice.findByPk(req.params.id, {
-        include: models.Card
+        include: models.Transaction
       });
       if (cardInvoice === null) {
-        res.status(404).json({ "message": "Fatura do cartão não encontrado" });
+        res.status(404).json({ "message": "Transações da fatura não encontrado" });
       } else {
         res.status(200).json(cardInvoice);
       }
     } catch (error) {
-      res.status(500).json({ "message": "Ocorreu um erro ao buscar as faturas", "error": error })
+      res.status(500).json({ "message": "Ocorreu um erro ao buscar as transações", "error": error })
     }
   }
 }
