@@ -1,9 +1,9 @@
 # FINANCIAL MANAGEMENT BACKEND API
 
-  API sendo criada utilizando as tecnologias:
-    MYSQL: <img src="https://banner2.cleanpng.com/20180614/bgj/aa7ffc9id.webp" styles="width: 70px">
-    SEQUELIZE
-    EXPRESS
+  API sendo criada utilizando as tecnologias: <br />
+    MYSQL <br />
+    SEQUELIZE <br />
+    EXPRESS <br />
 
 # API ROUTES
 
