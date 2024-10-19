@@ -48,11 +48,6 @@ router.get("/cards/invoices/:id", (req, res) => Card.getCardInvoices(req, res));
 
 
 
-
-
-
-
-
 // Invoice routes
 router.get("/invoices", (req, res) => Invoice.getAllInvoices(req, res));
 

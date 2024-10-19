@@ -75,7 +75,7 @@ class InvoiceController {
         include: models.Transaction
       });
       if (cardInvoice === null) {
-        res.status(404).json({ "message": "Transações da fatura não encontrado" });
+        res.status(404).json({ "message": "Fatura não existe" });
       } else {
         res.status(200).json(cardInvoice);
       }
