@@ -26,6 +26,13 @@ class AccountController {
 
   async createAccount(req: Request, res: Response) {
     try {
+      const existAccount = await models.Account.findOne({ where: { banco: req.body.banco } });
+
+      if (existAccount !== null) {
+        res.status(400).json({ "message": "Conta já cadastrada" });
+        return;
+      }
+
       const account = await models.Account.create(req.body);
       res.status(201).json(account);
     } catch (error) {

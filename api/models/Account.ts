@@ -8,14 +8,16 @@ export class Account extends Model {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        unique: true,
       },
       banco: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           min: 3,
-        }
+        },
+        unique: true
       },
       saldo: {
         type: DataTypes.DECIMAL(30, 2),
@@ -23,7 +25,8 @@ export class Account extends Model {
         validate: {
           is: /^[0-9]+(\.[0-9]{1,2})?$/,
           min: 0.01,
-        }
+        },
+        unique: false
       }
     }, {
       sequelize,
