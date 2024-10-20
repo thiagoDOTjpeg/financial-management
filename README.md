@@ -12,7 +12,7 @@ EXPRESS <br />
     GET: /accounts
         /accounts/:id
 
-    PUT: /accounts/:id
+    PATCH: /accounts/:id
 
     DELETE: /accounts/:id
 
@@ -29,7 +29,7 @@ EXPRESS <br />
     GET: /transactions
         /transactions/:id
 
-    PUT: /transactions/:id
+    PATCH: /transactions/:id
 
     DELETE: /transactions/:id
 
@@ -51,7 +51,7 @@ EXPRESS <br />
          /cards/:id
          /cards/invoices/:id
 
-    PUT: /cards/:id
+    PATCH: /cards/:id
 
     DELETE: /cards/:id
 
@@ -70,7 +70,7 @@ EXPRESS <br />
          /invoices/:id
          /invoices/transactions/:id
 
-    PUT: /invoices/:id
+    PATCH: /invoices/:id
 
     DELETE: /invoices/:id
 
