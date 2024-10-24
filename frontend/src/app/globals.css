@@ -6,7 +6,10 @@ body {
   overflow-x: hidden;
 }
 
-body {
+body,
+button,
+textarea,
+input {
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
