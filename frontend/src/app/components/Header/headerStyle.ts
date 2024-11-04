@@ -1,13 +1,11 @@
 import styled from "styled-components";
 
 export const WrapperHeader = styled.header`
-  display: grid;
-  grid-template-columns: 400px 400px 400px;
-  grid-template-rows: 50px 125px;
-  column-gap: 180px;
-  row-gap: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  justify-self: center;
+  gap: 20px;
 
   span {
   color: #062a58;
@@ -18,17 +16,23 @@ export const WrapperHeader = styled.header`
 }
 `;
 
+export const WrapperValores = styled.div`
+  display: flex;
+
+  gap: 90px;
+`;
+
 export const Entrada = styled.div`
   display: grid;
   grid-template-columns: 400px;
   grid-template-rows: 39px 361px;
 
   width: 400px;
-  height: 123px;
+  height: 100px;
   background-color: #d6dac8;
   border-radius: 25px;
 
-  box-shadow: 0 4px 4px 0 rgba($color: #000000, $alpha: 0.25);
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.25);
 
   span {
     margin-left: 13px;
@@ -53,11 +57,11 @@ export const Saida = styled.div`
   grid-template-rows: 39px 361px;
 
   width: 400px;
-  height: 123px;
+  height: 100px;
   background-color: #d6dac8;
   border-radius: 25px;
 
-  box-shadow: 0 4px 4px 0 rgba($color: #000000, $alpha: 0.25);
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.25);;
 
   span {
     margin-left: 13px;
@@ -84,12 +88,11 @@ export const Mes = styled.div`
   height: 33px;
   background-color: #d6dac8;
   border-radius: 25px;
-  box-shadow: 0 4px 4px 0 rgba($color: #000000, $alpha: 0.25);
-  grid-column: 1 / -1;
-  grid-row: 1;
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.25);
 
   justify-self: center;
-  margin-top: 28px;
+  margin-top: 15px;
+
 `;
 
 export const SaldoRestante = styled.div`
@@ -98,11 +101,11 @@ export const SaldoRestante = styled.div`
   grid-template-rows: 39px 361px;
 
   width: 400px;
-  height: 123px;
+  height: 100px;
   background-color: #d6dac8;
   border-radius: 25px;
 
-  box-shadow: 0 4px 4px 0 rgba($color: #000000, $alpha: 0.25);
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.25);
 
   span {
     margin-left: 13px;

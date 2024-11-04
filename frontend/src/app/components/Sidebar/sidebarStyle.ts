@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface WrapperProps {
-  SidebarOpen: boolean;
+  $sidebaropen: boolean;
 }
 
 export const WrapperSidebar = styled.article<WrapperProps>`
@@ -10,24 +10,26 @@ export const WrapperSidebar = styled.article<WrapperProps>`
   width: 250px;
   height: 100vh;
 
-  transform: ${({ SidebarOpen }) => SidebarOpen ? "translateX(0)" : "translateX(-100%)"};
+  margin-left:  ${({ $sidebaropen }) => $sidebaropen ? "0" : "-250px"};
 
-  transition: transform 0.25s ease-in-out;
+  transition: margin 0.29s ;
 
-  box-shadow: 4px 0 4px rgba($color: #000000, $alpha: 0.25);
+  box-shadow: 4px 0 4px rgba(0,0,0,0.25);
 
   background-color: #d6dac8;
 `;
 
 export const WrapperImage = styled.span`
-  height: 50px;
-  width: 50px;
-  margin-top: 9px;
-  margin-left: 170px;
+  svg {
+    height: 50px;
+    width: 50px;
+    margin-top: 9px;
+    margin-left: 170px;
 
-  color: rgba($color: #062a58, $alpha: 0.35);
-
+    color: rgba(6, 42, 88, 0.35);
+  }
   cursor: pointer;
+  
 `;
 
 export const WrapperButtons = styled.div`
@@ -63,10 +65,10 @@ export const Button = styled.button`
 
   font-family: Poppins;
   font-size: 24px;
-  color: rgba($color: #062a58, $alpha: 0.5);
+  color: rgba(6, 42, 88, 0.5);
 
   border: none;
   border-radius: 20px;
-  background-color: rgba($color: #d9d9d9, $alpha: 0.25);
-  box-shadow: 0 4px 4px 0 rgba($color: #000000, $alpha: 0.2);
+  background-color: rgba(217, 217, 217, 0.25);
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.25);
 `;

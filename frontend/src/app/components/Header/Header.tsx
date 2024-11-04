@@ -9,18 +9,20 @@ export default function Header() {
         <span>Novembro</span>
         <Image src={arrow} alt="arrow" />
       </S.Mes>
-      <S.Entrada>
-        <span>Entradas</span>
-        <p>R$: XXXX.XX</p>
-      </S.Entrada>
-      <S.Saida>
-        <span>Saídas</span>
-        <p>R$: XXXX.XX</p>
-      </S.Saida>
-      <S.SaldoRestante>
-        <span>Saldo Restante</span>
-        <p>R$: XXXX.XX</p>
-      </S.SaldoRestante>
+      <S.WrapperValores>
+        <S.Entrada>
+          <span>Entradas</span>
+          <p>R$: XXXX.XX</p>
+        </S.Entrada>
+        <S.Saida>
+          <span>Saídas</span>
+          <p>R$: XXXX.XX</p>
+        </S.Saida>
+        <S.SaldoRestante>
+          <span>Saldo Restante</span>
+          <p>R$: XXXX.XX</p>
+        </S.SaldoRestante>
+      </S.WrapperValores>
     </S.WrapperHeader>
   );
 }

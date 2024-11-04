@@ -15,7 +15,7 @@ export default function Sidebar() {
   }
 
   return (
-    <S.WrapperSidebar SidebarOpen={isOpen}>
+    <S.WrapperSidebar $sidebaropen={isOpen}>
       <S.WrapperImage>
         <GoX onClick={handleCloseSidebar} />
       </S.WrapperImage>
