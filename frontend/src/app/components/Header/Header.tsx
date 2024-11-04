@@ -1,26 +1,26 @@
 import Image from "next/image";
-import styles from "./styles.module.scss";
 import arrow from "../../assets/arrow.svg";
+import * as S from "./headerStyle";
 
 export default function Header() {
   return (
-    <header className={styles.wrapperHeader}>
-      <div className={styles.mes}>
+    <S.WrapperHeader>
+      <S.Mes>
         <span>Novembro</span>
         <Image src={arrow} alt="arrow" />
-      </div>
-      <div className={styles.entradas}>
+      </S.Mes>
+      <S.Entrada>
         <span>Entradas</span>
         <p>R$: XXXX.XX</p>
-      </div>
-      <div className={styles.saidas}>
+      </S.Entrada>
+      <S.Saida>
         <span>Saídas</span>
         <p>R$: XXXX.XX</p>
-      </div>
-      <div className={styles.saldoRestante}>
+      </S.Saida>
+      <S.SaldoRestante>
         <span>Saldo Restante</span>
         <p>R$: XXXX.XX</p>
-      </div>
-    </header>
+      </S.SaldoRestante>
+    </S.WrapperHeader>
   );
 }

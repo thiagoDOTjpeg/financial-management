@@ -1,20 +1,30 @@
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "@/redux/slices/sidebarSlice";
 import Header from "../Header/Header";
 import Image from "next/image";
-import styles from "./styles.module.scss";
 import Sidebar from "../Sidebar/Sidebar";
 import menu from "../../assets/menu.svg";
+import * as S from "./dashboardStyle";
 
 export default function Dashboard() {
+  const isOpen = useSelector((state: any) => state.sidebar.isOpen);
+  const dispatch = useDispatch();
+
+  function handleMenuClick() {
+    dispatch(toggleSidebar());
+  }
+
   return (
-    <div>
-      <main className={styles.wrapperDashboard}>
-        <span>
-          <Image src={menu} alt="menu" className={styles.image} />
-          <Sidebar />
-        </span>
+    <>
+      <S.WrapperDashboard SidebarOpen={isOpen}>
+        <S.Menu onClick={handleMenuClick}>
+          <Image src={menu} alt="menu" />
+        </S.Menu>
+
+        <Sidebar />
         <Header />
-      </main>
+      </S.WrapperDashboard>
       <footer></footer>
-    </div>
+    </>
   );
 }
