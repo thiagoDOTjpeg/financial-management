@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "transaction")
-public class Transactions implements Serializable  {
+public class Transaction implements Serializable  {
 
   @Serial
   private static final long serialVersionUID = 1L;
@@ -99,7 +99,7 @@ public class Transactions implements Serializable  {
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
-    Transactions that = (Transactions) o;
+    Transaction that = (Transaction) o;
     return id_transacoes == that.id_transacoes && id_fatura == that.id_fatura && id_cartao == that.id_cartao && id_conta == that.id_conta && Objects.equals(nome, that.nome) && Objects.equals(valor, that.valor) && Objects.equals(data, that.data);
   }
 
