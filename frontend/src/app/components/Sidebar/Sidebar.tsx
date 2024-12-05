@@ -1,27 +1,38 @@
-import styles from "./styles.module.scss";
+import { toggleSidebar } from "@/redux/slices/sidebarSlice";
 import { GoHomeFill } from "react-icons/go";
 import { GoCalendar } from "react-icons/go";
 import { GoLog } from "react-icons/go";
 import { GoX } from "react-icons/go";
+import { useDispatch, useSelector } from "react-redux";
+import * as S from "./sidebarStyle";
 
 export default function Sidebar() {
+  const isOpen = useSelector((state: any) => state.sidebar.isOpen);
+  const dispatch = useDispatch();
+
+  function handleCloseSidebar() {
+    dispatch(toggleSidebar());
+  }
+
   return (
-    <article className={styles.wrapperSidebar}>
-      <GoX className={styles.image} />
-      <div className={styles.wrapperButtons}>
-        <button>
+    <S.WrapperSidebar $sidebaropen={isOpen}>
+      <S.WrapperImage>
+        <GoX onClick={handleCloseSidebar} />
+      </S.WrapperImage>
+      <S.WrapperButtons>
+        <S.Button>
           <GoHomeFill />
           <span>Inicio</span>
-        </button>
-        <button>
+        </S.Button>
+        <S.Button>
           <GoCalendar />
           <span>Gerenciar</span>
-        </button>
-        <button>
+        </S.Button>
+        <S.Button>
           <GoLog />
           <span>Relatórios</span>
-        </button>
-      </div>
-    </article>
+        </S.Button>
+      </S.WrapperButtons>
+    </S.WrapperSidebar>
   );
 }
