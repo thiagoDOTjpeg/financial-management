@@ -1,84 +1,19 @@
-# FINANCIAL MANAGEMENT BACKEND API
+# Projeto de Gestão Financeira!!
 
-API sendo criada utilizando as tecnologias: <br />
-MYSQL <br />
-SEQUELIZE <br />
-EXPRESS <br />
+## Tecnologias/Linguagens usadas
 
-# API ROUTES
 
-### Accounts:
+* Front-End:
 
-    GET: /accounts
-        /accounts/:id
+![Next](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![Tailwind](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-    PATCH: /accounts/:id
+* Back-End:
 
-    DELETE: /accounts/:id
 
-    POST: /accounts
-      Como deve ser o body da requisição:
-          {
-            "id_banco": // É auto increment
-            "banco":
-            "saldo":
-          }
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-000?style=for-the-badge&logo=postgresql)
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 
-### Transactions:
-
-    GET: /transactions
-        /transactions/:id
-
-    PATCH: /transactions/:id
-
-    DELETE: /transactions/:id
-
-    POST: /transactions
-        Como deve ser o body da requisição:
-        {
-          "id_transacoes": // É auto increment
-          "id_cartao":  // Colocar o id cartão caso seja crédito
-          "id_conta":   // Senão coloca o id da conta caso seja débito
-          "nome":
-          "valor":
-          "data":
-          "id_fatura":
-        }
-
-### Cards:
-
-    GET: /cards
-         /cards/:id
-         /cards/invoices/:id
-
-    PATCH: /cards/:id
-
-    DELETE: /cards/:id
-
-    POST: /cards
-      Como deve ser o body da requisição:
-      {
-        "id_cartao": // É auto increment
-        "id_conta":
-        "data_vencimento":
-        "data_fechamento":
-      }
-
-### Invoices:
-
-    GET: /invoices
-         /invoices/:id
-         /invoices/transactions/:id
-
-    PATCH: /invoices/:id
-
-    DELETE: /invoices/:id
-
-    POST: /invoices
-      Como deve ser o body da requisição:
-      {
-        "id_fatura": // É auto increment
-        "id_cartao":
-        "mes":
-        "pago":
-      }
