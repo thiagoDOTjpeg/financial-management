@@ -1,3 +1,11 @@
-spring
- application
-  name=financial-management
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/financial_management
+    username: postgres
+    password: root123
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
