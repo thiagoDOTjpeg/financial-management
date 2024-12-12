@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "credit_card")
@@ -11,7 +12,7 @@ public class CreditCard {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String id;
+  private UUID id;
 
   @ManyToOne
   @JoinColumn(name = "id_account")
@@ -23,11 +24,11 @@ public class CreditCard {
   @Column(name = "due_date")
   private String due_date;
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
