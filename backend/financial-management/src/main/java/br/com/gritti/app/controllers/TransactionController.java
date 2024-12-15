@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping("/api/transactions")
 public class TransactionController {
 
+
   @Autowired
   private TransactionService transactionService;
 
@@ -27,5 +28,11 @@ public class TransactionController {
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public Transaction createTransaction(@RequestBody Transaction transaction) {
     return transactionService.createTransaction(transaction);
+  }
+
+  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> deleteTransaction(@PathVariable String id) throws Exception {
+    transactionService.deleteTransaction(id);
+    return ResponseEntity.ok().build();
   }
 }
