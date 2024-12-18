@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TransactionService {
@@ -30,7 +31,7 @@ public class TransactionService {
     return transactionRepository.save(transaction);
   }
 
-  public void deleteTransaction(String id) throws Exception{
+  public void deleteTransaction(UUID id) throws Exception{
     var transaction = transactionRepository.findById(id).orElseThrow(() -> new Exception("Transaction not found"));
     transactionRepository.deleteById(transaction.getId());
   }

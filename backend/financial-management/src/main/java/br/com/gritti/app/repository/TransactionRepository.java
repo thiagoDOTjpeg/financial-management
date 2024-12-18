@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
-    List<Transaction> findByInvoice(Invoice invoice);
+    //List<Transaction> findById_card(Invoice invoice);
 
 }
