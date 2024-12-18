@@ -20,6 +20,7 @@ public class AccountController {
     return accountService.listAllAccounts();
   }
 
+
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public Account createAccount(@RequestBody Account account) {
     return accountService.createAccount(account);

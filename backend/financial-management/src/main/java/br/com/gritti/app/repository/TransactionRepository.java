@@ -12,11 +12,11 @@ import java.util.UUID;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 
-    @Query(value = "SELECT" +
-            " transaction.id, " +
-            " transaction.id_account, " +
-            " transaction.id_invoice, " +
-            " transaction.name_transaction, " +
+    @Query(value = "SELECT " +
+            "transaction.id, " +
+            "transaction.id_account, " +
+            "transaction.id_invoice, " +
+            "transaction.name_transaction, " +
             "transaction.value, " +
             "transaction.timestamp, " +
             "transaction.description " +

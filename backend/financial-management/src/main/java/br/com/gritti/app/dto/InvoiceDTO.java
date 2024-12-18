@@ -4,6 +4,7 @@ import br.com.gritti.app.models.Invoice;
 import br.com.gritti.app.models.Transaction;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class InvoiceDTO {
@@ -11,11 +12,13 @@ public class InvoiceDTO {
     private UUID id;
     private Invoice invoiceContent;
     private Double valorTotal;
-    private List<Transaction> transactionContent;
+    private List<Transaction> transactionsContent;
 
-    public InvoiceDTO(Invoice invoiceContent, List<Transaction> transactionContent) {
+    public InvoiceDTO(UUID id, Invoice invoiceContent, Double valorTotal, List<Transaction> transactionContent ) {
+        this.id = id;
         this.invoiceContent = invoiceContent;
-        this.transactionContent = transactionContent;
+        this.valorTotal = valorTotal;
+        this.transactionsContent = transactionContent;
     }
 
     public Invoice getInvoiceContent() {
@@ -27,10 +30,38 @@ public class InvoiceDTO {
     }
 
     public List<Transaction> getTransactionContent() {
-        return transactionContent;
+        return transactionsContent;
     }
 
-    public void setTransactionContent(List<Transaction> transactionContent) {
-        this.transactionContent = transactionContent;
+    public void setTransactionsContent(List<Transaction> transactionContent) {
+        this.transactionsContent = transactionContent;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        InvoiceDTO that = (InvoiceDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(invoiceContent, that.invoiceContent) && Objects.equals(valorTotal, that.valorTotal) && Objects.equals(transactionsContent, that.transactionsContent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, invoiceContent, valorTotal, transactionsContent);
     }
 }

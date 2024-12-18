@@ -20,6 +20,7 @@ public class Transaction  {
   @JoinColumn(name = "id_account")
   private Account id_account;
 
+  @Column
   private UUID id_invoice;
 
   @Column(nullable = false)

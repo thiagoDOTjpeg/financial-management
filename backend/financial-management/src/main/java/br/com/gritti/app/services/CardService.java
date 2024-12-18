@@ -1,25 +1,36 @@
 package br.com.gritti.app.services;
 
 import br.com.gritti.app.models.CreditCard;
-import br.com.gritti.app.repository.CardRepository;
+import br.com.gritti.app.repository.CreditCardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CardService {
 
-  private CardRepository cardRepository;
+  private final CreditCardRepository creditCardRepository;
 
-  public CardService(CardRepository cardRepository) {
-    this.cardRepository = cardRepository;
+  @Autowired
+  public CardService(CreditCardRepository creditCardRepository) {
+    this.creditCardRepository = creditCardRepository;
   }
 
   public List<CreditCard> getAllCards() {
-    return cardRepository.findAll();
+    return creditCardRepository.findAll();
+  }
+
+  public CreditCard getCardById(UUID id)throws Exception{
+    return creditCardRepository.findById(id).orElseThrow(() -> new Exception("Credit Card not Found"));
   }
 
   public CreditCard createCard(CreditCard card) {
-    return cardRepository.save(card);
+    return creditCardRepository.save(card);
+  }
+
+  public CreditCard updateCard(CreditCard card) {
+    return creditCardRepository.save(card);
   }
 }

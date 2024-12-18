@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "credit_card")
+@Table
 public class CreditCard {
 
   @Id
@@ -15,13 +15,13 @@ public class CreditCard {
   private UUID id;
 
   @ManyToOne
-  @JoinColumn(name = "id_account")
+  @JoinColumn
   private Account id_account;
 
-  @Column(name = "closing_date")
+  @Column
   private String closing_date;
 
-  @Column(name = "due_date")
+  @Column
   private String due_date;
 
   public UUID getId() {
