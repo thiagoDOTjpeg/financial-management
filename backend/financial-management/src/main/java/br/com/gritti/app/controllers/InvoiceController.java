@@ -17,11 +17,11 @@ public class InvoiceController {
     @Autowired
     private InvoiceService invoiceService;
 
-    /*
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public InvoiceDTO getInvoiceById(@PathVariable UUID id) throws Exception {
       return invoiceService.getInvoiceById(id);
-    }*/
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Invoice createInvoice(@RequestBody Invoice invoice)  {

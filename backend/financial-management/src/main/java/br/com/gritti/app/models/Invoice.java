@@ -1,5 +1,6 @@
 package br.com.gritti.app.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,9 +19,6 @@ public class Invoice {
   @JoinColumn(name = "id_card")
   private CreditCard id_card;
 
-  @Column(name = "total_value")
-  private Double total_value;
-
   @Column(name = "paid")
   private boolean paid;
 
@@ -33,6 +31,15 @@ public class Invoice {
   @OneToMany
   @JoinColumn(name = "id_transaction")
   private List<Transaction> id_transaction;
+
+  public Invoice(String id) {
+    this.id = UUID.fromString(id);
+  }
+
+  public Invoice() {
+
+  }
+
 
   public UUID getId() {
     return id;
@@ -48,14 +55,6 @@ public class Invoice {
 
   public void setId_card(CreditCard id_card) {
     this.id_card = id_card;
-  }
-
-  public Double getTotal_value() {
-    return total_value;
-  }
-
-  public void setTotal_value(Double total_value) {
-    this.total_value = total_value;
   }
 
   public boolean isPaid() {
@@ -94,11 +93,11 @@ public class Invoice {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     Invoice invoice = (Invoice) o;
-    return paid == invoice.paid && Objects.equals(id, invoice.id) && Objects.equals(id_card, invoice.id_card) && Objects.equals(total_value, invoice.total_value) && Objects.equals(reference_month, invoice.reference_month) && Objects.equals(reference_year, invoice.reference_year) && Objects.equals(id_transaction, invoice.id_transaction);
+    return paid == invoice.paid && Objects.equals(id, invoice.id) && Objects.equals(id_card, invoice.id_card) && Objects.equals(reference_month, invoice.reference_month) && Objects.equals(reference_year, invoice.reference_year) && Objects.equals(id_transaction, invoice.id_transaction);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, id_card, total_value, paid, reference_month, reference_year, id_transaction);
+    return Objects.hash(id, id_card, paid, reference_month, reference_year, id_transaction);
   }
 }

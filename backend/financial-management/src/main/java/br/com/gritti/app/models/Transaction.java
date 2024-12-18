@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "transaction")
-public class Transaction implements Serializable  {
+public class Transaction  {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -20,20 +20,18 @@ public class Transaction implements Serializable  {
   @JoinColumn(name = "id_account")
   private Account id_account;
 
-  @ManyToOne
-  @JoinColumn(name = "id_card")
-  private CreditCard id_card;
+  private UUID id_invoice;
 
-  @Column(name = "name_transaction", nullable = false)
+  @Column(nullable = false)
   private String name_transaction;
 
-  @Column(name = "value", nullable = false)
+  @Column(nullable = false)
   private double value;
 
-  @Column(name = "timestamp", nullable = false)
+  @Column(nullable = false)
   private Date timestamp;
 
-  @Column(name = "description")
+  @Column
   private String description;
 
   public UUID getId() {
@@ -52,12 +50,12 @@ public class Transaction implements Serializable  {
     this.id_account = id_account;
   }
 
-  public CreditCard getId_card() {
-    return id_card;
+  public UUID getId_invoice() {
+    return id_invoice;
   }
 
-  public void setId_card(CreditCard id_card) {
-    this.id_card = id_card;
+  public void setId_invoice(UUID id_invoice) {
+    this.id_invoice = id_invoice;
   }
 
   public String getName_transaction() {
@@ -96,11 +94,11 @@ public class Transaction implements Serializable  {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     Transaction that = (Transaction) o;
-    return Double.compare(value, that.value) == 0 && Objects.equals(id, that.id) && Objects.equals(id_account, that.id_account) && Objects.equals(id_card, that.id_card) && Objects.equals(name_transaction, that.name_transaction) && Objects.equals(timestamp, that.timestamp) && Objects.equals(description, that.description);
+    return Double.compare(value, that.value) == 0 && Objects.equals(id, that.id) && Objects.equals(id_account, that.id_account) && Objects.equals(id_invoice, that.id_invoice) && Objects.equals(name_transaction, that.name_transaction) && Objects.equals(timestamp, that.timestamp) && Objects.equals(description, that.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, id_account, id_card, name_transaction, value, timestamp, description);
+    return Objects.hash(id, id_account, id_invoice, name_transaction, value, timestamp, description);
   }
 }

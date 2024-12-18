@@ -22,14 +22,12 @@ public class InvoiceService {
         this.invoiceRepository = invoiceRepository;
         this.transactionRepository = transactionRepository;
     }
-
-    /*
     public InvoiceDTO getInvoiceById(UUID id) throws Exception {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new Exception("Invoice not found"));
-        List<Transaction> transaction = transactionRepository.findByInvoice(invoice);
+        List<Transaction> transaction = transactionRepository.findAllById_invoice(invoice.getId());
         InvoiceDTO response = new InvoiceDTO(invoice, transaction);
         return response;
-    } */
+    }
 
     public Invoice createInvoice(Invoice invoice){
       return invoiceRepository.save(invoice);
