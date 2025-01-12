@@ -1,6 +1,5 @@
 package br.com.gritti.app.model;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,12 +37,8 @@ public class User implements UserDetails, Serializable {
   @Column(name = "credentials_non_expired")
   private Boolean credentialsNonExpired;
 
-  @ManyToOne
-  @JoinColumn(name = "id_role")
-  private Role role;
-
   @Column(name = "account_status", nullable = false)
-  private String accountStatus;
+  private Boolean accountStatus;
 
   @Column(name = "created_at")
   private Date createdAt;
@@ -67,17 +62,26 @@ public class User implements UserDetails, Serializable {
     return roles;
   }
 
+  @Override
+  public String getUsername() {
+    return username;
+  }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.permissions;
+  }
+
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
   public UUID getId() {
     return id;
   }
 
   public void setId(UUID id) {
     this.id = id;
-  }
-
-  @Override
-  public String getUsername() {
-    return username;
   }
 
   public void setUsername(String username) {
@@ -90,16 +94,6 @@ public class User implements UserDetails, Serializable {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return this.permissions;
-  }
-
-  @Override
-  public String getPassword() {
-    return password;
   }
 
   public void setPassword(String password) {
@@ -138,19 +132,11 @@ public class User implements UserDetails, Serializable {
     this.credentialsNonExpired = credentialsNonExpired;
   }
 
-  public Role getRole() {
-    return role;
-  }
-
-  public void setRole(Role role) {
-    this.role = role;
-  }
-
-  public String getAccountStatus() {
+  public Boolean getAccountStatus() {
     return accountStatus;
   }
 
-  public void setAccountStatus(String accountStatus) {
+  public void setAccountStatus(Boolean accountStatus) {
     this.accountStatus = accountStatus;
   }
 
@@ -182,11 +168,11 @@ public class User implements UserDetails, Serializable {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     User user = (User) o;
-    return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(fullName, user.fullName) && Objects.equals(accountNonExpired, user.accountNonExpired) && Objects.equals(accountNonLocked, user.accountNonLocked) && Objects.equals(credentialsNonExpired, user.credentialsNonExpired) && Objects.equals(role, user.role) && Objects.equals(accountStatus, user.accountStatus) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(lastLogin, user.lastLogin);
+    return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(fullName, user.fullName) && Objects.equals(accountNonExpired, user.accountNonExpired) && Objects.equals(accountNonLocked, user.accountNonLocked) && Objects.equals(credentialsNonExpired, user.credentialsNonExpired) && Objects.equals(accountStatus, user.accountStatus) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(lastLogin, user.lastLogin) && Objects.equals(permissions, user.permissions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, email, password, fullName, accountNonExpired, accountNonLocked, credentialsNonExpired, role, accountStatus, createdAt, updatedAt, lastLogin);
+    return Objects.hash(id, username, email, password, fullName, accountNonExpired, accountNonLocked, credentialsNonExpired, accountStatus, createdAt, updatedAt, lastLogin, permissions);
   }
 }

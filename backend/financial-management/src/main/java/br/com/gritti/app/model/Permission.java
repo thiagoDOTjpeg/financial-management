@@ -40,7 +40,6 @@ public class Permission implements GrantedAuthority, Serializable {
   @Column(name = "updated_by")
   private String updatedBy;
 
-
   public Permission() {
   }
 

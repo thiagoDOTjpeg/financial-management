@@ -13,12 +13,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@Table(name = "accounts")
 public class Account implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
   @Column(name = "bank_name")
   private String bankName;

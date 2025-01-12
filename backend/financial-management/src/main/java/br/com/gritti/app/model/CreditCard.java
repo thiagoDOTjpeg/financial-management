@@ -13,12 +13,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@Table(name = "credit_cards")
 public class CreditCard implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
   @Column(name = "card_brand")
   private String cardBrand;
@@ -42,6 +47,9 @@ public class CreditCard implements Serializable {
   @ManyToOne
   @JoinColumn(name = "account_id")
   private Account account;
+
+  @OneToMany(mappedBy = "creditCard")
+  private List<Invoice> invoices;
 
   @OneToMany(mappedBy = "creditCard")
   private List<CreditTransaction> transactions;

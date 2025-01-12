@@ -12,12 +12,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@Table(name = "debit_transactions")
 public class DebitTransaction implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
   @Column(nullable = false)
   private Double value;
@@ -109,15 +114,23 @@ public class DebitTransaction implements Serializable {
     this.debitCard = debitCard;
   }
 
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     DebitTransaction that = (DebitTransaction) o;
-    return Objects.equals(id, that.id) && Objects.equals(value, that.value) && Objects.equals(description, that.description) && Objects.equals(createdAt, that.createdAt) && Objects.equals(createdBy, that.createdBy) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(updatedBy, that.updatedBy) && Objects.equals(debitCard, that.debitCard);
+    return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(value, that.value) && Objects.equals(description, that.description) && Objects.equals(createdAt, that.createdAt) && Objects.equals(createdBy, that.createdBy) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(updatedBy, that.updatedBy) && Objects.equals(debitCard, that.debitCard);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, value, description, createdAt, createdBy, updatedAt, updatedBy, debitCard);
+    return Objects.hash(id, user, value, description, createdAt, createdBy, updatedAt, updatedBy, debitCard);
   }
 }
