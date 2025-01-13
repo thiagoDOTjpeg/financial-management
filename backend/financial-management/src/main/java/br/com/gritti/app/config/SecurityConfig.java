@@ -28,14 +28,14 @@ public class SecurityConfig {
   private JwtTokenProvider tokenProvider;
 
   @Bean
-  PasswordEncoder passwordEncoder(PasswordEncoder passwordEncoder) {
+  PasswordEncoder passwordEncoder() {
     Pbkdf2PasswordEncoder encoder = new Pbkdf2PasswordEncoder("", 8, 185000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
 
     Map<String, PasswordEncoder> encoders = new HashMap<>();
     encoders.put("pbkdf2", encoder);
     DelegatingPasswordEncoder delegatingPasswordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
     delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(encoder);
-    return passwordEncoder;
+    return delegatingPasswordEncoder;
   }
 
   @Bean
@@ -43,6 +43,7 @@ public class SecurityConfig {
     return authenticationConfiguration.getAuthenticationManager();
   }
 
+  @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     JwtTokenFilter jwtTokenFilter = new JwtTokenFilter(tokenProvider);
     return http.httpBasic(AbstractHttpConfigurer::disable)
