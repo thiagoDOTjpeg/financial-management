@@ -51,9 +51,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                    .requestMatchers("/auth/signin", "/auth/refresh/**", "/swagger-ui/**", "/api-docs/**", "/api-docs", "/swagger-ui.html").permitAll()
-                    .requestMatchers("/api/**").authenticated()
-                    .requestMatchers("/users").denyAll())
+                    .requestMatchers("/**").permitAll())
             .cors(cors -> {})
             .build();
 
