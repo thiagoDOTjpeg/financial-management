@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class AuthServices {
 
@@ -41,6 +43,8 @@ public class AuthServices {
       } else {
         throw new UsernameNotFoundException("username " + username + " not found!");
       }
+      user.setLastLogin(new Date());
+      userRepository.save(user);
       return ResponseEntity.ok(tokenResponse);
     } catch (Exception e) {
       throw new BadCredentialsException("Invalid username or password!");
@@ -57,6 +61,8 @@ public class AuthServices {
     } else {
       throw new UsernameNotFoundException("Username " + username + " not found!");
     }
+    user.setLastLogin(new Date());
+    userRepository.save(user);
     return ResponseEntity.ok(tokenResponse);
   }
 }

@@ -2,15 +2,16 @@ package br.com.gritti.app.controller;
 
 import br.com.gritti.app.data.dto.user.UserCreateDTO;
 import br.com.gritti.app.data.dto.user.UserResponseDTO;
+import br.com.gritti.app.model.User;
 import br.com.gritti.app.service.UserServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "User Endpoint")
 @RestController
@@ -30,4 +31,18 @@ public class UserController {
     UserResponseDTO response = service.createUser(data);
     return ResponseEntity.ok(response);
   }
+
+  @Operation(summary = "Get a user by his UUID")
+  @GetMapping("/{id}")
+  public ResponseEntity<User> getUserById(@PathVariable("id") UUID id) {
+    return ResponseEntity.ok(service.getUserById(id));
+  }
+
+  @Operation(summary = "Get all users")
+  @GetMapping()
+  public ResponseEntity<List<User>> getAllUsers() {
+    return ResponseEntity.ok(service.getAllUsers());
+  }
+
+
 }

@@ -48,10 +48,10 @@ public class Account implements Serializable {
   private String updatedBy;
 
   @OneToMany(mappedBy = "account")
-  private List<CreditCard> creditCard;
+  private List<CreditCard> creditCards;
 
   @OneToMany(mappedBy = "account")
-  private List<DebitCard> debitCard;
+  private List<DebitCard> debitCards;
 
   public UUID getId() {
     return id;
@@ -109,31 +109,31 @@ public class Account implements Serializable {
     this.updatedBy = updatedBy;
   }
 
-  public List<CreditCard> getCreditCard() {
-    return creditCard;
+  public List<CreditCard> getCreditCards() {
+    return creditCards;
   }
 
-  public void setCreditCard(List<CreditCard> creditCard) {
-    this.creditCard = creditCard;
+  public void setCreditCards(List<CreditCard> creditCard) {
+    this.creditCards = creditCard;
   }
 
-  public List<DebitCard> getDebitCard() {
-    return debitCard;
+  public List<DebitCard> getDebitCards() {
+    return debitCards;
   }
 
-  public void setDebitCard(List<DebitCard> debitCard) {
-    this.debitCard = debitCard;
+  public void setDebitCards(List<DebitCard> debitCard) {
+    this.debitCards = debitCard;
   }
 
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     Account account = (Account) o;
-    return Objects.equals(id, account.id) && Objects.equals(bankName, account.bankName) && Objects.equals(balance, account.balance) && Objects.equals(createdAt, account.createdAt) && Objects.equals(createdBy, account.createdBy) && Objects.equals(updatedAt, account.updatedAt) && Objects.equals(updatedBy, account.updatedBy) && Objects.equals(creditCard, account.creditCard) && Objects.equals(debitCard, account.debitCard);
+    return Objects.equals(id, account.id) && Objects.equals(bankName, account.bankName) && Objects.equals(balance, account.balance) && Objects.equals(createdAt, account.createdAt) && Objects.equals(createdBy, account.createdBy) && Objects.equals(updatedAt, account.updatedAt) && Objects.equals(updatedBy, account.updatedBy) && Objects.equals(creditCards, account.creditCards) && Objects.equals(debitCards, account.debitCards);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, bankName, balance, createdAt, createdBy, updatedAt, updatedBy, creditCard, debitCard);
+    return Objects.hash(id, bankName, balance, createdAt, createdBy, updatedAt, updatedBy, creditCards, debitCards);
   }
 }

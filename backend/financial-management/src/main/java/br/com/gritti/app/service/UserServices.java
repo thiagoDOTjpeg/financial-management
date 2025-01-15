@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
@@ -28,6 +30,15 @@ public class UserServices implements UserDetailsService {
     this.repository = repository;
     this.encoder = encoder;
   }
+
+  public List<User> getAllUsers() {
+    return repository.findAll();
+  }
+
+  public User getUserById(UUID id) {
+    return repository.findById(id).orElseThrow(() -> new UsernameNotFoundException("ID " + id + " not found"));
+  }
+
 
   public UserResponseDTO createUser(UserCreateDTO data) {
     Date now = new Date();
