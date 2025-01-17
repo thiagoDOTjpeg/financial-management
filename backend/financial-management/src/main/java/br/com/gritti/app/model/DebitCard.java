@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "debit_cards")
-public class DebitCard implements Serializable {
+public class DebitCard extends Auditable implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -24,22 +24,6 @@ public class DebitCard implements Serializable {
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
-
-  @CreatedDate
-  @Column(name = "created_at", updatable = false)
-  private Date createdAt;
-
-  @CreatedBy
-  @Column(name = "created_by")
-  private String createdBy;
-
-  @LastModifiedDate
-  @Column(name = "updated_at")
-  private Date updatedAt;
-
-  @LastModifiedBy
-  @Column(name = "updated_by")
-  private String updatedBy;
 
   @ManyToOne
   @JoinColumn(name = "account_id")
@@ -54,38 +38,6 @@ public class DebitCard implements Serializable {
 
   public void setId(UUID id) {
     this.id = id;
-  }
-
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public String getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(String createdBy) {
-    this.createdBy = createdBy;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
-  public String getUpdatedBy() {
-    return updatedBy;
-  }
-
-  public void setUpdatedBy(String updatedBy) {
-    this.updatedBy = updatedBy;
   }
 
   public Account getAccount() {
@@ -116,11 +68,11 @@ public class DebitCard implements Serializable {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     DebitCard debitCard = (DebitCard) o;
-    return Objects.equals(id, debitCard.id) && Objects.equals(user, debitCard.user) && Objects.equals(createdAt, debitCard.createdAt) && Objects.equals(createdBy, debitCard.createdBy) && Objects.equals(updatedAt, debitCard.updatedAt) && Objects.equals(updatedBy, debitCard.updatedBy) && Objects.equals(account, debitCard.account) && Objects.equals(transactions, debitCard.transactions);
+    return Objects.equals(id, debitCard.id) && Objects.equals(user, debitCard.user) && Objects.equals(account, debitCard.account) && Objects.equals(transactions, debitCard.transactions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, user, createdAt, createdBy, updatedAt, updatedBy, account, transactions);
+    return Objects.hash(id, user, account, transactions);
   }
 }

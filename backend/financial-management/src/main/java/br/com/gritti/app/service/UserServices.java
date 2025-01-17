@@ -1,6 +1,6 @@
 package br.com.gritti.app.service;
 
-import br.com.gritti.app.data.dto.user.UserCreateDTO;
+import br.com.gritti.app.data.dto.user.UserRequestDTO;
 import br.com.gritti.app.data.dto.user.UserResponseDTO;
 import br.com.gritti.app.model.User;
 import br.com.gritti.app.repository.UserRepository;
@@ -40,9 +40,9 @@ public class UserServices implements UserDetailsService {
   }
 
 
-  public UserResponseDTO createUser(UserCreateDTO data) {
+  public UserResponseDTO createUser(UserRequestDTO data) {
     Date now = new Date();
-    var user = new User();
+    User user = new User();
     user.setUsername(data.getUsername());
     user.setPassword(encoder.encodePassword(data.getPassword()));
     user.setEmail(data.getEmail());
@@ -52,11 +52,9 @@ public class UserServices implements UserDetailsService {
     user.setCredentialsNonExpired(true);
     user.setAccountNonExpired(true);
     user.setAccountStatus(true);
-    user.setCreatedAt(now);
-    user.setUpdatedAt(now);
     User savedUser = repository.save(user);
 
-    return new UserResponseDTO(savedUser.getId(), savedUser.getUsername(), "User created successfully");
+    return new UserResponseDTO(savedUser.getId(), savedUser.getUsername());
   }
 
   @Override

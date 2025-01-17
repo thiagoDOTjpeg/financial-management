@@ -1,6 +1,6 @@
 package br.com.gritti.app.controller;
 
-import br.com.gritti.app.data.dto.user.UserCreateDTO;
+import br.com.gritti.app.data.dto.user.UserRequestDTO;
 import br.com.gritti.app.data.dto.user.UserResponseDTO;
 import br.com.gritti.app.model.User;
 import br.com.gritti.app.service.UserServices;
@@ -27,7 +27,7 @@ public class UserController {
 
   @Operation(summary = "Creates a user")
   @PostMapping()
-  public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO data) {
+  public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO data) {
     UserResponseDTO response = service.createUser(data);
     return ResponseEntity.ok(response);
   }

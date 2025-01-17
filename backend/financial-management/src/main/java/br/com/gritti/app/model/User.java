@@ -40,12 +40,6 @@ public class User implements UserDetails, Serializable {
   @Column(name = "account_status", nullable = false)
   private Boolean accountStatus;
 
-  @Column(name = "created_at")
-  private Date createdAt;
-
-  @Column(name = "updated_at")
-  private Date updatedAt;
-
   @Column(name = "last_login")
   private Date lastLogin;
 
@@ -140,22 +134,6 @@ public class User implements UserDetails, Serializable {
     this.accountStatus = accountStatus;
   }
 
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
   public Date getLastLogin() {
     return lastLogin;
   }
@@ -168,11 +146,11 @@ public class User implements UserDetails, Serializable {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     User user = (User) o;
-    return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(fullName, user.fullName) && Objects.equals(accountNonExpired, user.accountNonExpired) && Objects.equals(accountNonLocked, user.accountNonLocked) && Objects.equals(credentialsNonExpired, user.credentialsNonExpired) && Objects.equals(accountStatus, user.accountStatus) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(lastLogin, user.lastLogin) && Objects.equals(permissions, user.permissions);
+    return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(fullName, user.fullName) && Objects.equals(accountNonExpired, user.accountNonExpired) && Objects.equals(accountNonLocked, user.accountNonLocked) && Objects.equals(credentialsNonExpired, user.credentialsNonExpired) && Objects.equals(accountStatus, user.accountStatus) && Objects.equals(lastLogin, user.lastLogin) && Objects.equals(permissions, user.permissions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, email, password, fullName, accountNonExpired, accountNonLocked, credentialsNonExpired, accountStatus, createdAt, updatedAt, lastLogin, permissions);
+    return Objects.hash(id, username, email, password, fullName, accountNonExpired, accountNonLocked, credentialsNonExpired, accountStatus, lastLogin, permissions);
   }
 }

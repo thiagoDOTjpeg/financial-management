@@ -1,16 +1,17 @@
-package br.com.gritti.app.data.dto.user;
+package br.com.gritti.app.data.vo;
 
-import java.util.Optional;
 import java.util.UUID;
 
-public class UserResponseDTO {
+public class UserVO {
 
   private UUID id;
   private String username;
+  private String email;
 
-  public UserResponseDTO(UUID id, String username) {
+  public UserVO(UUID id, String username, String email) {
     this.id = id;
     this.username = username;
+    this.email = email;
   }
 
   public UUID getId() {
@@ -29,5 +30,11 @@ public class UserResponseDTO {
     this.username = username;
   }
 
+  public String getEmail() {
+    return email;
+  }
 
+  public void setEmail(String email) {
+    this.email = email;
+  }
 }

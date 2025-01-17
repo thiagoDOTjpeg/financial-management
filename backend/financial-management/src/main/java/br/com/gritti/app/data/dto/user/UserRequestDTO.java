@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class UserCreateDTO implements Serializable {
+public class UserRequestDTO implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @NotBlank
@@ -22,7 +22,7 @@ public class UserCreateDTO implements Serializable {
   @NotBlank
   private String fullName;
 
-  public UserCreateDTO(String username, String email, String password, String fullName) {
+  public UserRequestDTO(String username, String email, String password, String fullName) {
     this.username = username;
     this.email = email;
     this.password = password;
@@ -64,7 +64,7 @@ public class UserCreateDTO implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
-    UserCreateDTO that = (UserCreateDTO) o;
+    UserRequestDTO that = (UserRequestDTO) o;
     return Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(fullName, that.fullName);
   }
 

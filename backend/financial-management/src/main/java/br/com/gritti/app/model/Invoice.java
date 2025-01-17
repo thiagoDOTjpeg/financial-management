@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "invoices")
-public class Invoice implements Serializable {
+public class Invoice extends Auditable implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -33,22 +33,6 @@ public class Invoice implements Serializable {
 
   @Column(name = "reference_month")
   private String referenceMonth;
-
-  @CreatedDate
-  @Column(name = "created_at", updatable = false)
-  private Date createdAt;
-
-  @CreatedBy
-  @Column(name = "created_by")
-  private String createdBy;
-
-  @LastModifiedDate
-  @Column(name = "updated_at")
-  private Date updatedAt;
-
-  @LastModifiedBy
-  @Column(name = "updated_by")
-  private String updatedBy;
 
   @OneToMany(mappedBy = "invoice")
   private List<CreditTransaction> transactions;
@@ -97,38 +81,6 @@ public class Invoice implements Serializable {
     this.referenceMonth = referenceMonth;
   }
 
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public String getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(String createdBy) {
-    this.createdBy = createdBy;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
-  public String getUpdatedBy() {
-    return updatedBy;
-  }
-
-  public void setUpdatedBy(String updatedBy) {
-    this.updatedBy = updatedBy;
-  }
-
   public List<CreditTransaction> getTransactions() {
     return transactions;
   }
@@ -149,11 +101,11 @@ public class Invoice implements Serializable {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     Invoice invoice = (Invoice) o;
-    return Objects.equals(id, invoice.id) && Objects.equals(user, invoice.user) && Objects.equals(dueDate, invoice.dueDate) && Objects.equals(status, invoice.status) && Objects.equals(referenceMonth, invoice.referenceMonth) && Objects.equals(createdAt, invoice.createdAt) && Objects.equals(createdBy, invoice.createdBy) && Objects.equals(updatedAt, invoice.updatedAt) && Objects.equals(updatedBy, invoice.updatedBy) && Objects.equals(transactions, invoice.transactions) && Objects.equals(creditCard, invoice.creditCard);
+    return Objects.equals(id, invoice.id) && Objects.equals(user, invoice.user) && Objects.equals(dueDate, invoice.dueDate) && Objects.equals(status, invoice.status) && Objects.equals(referenceMonth, invoice.referenceMonth) && Objects.equals(transactions, invoice.transactions) && Objects.equals(creditCard, invoice.creditCard);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, user, dueDate, status, referenceMonth, createdAt, createdBy, updatedAt, updatedBy, transactions, creditCard);
+    return Objects.hash(id, user, dueDate, status, referenceMonth, transactions, creditCard);
   }
 }

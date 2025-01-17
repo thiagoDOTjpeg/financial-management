@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "credit_transactions")
-public class CreditTransaction implements Serializable {
+public class CreditTransaction extends Auditable implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -32,22 +32,6 @@ public class CreditTransaction implements Serializable {
 
   @Column
   private String description;
-
-  @CreatedDate
-  @Column(name = "created_at", updatable = false)
-  private Date createdAt;
-
-  @CreatedBy
-  @Column(name = "created_by")
-  private String createdBy;
-
-  @LastModifiedDate
-  @Column(name = "updated_at")
-  private Date updatedAt;
-
-  @LastModifiedBy
-  @Column(name = "updated_by")
-  private String updatedBy;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "credit_card_id")
@@ -89,38 +73,6 @@ public class CreditTransaction implements Serializable {
     this.description = description;
   }
 
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public String getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(String createdBy) {
-    this.createdBy = createdBy;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
-  public String getUpdatedBy() {
-    return updatedBy;
-  }
-
-  public void setUpdatedBy(String updatedBy) {
-    this.updatedBy = updatedBy;
-  }
-
   public CreditCard getCreditCard() {
     return creditCard;
   }
@@ -149,11 +101,11 @@ public class CreditTransaction implements Serializable {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     CreditTransaction that = (CreditTransaction) o;
-    return numberOfInstallments == that.numberOfInstallments && Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(value, that.value) && Objects.equals(description, that.description) && Objects.equals(createdAt, that.createdAt) && Objects.equals(createdBy, that.createdBy) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(updatedBy, that.updatedBy) && Objects.equals(creditCard, that.creditCard) && Objects.equals(invoice, that.invoice);
+    return numberOfInstallments == that.numberOfInstallments && Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(value, that.value) && Objects.equals(description, that.description) && Objects.equals(creditCard, that.creditCard) && Objects.equals(invoice, that.invoice);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, user, value, numberOfInstallments, description, createdAt, createdBy, updatedAt, updatedBy, creditCard, invoice);
+    return Objects.hash(id, user, value, numberOfInstallments, description, creditCard, invoice);
   }
 }
