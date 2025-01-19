@@ -6,17 +6,16 @@ import java.util.UUID;
 
 public class AccountRequestDTO extends Auditable {
 
-  private UUID user_id;
+  private UUID userId;
   private String bankName;
   private Double balance;
 
-
-  public UUID getUser_id() {
-    return user_id;
+  public UUID getUserId() {
+    return userId;
   }
 
-  public void setUser_id(UUID user_id) {
-    this.user_id = user_id;
+  public void setUserId(UUID userId) {
+    this.userId = userId;
   }
 
   public String getBankName() {

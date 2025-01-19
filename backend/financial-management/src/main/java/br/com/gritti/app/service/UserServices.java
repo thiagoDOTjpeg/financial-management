@@ -2,6 +2,7 @@ package br.com.gritti.app.service;
 
 import br.com.gritti.app.data.dto.user.UserRequestDTO;
 import br.com.gritti.app.data.dto.user.UserResponseDTO;
+import br.com.gritti.app.mapper.UserMapper;
 import br.com.gritti.app.model.User;
 import br.com.gritti.app.repository.UserRepository;
 import br.com.gritti.app.util.PasswordEncoderUtil;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -23,12 +23,15 @@ public class UserServices implements UserDetailsService {
 
   UserRepository repository;
 
+  UserMapper mapper;
+
   private final PasswordEncoderUtil encoder;
 
   @Autowired
-  public UserServices(UserRepository repository, PasswordEncoderUtil encoder) {
+  public UserServices(UserRepository repository, PasswordEncoderUtil encoder, UserMapper mapper) {
     this.repository = repository;
     this.encoder = encoder;
+    this.mapper = mapper;
   }
 
   public List<User> getAllUsers() {
@@ -41,20 +44,16 @@ public class UserServices implements UserDetailsService {
 
 
   public UserResponseDTO createUser(UserRequestDTO data) {
-    Date now = new Date();
-    User user = new User();
-    user.setUsername(data.getUsername());
+    User user = mapper.requestToUser(data);
     user.setPassword(encoder.encodePassword(data.getPassword()));
-    user.setEmail(data.getEmail());
-    user.setFullName(data.getFullName());
     user.setAccountNonExpired(true);
     user.setAccountNonLocked(true);
     user.setCredentialsNonExpired(true);
-    user.setAccountNonExpired(true);
     user.setAccountStatus(true);
+
     User savedUser = repository.save(user);
 
-    return new UserResponseDTO(savedUser.getId(), savedUser.getUsername());
+    return mapper.userToResponseDTO(savedUser);
   }
 
   @Override

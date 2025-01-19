@@ -22,13 +22,6 @@ public class UserRequestDTO implements Serializable {
   @NotBlank
   private String fullName;
 
-  public UserRequestDTO(String username, String email, String password, String fullName) {
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.fullName = fullName;
-  }
-
   public String getUsername() {
     return username;
   }
