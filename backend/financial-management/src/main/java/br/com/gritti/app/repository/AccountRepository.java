@@ -1,6 +1,6 @@
 package br.com.gritti.app.repository;
 
-import br.com.gritti.app.models.Account;
+import br.com.gritti.app.model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
