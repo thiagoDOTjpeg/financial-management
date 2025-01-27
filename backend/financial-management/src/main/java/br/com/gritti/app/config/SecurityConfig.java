@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,10 +49,12 @@ public class SecurityConfig {
     JwtTokenFilter jwtTokenFilter = new JwtTokenFilter(tokenProvider);
     return http.httpBasic(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
+            .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                    .requestMatchers("/**").permitAll())
+                    .requestMatchers("/**").permitAll()
+                    .requestMatchers("/h2-console", "/h2-console/**").permitAll())
             .cors(cors -> {})
             .build();
 

@@ -1,4 +1,4 @@
-package br.com.gritti.app.exceptions.handler;
+package br.com.gritti.app.exception.handler;
 
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

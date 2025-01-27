@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "credit_cards")
 public class CreditCard extends Auditable implements Serializable {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -60,6 +62,22 @@ public class CreditCard extends Auditable implements Serializable {
 
   public void setAccount(Account account) {
     this.account = account;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public List<Invoice> getInvoices() {
+    return invoices;
+  }
+
+  public void setInvoices(List<Invoice> invoices) {
+    this.invoices = invoices;
   }
 
   public List<CreditTransaction> getTransactions() {

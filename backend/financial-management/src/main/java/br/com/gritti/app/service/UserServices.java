@@ -20,11 +20,8 @@ import java.util.logging.Logger;
 public class UserServices implements UserDetailsService {
 
   private final Logger logger = Logger.getLogger(UserServices.class.getName());
-
-  UserRepository repository;
-
-  UserMapper mapper;
-
+  private final UserRepository repository;
+  private final UserMapper mapper;
   private final PasswordEncoderUtil encoder;
 
   @Autowired

@@ -1,6 +1,6 @@
 package br.com.gritti.app.data.dto.account;
 
-import br.com.gritti.app.data.vo.UserVO;
+import br.com.gritti.app.data.vo.user.UserMinVO;
 import br.com.gritti.app.model.CreditCard;
 import br.com.gritti.app.model.DebitCard;
 
@@ -10,13 +10,13 @@ import java.util.UUID;
 public class AccountResponseDTO {
 
   private UUID id;
-  private UserVO user;
+  private UserMinVO user;
   private String bankName;
   private Double balance;
   private List<CreditCard> creditCard;
   private List<DebitCard> debitCard;
 
-  public AccountResponseDTO(UUID id, UserVO user, String bankName, Double balance) {
+  public AccountResponseDTO(UUID id, UserMinVO user, String bankName, Double balance) {
     this.id = id;
     this.user = user;
     this.bankName = bankName;
@@ -31,11 +31,11 @@ public class AccountResponseDTO {
     this.id = id;
   }
 
-  public UserVO getUser() {
+  public UserMinVO getUser() {
     return user;
   }
 
-  public void setUser(UserVO user) {
+  public void setUser(UserMinVO user) {
     this.user = user;
   }
 

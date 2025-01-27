@@ -2,7 +2,7 @@ package br.com.gritti.app.service;
 
 import br.com.gritti.app.data.dto.account.AccountRequestDTO;
 import br.com.gritti.app.data.dto.account.AccountResponseDTO;
-import br.com.gritti.app.data.vo.UserVO;
+import br.com.gritti.app.data.vo.user.UserMinVO;
 import br.com.gritti.app.mapper.AccountMapper;
 import br.com.gritti.app.mapper.UserMapper;
 import br.com.gritti.app.model.Account;
@@ -19,8 +19,9 @@ public class AccountServices {
 
   private final AccountRepository accountRepository;
   private final UserRepository userRepository;
-  private final AccountMapper accountMapper;
   private final UserMapper userMapper;
+  private final AccountMapper accountMapper;
+
 
   @Autowired
   public AccountServices(AccountRepository accountRepository, UserRepository userRepository, AccountMapper accountMapper, UserMapper userMapper) {
@@ -37,7 +38,7 @@ public class AccountServices {
     account.setUser(user);
     accountRepository.save(account);
 
-    UserVO vo = userMapper.userToUserVO(user);
+    UserMinVO vo = userMapper.userToUserMinVO(user);
     AccountResponseDTO responseDTO = accountMapper.accountToResponseDTO(account);
     responseDTO.setUser(vo);
 

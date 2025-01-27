@@ -22,10 +22,6 @@ public class DebitCard extends Auditable implements Serializable {
   private UUID id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User user;
-
-  @ManyToOne
   @JoinColumn(name = "account_id")
   private Account account;
 
@@ -56,23 +52,15 @@ public class DebitCard extends Auditable implements Serializable {
     this.transactions = transactions;
   }
 
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     DebitCard debitCard = (DebitCard) o;
-    return Objects.equals(id, debitCard.id) && Objects.equals(user, debitCard.user) && Objects.equals(account, debitCard.account) && Objects.equals(transactions, debitCard.transactions);
+    return Objects.equals(id, debitCard.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, user, account, transactions);
+    return Objects.hashCode(id);
   }
 }
