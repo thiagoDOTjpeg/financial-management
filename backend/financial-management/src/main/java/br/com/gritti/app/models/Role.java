@@ -3,12 +3,16 @@ package br.com.gritti.app.models;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(schema = "roles")
 public class Role implements GrantedAuthority, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

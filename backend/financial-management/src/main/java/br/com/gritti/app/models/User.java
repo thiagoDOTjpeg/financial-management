@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @Table(schema = "users")
 public class User extends Auditable implements UserDetails, Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -44,16 +46,16 @@ public class User extends Auditable implements UserDetails, Serializable {
     private Boolean accountStatus;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles", joinColumns = {@JoinColumn (name = "id_user")},
+    @JoinTable(name = "user_permissions", joinColumns = {@JoinColumn (name = "id_user")},
             inverseJoinColumns = {@JoinColumn (name = "id_role")})
     private List<Role> roles;
 
-    public List<String> getRoles() {
-        List<String> roles = new ArrayList<>();
+    public List<String> getPermissions() {
+        List<String> permissions = new ArrayList<>();
         for(Role role : roles) {
-            roles.add(role.getDescription());
+            permissions.add(role.getDescription());
         }
-        return roles;
+        return permissions;
     }
 
     public Boolean getAccountStatus() {
