@@ -3,6 +3,7 @@ package br.com.gritti.app.model;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class Account extends Auditable implements Serializable {
   private String bankName;
 
   @Column
-  private Double balance;
+  private BigDecimal balance;
 
   @OneToMany(mappedBy = "account")
   private List<CreditCard> creditCards;
@@ -56,11 +57,11 @@ public class Account extends Auditable implements Serializable {
     this.bankName = bankName;
   }
 
-  public Double getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
-  public void setBalance(Double balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   }
 

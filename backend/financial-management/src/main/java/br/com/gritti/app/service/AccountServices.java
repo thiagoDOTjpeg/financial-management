@@ -12,7 +12,9 @@ import br.com.gritti.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountServices {
@@ -39,14 +41,16 @@ public class AccountServices {
     accountRepository.save(account);
 
     UserMinVO vo = userMapper.userToUserMinVO(user);
-    AccountResponseDTO responseDTO = accountMapper.accountToResponseDTO(account);
+    AccountResponseDTO responseDTO = new AccountResponseDTO(account);
     responseDTO.setUser(vo);
 
     return responseDTO;
   }
 
-  public List<Account> getAllAccounts() {
-    return accountRepository.findAll();
+  public List<AccountResponseDTO> getAllAccounts() {
+    List<Account> result = accountRepository.findAll();
+    List<AccountResponseDTO> responseDTOs = result.stream().map(AccountResponseDTO::new).toList();
+    return responseDTOs;
   }
 
 }

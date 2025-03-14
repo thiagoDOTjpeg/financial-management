@@ -1,24 +1,27 @@
 package br.com.gritti.app.data.vo.credit_card;
 
+import br.com.gritti.app.data.vo.account.AccountMinVO;
 import br.com.gritti.app.data.vo.user.UserMinVO;
 import br.com.gritti.app.model.Account;
 import br.com.gritti.app.model.CreditCard;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CreditCardMinVO {
+public class CreditCardMinVO implements Serializable {
+  @Serial
+  private static final long serialVersionUID = 1L;
 
   private UUID id;
-  private UserMinVO user;
   private String cardBrand;
-  private Account account;
+  private AccountMinVO account;
 
   public CreditCardMinVO(CreditCard entity) {
     id = entity.getId();
-    user = new UserMinVO(entity.getUser());
     cardBrand = entity.getCardBrand();
-    account = entity.getAccount();
+    account = new AccountMinVO(entity.getAccount());
   }
 
   public UUID getId() {
@@ -29,14 +32,6 @@ public class CreditCardMinVO {
     this.id = id;
   }
 
-  public UserMinVO getUser() {
-    return user;
-  }
-
-  public void setUser(UserMinVO user) {
-    this.user = user;
-  }
-
   public String getCardBrand() {
     return cardBrand;
   }
@@ -45,11 +40,11 @@ public class CreditCardMinVO {
     this.cardBrand = cardBrand;
   }
 
-  public Account getAccount() {
+  public AccountMinVO getAccount() {
     return account;
   }
 
-  public void setAccount(Account account) {
+  public void setAccount(AccountMinVO account) {
     this.account = account;
   }
 

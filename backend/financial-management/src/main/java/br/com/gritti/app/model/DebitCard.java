@@ -22,6 +22,13 @@ public class DebitCard extends Auditable implements Serializable {
   private UUID id;
 
   @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
+
+  @Column(name = "card_brand")
+  private String cardBrand;
+
+  @ManyToOne
   @JoinColumn(name = "account_id")
   private Account account;
 
@@ -34,6 +41,22 @@ public class DebitCard extends Auditable implements Serializable {
 
   public void setId(UUID id) {
     this.id = id;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public String getCardBrand() {
+    return cardBrand;
+  }
+
+  public void setCardBrand(String cardBrand) {
+    this.cardBrand = cardBrand;
   }
 
   public Account getAccount() {

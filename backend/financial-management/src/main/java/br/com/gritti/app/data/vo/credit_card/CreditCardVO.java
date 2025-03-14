@@ -6,18 +6,22 @@ import br.com.gritti.app.model.CreditCard;
 import br.com.gritti.app.model.CreditTransaction;
 import br.com.gritti.app.model.Invoice;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CreditCardVO {
+public class CreditCardVO implements Serializable {
+  @Serial
+  private static final long serialVersionUID = 1L;
 
   private UUID id;
   private UserMinVO user;
   private String cardBrand;
   private Account account;
   private List<Invoice> invoices;
-  private  List<CreditTransaction> transactions;
+  private List<CreditTransaction> transactions;
 
   public CreditCardVO(CreditCard entity) {
     id = entity.getId();

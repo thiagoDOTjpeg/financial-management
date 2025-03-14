@@ -1,21 +1,27 @@
 package br.com.gritti.app.data.vo.account;
 
+import br.com.gritti.app.data.vo.user.UserMinVO;
 import br.com.gritti.app.model.Account;
 import br.com.gritti.app.model.User;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
-public class AccountMinVO {
+public class AccountMinVO implements Serializable {
+  @Serial
+  private static final long serialVersionUID = 1L;
 
   private UUID id;
-  private User user;
+  private UserMinVO user;
   private String bankName;
-  private Double balance;
+  private BigDecimal balance;
 
   public AccountMinVO(Account entity) {
     id = entity.getId();
-    user = entity.getUser();
+    user = new UserMinVO(entity.getUser());
     bankName = entity.getBankName();
     balance = entity.getBalance();
   }
@@ -28,13 +34,9 @@ public class AccountMinVO {
     this.id = id;
   }
 
-  public User getUser() {
-    return user;
-  }
+  public UserMinVO getUser() { return user; }
 
-  public void setUser(User user) {
-    this.user = user;
-  }
+  public void setUser(UserMinVO user) { this.user = user; }
 
   public String getBankName() {
     return bankName;
@@ -44,11 +46,11 @@ public class AccountMinVO {
     this.bankName = bankName;
   }
 
-  public Double getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
-  public void setBalance(Double balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   }
 

@@ -3,10 +3,12 @@ package br.com.gritti.app.data.dto.user;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class UserRequestDTO implements Serializable {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   @NotBlank

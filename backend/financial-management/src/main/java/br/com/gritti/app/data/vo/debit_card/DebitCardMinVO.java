@@ -12,22 +12,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class DebitCardVO implements Serializable {
+public class DebitCardMinVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private UUID id;
-    private UserMinVO user;
     private String cardBrand;
     private AccountMinVO account;
-    private List<DebitTransaction> transactions;
 
-    public DebitCardVO(DebitCard entity) {
+    public DebitCardMinVO(DebitCard entity) {
         id = entity.getId();
         cardBrand = entity.getCardBrand();
-        user = new UserMinVO(entity.getUser());
         account = new AccountMinVO(entity.getAccount());
-        transactions = entity.getTransactions();
     }
 
     public UUID getId() {
@@ -36,14 +32,6 @@ public class DebitCardVO implements Serializable {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UserMinVO getUser() {
-        return user;
-    }
-
-    public void setUser(UserMinVO user) {
-        this.user = user;
     }
 
     public String getCardBrand() {
@@ -62,18 +50,10 @@ public class DebitCardVO implements Serializable {
         this.account = account;
     }
 
-    public List<DebitTransaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<DebitTransaction> transactions) {
-        this.transactions = transactions;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        DebitCardVO that = (DebitCardVO) o;
+        DebitCardMinVO that = (DebitCardMinVO) o;
         return Objects.equals(id, that.id);
     }
 

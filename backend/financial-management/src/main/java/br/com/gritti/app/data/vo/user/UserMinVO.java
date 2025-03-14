@@ -2,11 +2,15 @@ package br.com.gritti.app.data.vo.user;
 
 import br.com.gritti.app.model.User;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-public class UserMinVO {
+public class UserMinVO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private UUID id;
     private String username;

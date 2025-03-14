@@ -1,22 +1,33 @@
 package br.com.gritti.app.data.dto.account;
 
+import br.com.gritti.app.data.vo.credit_card.CreditCardMinVO;
+import br.com.gritti.app.data.vo.debit_card.DebitCardMinVO;
 import br.com.gritti.app.data.vo.user.UserMinVO;
-import br.com.gritti.app.model.CreditCard;
-import br.com.gritti.app.model.DebitCard;
+import br.com.gritti.app.model.Account;
 
-import java.util.List;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AccountResponseDTO {
 
   private UUID id;
   private UserMinVO user;
   private String bankName;
-  private Double balance;
-  private List<CreditCard> creditCard;
-  private List<DebitCard> debitCard;
+  private BigDecimal balance;
+  private List<CreditCardMinVO> creditCard;
+  private List<DebitCardMinVO> debitCard;
 
-  public AccountResponseDTO(UUID id, UserMinVO user, String bankName, Double balance) {
+  public AccountResponseDTO(Account entity) {
+    id = entity.getId();
+    user = new UserMinVO(entity.getUser());
+    bankName = entity.getBankName();
+    balance = entity.getBalance();
+    creditCard = Optional.ofNullable(entity.getCreditCards()).orElseGet(Collections::emptyList).stream().map(CreditCardMinVO::new).collect(Collectors.toList());
+    debitCard = Optional.ofNullable(entity.getDebitCards()).orElseGet(Collections::emptyList).stream().map(DebitCardMinVO::new).collect(Collectors.toList());
+  }
+
+  public AccountResponseDTO(UUID id, UserMinVO user, String bankName, BigDecimal balance) {
     this.id = id;
     this.user = user;
     this.bankName = bankName;
@@ -47,27 +58,28 @@ public class AccountResponseDTO {
     this.bankName = bankName;
   }
 
-  public Double getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
 
-  public void setBalance(Double balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   }
 
-  public List<CreditCard> getCreditCard() {
+
+  public List<CreditCardMinVO> getCreditCard() {
     return creditCard;
   }
 
-  public void setCreditCard(List<CreditCard> creditCard) {
+  public void setCreditCard(List<CreditCardMinVO> creditCard) {
     this.creditCard = creditCard;
   }
 
-  public List<DebitCard> getDebitCard() {
+  public List<DebitCardMinVO> getDebitCard() {
     return debitCard;
   }
 
-  public void setDebitCard(List<DebitCard> debitCard) {
+  public void setDebitCard(List<DebitCardMinVO> debitCard) {
     this.debitCard = debitCard;
   }
 }
