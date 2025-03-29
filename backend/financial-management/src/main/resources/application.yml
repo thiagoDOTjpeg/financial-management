@@ -3,15 +3,13 @@ cors:
 security:
   jwt:
     token:
-      secret-key: eoflamengo53
+      secret-key: eoflamengo
       expire-length: 3600000
 spring:
-  profiles:
-    active: ${APP_PROFILE:test}
   datasource:
     url: jdbc:postgresql://localhost:5432/financial_management
-    username: postgres
-    password: root123
+    username: admin
+    password: admin123
   jpa:
     hibernate:
       ddl-auto: update
