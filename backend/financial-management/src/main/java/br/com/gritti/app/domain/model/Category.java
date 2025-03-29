@@ -1,6 +1,7 @@
-package br.com.gritti.app.models;
+package br.com.gritti.app.domain.model;
 
-import br.com.gritti.app.enums.CategoryType;
+import br.com.gritti.app.domain.enums.CategoryType;
+import br.com.gritti.app.infra.entity.Auditable;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -8,7 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(schema = "categories")
+@Table(name = "categories")
 public class Category extends Auditable implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

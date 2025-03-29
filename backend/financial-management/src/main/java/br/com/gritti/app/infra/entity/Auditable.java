@@ -1,4 +1,4 @@
-package br.com.gritti.app.domain.model;
+package br.com.gritti.app.infra.entity;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -8,7 +8,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

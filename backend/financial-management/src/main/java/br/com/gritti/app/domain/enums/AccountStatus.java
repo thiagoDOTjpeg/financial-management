@@ -1,4 +1,4 @@
-package br.com.gritti.app.enums;
+package br.com.gritti.app.domain.enums;
 
 public enum AccountStatus {
   ACTIVE,

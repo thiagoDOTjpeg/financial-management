@@ -1,5 +1,8 @@
-package br.com.gritti.app.models;
+package br.com.gritti.app.domain.model;
 
+import br.com.gritti.app.domain.valueobject.Email;
+import br.com.gritti.app.domain.enums.AccountStatus;
+import br.com.gritti.app.infra.entity.Auditable;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +12,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@Table(schema = "users")
+@Table(name = "users")
 public class User extends Auditable implements UserDetails, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,28 +30,29 @@ public class User extends Auditable implements UserDetails, Serializable {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Embedded
+    private Email email;
 
     @Column(name = "last_login")
     private Date lastLogin;
 
-    @Column(name = "account_non_expired")
-    private Boolean accountNonExpired;
+    @Column(name = "account_non_expired", nullable = false)
+    private Boolean accountNonExpired = true;
 
-    @Column(name = "account_non_locked")
-    private Boolean accountNonLocked;
+    @Column(name = "account_non_locked", nullable = false)
+    private Boolean accountNonLocked = true;
 
-    @Column(name = "credentials_non_expired")
-    private Boolean credentialsNonExpired;
+    @Column(name = "credentials_non_expired", nullable = false)
+    private Boolean credentialsNonExpired = true;
 
     @Column(name = "account_status", nullable = false)
-    private Boolean accountStatus;
+    @Enumerated(EnumType.STRING)
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_permissions", joinColumns = {@JoinColumn (name = "id_user")},
             inverseJoinColumns = {@JoinColumn (name = "id_role")})
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     public List<String> getPermissions() {
         List<String> permissions = new ArrayList<>();
@@ -58,11 +62,11 @@ public class User extends Auditable implements UserDetails, Serializable {
         return permissions;
     }
 
-    public Boolean getAccountStatus() {
+    public AccountStatus getAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(Boolean accountStatus) {
+    public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
     }
 
@@ -98,11 +102,11 @@ public class User extends Auditable implements UserDetails, Serializable {
         this.lastLogin = lastLogin;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 
@@ -143,5 +147,17 @@ public class User extends Auditable implements UserDetails, Serializable {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

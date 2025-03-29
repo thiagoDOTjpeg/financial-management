@@ -1,4 +1,4 @@
-package br.com.gritti.app.models;
+package br.com.gritti.app.domain.model;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(schema = "roles")
+@Table(name = "roles")
 public class Role implements GrantedAuthority, Serializable {
 
     @Serial

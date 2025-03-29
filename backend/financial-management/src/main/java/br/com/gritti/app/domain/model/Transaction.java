@@ -1,6 +1,7 @@
-package br.com.gritti.app.models;
+package br.com.gritti.app.domain.model;
 
-import br.com.gritti.app.enums.PaymentType;
+import br.com.gritti.app.domain.enums.PaymentType;
+import br.com.gritti.app.infra.entity.Auditable;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(schema = "transactions")
+@Table(name = "transactions")
 public class Transaction extends Auditable implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

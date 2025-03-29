@@ -1,5 +1,6 @@
-package br.com.gritti.app.models;
+package br.com.gritti.app.domain.model;
 
+import br.com.gritti.app.infra.entity.Auditable;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -7,7 +8,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(schema = "cards")
+@Table(name = "cards")
 public class Card extends Auditable implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -16,8 +17,8 @@ public class Card extends Auditable implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false)
-    private Double limit;
+    @Column(name = "credit_limit", nullable = false)
+    private int creditLimit;
 
     @Column(name = "card_brand", nullable = false)
     private String cardBrand;
@@ -34,12 +35,12 @@ public class Card extends Auditable implements Serializable {
         this.id = id;
     }
 
-    public Double getLimit() {
-        return limit;
+    public int getCreditLimit() {
+        return creditLimit;
     }
 
-    public void setLimit(Double limit) {
-        this.limit = limit;
+    public void setCreditLimit(int creditLimit) {
+        this.creditLimit = creditLimit;
     }
 
     public String getCardBrand() {
