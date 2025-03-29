@@ -1,4 +1,4 @@
-package br.com.gritti.app.models;
+package br.com.gritti.app.domain.model;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @MappedSuperclass
@@ -16,7 +17,7 @@ public class Auditable {
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @CreatedBy
     @Column(name = "created_by")
@@ -25,17 +26,17 @@ public class Auditable {
     @LastModifiedDate
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @LastModifiedBy
     @Column(name = "updated_by")
     private String updatedBy;
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -47,11 +48,11 @@ public class Auditable {
         this.createdBy = createdBy;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
