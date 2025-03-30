@@ -40,8 +40,10 @@ public class UserApplicationService {
     if(userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
       throw new IllegalArgumentException("Password cannot be empty");
     }
+    userDomainService.validateUsernameEmail(userDTO.getEmail(), userDTO.getUsername());
     User user = userMapper.toUser(userDTO);
     user.setPassword(encoder.encode(userDTO.getPassword()));
     return userDomainService.createUser(user);
   }
+
 }

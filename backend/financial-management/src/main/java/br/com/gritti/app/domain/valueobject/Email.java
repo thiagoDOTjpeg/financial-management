@@ -1,10 +1,12 @@
 package br.com.gritti.app.domain.valueobject;
 
 import br.com.gritti.app.shared.exceptions.InvalidEmailException;
+import jakarta.persistence.Embeddable;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+@Embeddable
 public class Email {
   private String value;
 

@@ -1,7 +1,9 @@
 package br.com.gritti.app.domain.service;
 
 import br.com.gritti.app.domain.model.User;
+import br.com.gritti.app.domain.valueobject.Email;
 import br.com.gritti.app.infra.repository.UserRepositoryImpl;
+import br.com.gritti.app.shared.exceptions.EmailAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +34,6 @@ public class UserDomainService implements UserDetailsService {
   }
 
   public User createUser(User user) {
-    logger.info("User created: " + user);
     userRepositoryImpl.save(user);
     return user;
   }
@@ -44,6 +45,16 @@ public class UserDomainService implements UserDetailsService {
       return user;
     } else {
       throw new UsernameNotFoundException("Username " + username + " not found");
+    }
+  }
+
+  public void validateUsernameEmail(String email, String username) {
+    Email emailObj = new Email(email);
+    if(userRepositoryImpl.existsByEmail(emailObj)) {
+      throw new EmailAlreadyExistsException("Email " + email + " already exists");
+    }
+    if(userRepositoryImpl.existsByUsername(username)) {
+      throw new UsernameNotFoundException("Username " + username + " already exists");
     }
   }
 }

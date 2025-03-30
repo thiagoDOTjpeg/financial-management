@@ -19,14 +19,12 @@ public class UserController {
     this.userApplicationService = userApplicationService;
   }
 
-  @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-              produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<User> getUsers() {
     return userApplicationService.getUsers();
   }
 
-  @GetMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
-                                  produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Optional<User> getUserById(@PathVariable UUID id) {
     return userApplicationService.getUserById(id);
   }

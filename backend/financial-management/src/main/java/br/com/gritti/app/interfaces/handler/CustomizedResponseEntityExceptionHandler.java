@@ -27,6 +27,18 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(EmailAlreadyExistsException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllEmailAlreadyExistsExceptions(Exception ex, WebRequest request) {
+    ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(), request.getDescription(false));
+    return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(UsernameAlreadyExistsException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllUsernameAlreadyExistsExceptions(Exception ex, WebRequest request) {
+    ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(), request.getDescription(false));
+    return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(UsernameNotFoundException.class)
   public final ResponseEntity<ExceptionMessage> handleAllUsernameExceptions(Exception ex, WebRequest request) {
     ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(), request.getDescription(false));
@@ -42,6 +54,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
   @ExceptionHandler(InvalidJWTAuthenticationException.class)
   public final ResponseEntity<ExceptionMessage> handleInvalidJWTAuthenticationException(Exception ex, WebRequest request) {
     ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(), request.getDescription(false));
-    return new ResponseEntity<>(exceptionMessage, HttpStatus.FORBIDDEN);
+    return new ResponseEntity<>(exceptionMessage, HttpStatus.UNAUTHORIZED);
   }
 }
