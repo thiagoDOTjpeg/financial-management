@@ -6,6 +6,8 @@ import br.com.gritti.app.infra.repository.UserRepositoryImpl;
 import br.com.gritti.app.shared.exceptions.EmailAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,7 +19,7 @@ import java.util.UUID;
 
 @Service
 public class UserDomainService implements UserDetailsService {
-  private Logger logger = LoggerFactory.getLogger(UserDomainService.class.getName());
+  private final Logger logger = LoggerFactory.getLogger(UserDomainService.class.getName());
 
   private final UserRepositoryImpl userRepositoryImpl;
 
@@ -57,4 +59,5 @@ public class UserDomainService implements UserDetailsService {
       throw new UsernameNotFoundException("Username " + username + " already exists");
     }
   }
+
 }
