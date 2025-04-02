@@ -88,6 +88,9 @@ O sistema utiliza um banco de dados relacional com as seguintes tabelas principa
 - **transactions_installment**: Mapeamento de transações para parcelas
 - **installments_invoices**: Mapeamento de parcelas para faturas
 
+ ![bank_account](https://github.com/user-attachments/assets/3847d286-4d6b-40b5-9140-da8604369a66)
+
+
 O esquema do banco de dados inclui campos abrangentes de auditoria (created_at, created_by, updated_at, updated_by) em todas as tabelas para rastreabilidade.
 
 ## Funcionalidades
