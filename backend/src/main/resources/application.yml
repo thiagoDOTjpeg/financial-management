@@ -1,0 +1,24 @@
+cors:
+  originPatterns: http://localhost:3000,http://localhost:8000,http://localhost:8080
+security:
+  jwt:
+    token:
+      secret-key: eoflamengo
+      expire-length: 3600000
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/financial_management
+    username: admin
+    password: admin123
+  jpa:
+    hibernate:
+      ddl-auto: none
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    use-root-path: true
+  paths-to-match:
+    - /**
+    - /auth/**
+    - /api/**
