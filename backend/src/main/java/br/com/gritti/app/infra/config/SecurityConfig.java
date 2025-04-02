@@ -2,6 +2,7 @@ package br.com.gritti.app.infra.config;
 
 import br.com.gritti.app.infra.security.jwt.TokenFilter;
 import br.com.gritti.app.infra.security.jwt.TokenProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +47,17 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     TokenFilter tokenFilter = new TokenFilter(tokenProvider);
     return http.httpBasic(AbstractHttpConfigurer::disable)
+            .exceptionHandling(exceptions -> exceptions
+                    .authenticationEntryPoint((request, response, authException) -> {
+                      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                      response.setContentType("application/json");
+                      response.getWriter().write("{\"error\":\"Forbidden\", \"message\":\"Authentication required.\"}");
+                    })
+                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                      response.setContentType("application/json");
+                      response.getWriter().write("{\"error\":\"Forbidden\", \"message\":\"Access denied.\"}");
+                    }))
             .csrf(AbstractHttpConfigurer::disable).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(authorizeRequest -> authorizeRequest
