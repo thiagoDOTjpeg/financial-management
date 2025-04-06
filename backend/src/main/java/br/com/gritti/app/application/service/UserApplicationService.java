@@ -23,16 +23,16 @@ import java.util.UUID;
 @Service
 public class UserApplicationService {
   private final Logger log = LoggerFactory.getLogger(UserApplicationService.class.getName());
-  private final UserDomainService userDomainService;
-  private final UserMapper userMapper;
-  private final PasswordEncoder encoder;
 
   @Autowired
-  public UserApplicationService(UserDomainService userDomainService, UserMapper userMapper, PasswordEncoder encoder) {
-    this.userDomainService = userDomainService;
-    this.userMapper = userMapper;
-    this.encoder = encoder;
-  }
+  private UserDomainService userDomainService;
+
+  @Autowired
+  private UserMapper userMapper;
+
+  @Autowired
+  private PasswordEncoder encoder;
+
 
   public List<UserResponseDTO> getUsers() {
     List<UserResponseDTO> usersDTOs = userDomainService.getUsers().stream().map(userMapper::userToUserResponseDTOPermissionCheck).toList();
@@ -44,8 +44,9 @@ public class UserApplicationService {
   }
 
   public UserResponseDTO getUserById(UUID id) {
-   UserResponseDTO userDTO = userMapper.userToUserResponseDTOPermissionCheck(userDomainService.getUserById(id)
-           .orElseThrow(() ->new ResourceNotFoundException("User not found")));
+    User user = userDomainService.getUserById(id)
+            .orElseThrow(() ->new ResourceNotFoundException("User not found"));
+   UserResponseDTO userDTO = userMapper.userToUserResponseDTOPermissionCheck(user);
    userDTO.add(linkTo(methodOn(UserController.class).getUserById(id)).withSelfRel().withType("GET"));
    userDTO.add(linkTo(methodOn(UserController.class).getUsers()).withRel("users").withType("GET"));
    return userDTO;
@@ -61,5 +62,4 @@ public class UserApplicationService {
     User userCreated = userDomainService.createUser(user);
     return userMapper.userToUserResponseDTOPermissionCheck(userCreated);
   }
-
 }

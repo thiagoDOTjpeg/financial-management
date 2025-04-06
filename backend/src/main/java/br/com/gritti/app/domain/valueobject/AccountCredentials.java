@@ -1,9 +1,11 @@
 package br.com.gritti.app.domain.valueobject;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class AccountCredentials implements Serializable {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   private String username;

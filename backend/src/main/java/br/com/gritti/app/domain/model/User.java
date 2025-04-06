@@ -62,6 +62,10 @@ public class User extends Auditable implements UserDetails, Serializable {
         return permissions;
     }
 
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
     public AccountStatus getAccountStatus() {
         return accountStatus;
     }

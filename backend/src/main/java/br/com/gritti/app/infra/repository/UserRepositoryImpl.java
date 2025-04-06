@@ -4,6 +4,7 @@ import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.repository.UserRepository;
 import br.com.gritti.app.domain.valueobject.Email;
 import br.com.gritti.app.infra.persistence.JpaUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,11 +13,9 @@ import java.util.UUID;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
-  private final JpaUserRepository jpaUserRepository;
+  @Autowired
+  private JpaUserRepository jpaUserRepository;
 
-  public UserRepositoryImpl(JpaUserRepository jpaUserRepository) {
-    this.jpaUserRepository = jpaUserRepository;
-  }
 
   @Override
   public List<User> findAll() {

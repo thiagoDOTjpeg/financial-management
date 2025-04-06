@@ -50,6 +50,9 @@ public class UserResponseDTO extends RepresentationModel<UserResponseDTO> implem
     this.updatedBy = updatedBy;
   }
 
+  public UserResponseDTO() {
+  }
+
   public UUID getId() {
     return id;
   }

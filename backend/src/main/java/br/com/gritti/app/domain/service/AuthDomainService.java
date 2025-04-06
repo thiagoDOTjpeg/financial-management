@@ -19,16 +19,14 @@ import java.util.Date;
 
 @Service
 public class AuthDomainService {
-  private final AuthenticationManager authenticationManager;
-  private final TokenProvider tokenProvider;
-  private final UserRepositoryImpl userRepositoryImpl;
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
   @Autowired
-  public AuthDomainService(AuthenticationManager authenticationManager, TokenProvider tokenProvider, UserRepositoryImpl userRepositoryImpl) {
-    this.authenticationManager = authenticationManager;
-    this.tokenProvider = tokenProvider;
-    this.userRepositoryImpl = userRepositoryImpl;
-  }
+  private TokenProvider tokenProvider;
+
+  @Autowired
+  private UserRepositoryImpl userRepositoryImpl;
 
   public Token signin(AccountCredentials data){
     try {
@@ -38,12 +36,8 @@ public class AuthDomainService {
 
       var user = userRepositoryImpl.findByUsername(username);
 
-      Token tokenResponse = new Token();
-      if(user != null) {
-        tokenResponse = tokenProvider.createToken(username, user.getPermissions());
-      } else {
-        throw new UsernameNotFoundException("Username " + username + " not found");
-      }
+      Token tokenResponse;
+      tokenResponse = tokenProvider.createToken(username, user.getPermissions());
       user.setLastLogin(new Date());
       userRepositoryImpl.save(user);
       return tokenResponse;
@@ -55,12 +49,10 @@ public class AuthDomainService {
   public Token refreshToken(String username, String refreshToken) {
     User user = userRepositoryImpl.findByUsername(username);
 
+    if(user == null) throw new UsernameNotFoundException("Username " + username + " not found");
+    
     Token tokenResponse;
-    if(user != null) {
-      tokenResponse = tokenProvider.refreshToken(refreshToken);
-    } else {
-      throw new UsernameNotFoundException("Username " + username + " not found");
-    }
+    tokenResponse = tokenProvider.refreshToken(refreshToken);
     user.setLastLogin(new Date());
     userRepositoryImpl.save(user);
     return tokenResponse;

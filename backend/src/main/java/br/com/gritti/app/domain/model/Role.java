@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "roles")
@@ -16,10 +17,15 @@ public class Role implements GrantedAuthority, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column
     private String description;
+
+    public Role(UUID id, String description) {
+        this.id = id;
+        this.description = description;
+    }
 
     public Role(){}
 
@@ -28,11 +34,11 @@ public class Role implements GrantedAuthority, Serializable {
         return this.description;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

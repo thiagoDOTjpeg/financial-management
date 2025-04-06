@@ -14,6 +14,9 @@ public class UserCreateDTO {
     this.password = password;
   }
 
+  public UserCreateDTO() {
+  }
+
   public String getUsername() {
     return username;
   }
