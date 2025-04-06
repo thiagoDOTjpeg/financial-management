@@ -67,7 +67,7 @@ java/br/com/gritti/app/
 │   │   ├── AuthController
 │   │   └── UserController
 │   └── handler/            # Manipuladores de exceção
-│       └── CustomizedResponseEntityExceptionHandler
+│       └── GlobalExceptionHandler
 └── shared/                 # Componentes compartilhados
     └── exceptions/         # Classes de exceção
 ```
