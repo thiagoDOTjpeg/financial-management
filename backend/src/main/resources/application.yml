@@ -12,7 +12,9 @@ spring:
     password: admin123
   jpa:
     hibernate:
+      format_sql: true
       ddl-auto: none
+    show-sql: true
 springdoc:
   api-docs:
     path: /api-docs

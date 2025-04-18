@@ -1,8 +1,10 @@
 package br.com.gritti.app.interfaces.handler;
 
 import br.com.gritti.app.shared.exceptions.*;
+import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 
 @ControllerAdvice
@@ -27,6 +30,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   public final ResponseEntity<ExceptionMessage> handleAllEmailExceptions(Exception ex, WebRequest request) {
     ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(),
         request.getDescription(false));
+    return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllBadCredentialsExceptions(Exception ex, WebRequest request) {
+    ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(),
+            request.getDescription(false));
     return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
   }
 

@@ -35,6 +35,8 @@ public class UserApplicationService {
 
 
   public List<UserResponseDTO> getUsers() {
+    log.info("Received request in application and passing to domain to get all users");
+
     List<UserResponseDTO> usersDTOs = userDomainService.getUsers().stream().map(userMapper::userToUserResponseDTOPermissionCheck).toList();
     usersDTOs.forEach(u -> {
       u.add(linkTo(methodOn(UserController.class).getUserById(u.getId())).withSelfRel().withType("GET"));
@@ -44,15 +46,18 @@ public class UserApplicationService {
   }
 
   public UserResponseDTO getUserById(UUID id) {
-    User user = userDomainService.getUserById(id)
-            .orElseThrow(() ->new ResourceNotFoundException("User not found"));
-   UserResponseDTO userDTO = userMapper.userToUserResponseDTOPermissionCheck(user);
-   userDTO.add(linkTo(methodOn(UserController.class).getUserById(id)).withSelfRel().withType("GET"));
-   userDTO.add(linkTo(methodOn(UserController.class).getUsers()).withRel("users").withType("GET"));
-   return userDTO;
+      log.info("Received request in application and passing to domain to a user by id: {}", id);
+      
+      User user = userDomainService.getUserById(id);
+      UserResponseDTO userDTO = userMapper.userToUserResponseDTOPermissionCheck(user);
+      userDTO.add(linkTo(methodOn(UserController.class).getUserById(id)).withSelfRel().withType("GET"));
+      userDTO.add(linkTo(methodOn(UserController.class).getUsers()).withRel("users").withType("GET"));
+      return userDTO;
   }
 
   public UserResponseDTO createUser(UserCreateDTO userDTO) {
+    log.info("Received request in application and passing to domain to create a new user: {}", userDTO);
+
     if(userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
       throw new IllegalArgumentException("Password cannot be empty");
     }

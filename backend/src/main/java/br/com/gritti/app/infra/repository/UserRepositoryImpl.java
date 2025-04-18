@@ -4,6 +4,8 @@ import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.repository.UserRepository;
 import br.com.gritti.app.domain.valueobject.Email;
 import br.com.gritti.app.infra.persistence.JpaUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,12 +15,15 @@ import java.util.UUID;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
+
+  private Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class.getName());
+
   @Autowired
   private JpaUserRepository jpaUserRepository;
 
-
   @Override
   public List<User> findAll() {
+    log.info("Request received from domain and finding all users from the jpa repository");
     return jpaUserRepository.findAll();
   }
 

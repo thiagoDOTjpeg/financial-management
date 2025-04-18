@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -89,7 +88,7 @@ class UserApplicationServiceTest {
     UserResponseDTO userResponseDTO = UserTestFactory.createUserResponseDTO(user);
 
 
-    when(domainService.getUserById(user.getId())).thenReturn(Optional.of(user));
+    when(domainService.getUserById(user.getId())).thenReturn(user);
     when(mapper.userToUserResponseDTOPermissionCheck(user)).thenReturn(userResponseDTO);
 
     UserResponseDTO responseDTO = service.getUserById(user.getId());
@@ -120,7 +119,7 @@ class UserApplicationServiceTest {
   @Test
   void getUserByIdNotFound() {
     UUID id = UUID.randomUUID();
-    when(domainService.getUserById(id)).thenReturn(Optional.empty());
+    when(domainService.getUserById(id)).thenReturn(new User());
 
     assertThrows(ResourceNotFoundException.class, () -> service.getUserById(id));
 

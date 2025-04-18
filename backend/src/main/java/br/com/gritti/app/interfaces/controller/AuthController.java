@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,9 @@ public class AuthController {
   @PostMapping("/signin")
   @Operation(summary = "Obter o Token de autenticação", description = "Retorna o Access Token e o Refresh Token")
   public ResponseEntity<Token> signin(@RequestBody AccountCredentials data) {
+    if(data == null || data.getUsername() == null || data.getUsername().isBlank() || data.getPassword() == null || data.getPassword().isBlank()) {
+      throw new BadCredentialsException("Invalid credentials");
+    }
     Token token = authApplicationService.signin(data);
     return ResponseEntity.ok(token);
   }
@@ -35,6 +39,9 @@ public class AuthController {
   @Operation(summary = "Renovar o token de autenticação", description = "Renova o Access Token através do Refresh Token")
   public ResponseEntity<Token> refreshToken(@RequestHeader("Authorization") String refreshToken) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    if(refreshToken == null || refreshToken.isEmpty() || username == null || username.isEmpty()) {
+      throw new BadCredentialsException("Invalid client request!");
+    }
     Token token = authApplicationService.refreshToken(username, refreshToken);
     return ResponseEntity.ok(token);
   }

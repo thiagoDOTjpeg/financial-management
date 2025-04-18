@@ -60,7 +60,7 @@ class UserDomainServiceTest {
 
     when(repository.findById(user.getId())).thenReturn(Optional.of(user));
 
-    Optional<User> resultUser = service.getUserById(user.getId());
+    User resultUser = service.getUserById(user.getId());
 
     assertNotNull(resultUser);
     assertEquals(userOptional, resultUser);

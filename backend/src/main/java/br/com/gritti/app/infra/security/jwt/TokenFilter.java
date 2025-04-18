@@ -39,8 +39,6 @@ public class TokenFilter extends OncePerRequestFilter {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       response.setContentType("application/json");
       response.getWriter().print("{\"error\":\"Unauthorized\", \"message\":\"" + e.getMessage() + "\"}");
-
-      return;
     }
   }
 }

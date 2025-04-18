@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,20 +52,21 @@ public class SecurityConfig {
                     .authenticationEntryPoint((request, response, authException) -> {
                       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                       response.setContentType("application/json");
-                      response.getWriter().write("{\"error\":\"Forbidden\", \"message\":\"Authentication required.\"}");
+                      response.getWriter().write("{\"timestamp\": \"" + new Date() + "\", \"error\":\"Unauthorized\", \"message\":\"Authentication required.\"}");
                     })
                     .accessDeniedHandler((request, response, accessDeniedException) -> {
                       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                       response.setContentType("application/json");
-                      response.getWriter().write("{\"error\":\"Forbidden\", \"message\":\"Access denied.\"}");
+                      response.getWriter().write("{\"timestamp\": \" \" + new Date() + \",\"error\":\"Unauthorized\", \"message\":\"Access denied.\"}");
                     }))
             .csrf(AbstractHttpConfigurer::disable).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(authorizeRequest -> authorizeRequest
-                    .requestMatchers("/api/v1/auth/signin", "api/v1/auth/refresh", "/swagger-ui/**", "/api-docs/**", "/api-docs", "/swagger-ui.html").permitAll()
-                    //.requestMatchers("/api/v1/user").permitAll()
-                    .requestMatchers("/api/**").authenticated()
-                    .requestMatchers("/users").denyAll())
+                    .requestMatchers("/**").permitAll())
+                    /*.requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh", "/swagger-ui/**", "/api-docs/**", "/api-docs", "/swagger-ui.html").permitAll()
+                    .requestMatchers("/api/v1/user").permitAll()
+                    .requestMatchers("/api/**").permitAll()
+                    .requestMatchers("/users").denyAll())*/
             .cors(cors -> {})
             .build();
   }
