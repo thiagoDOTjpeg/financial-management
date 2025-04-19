@@ -33,7 +33,7 @@ public class UserTestFactory {
     user.setEmail(new Email(email));
     user.setPassword("hashedPassword");
     user.setLastLogin(new Date());
-    user.setRoles(new ArrayList<>());
+    user.setRoles(new Role());
     return user;
   }
 

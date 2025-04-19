@@ -11,6 +11,8 @@ public interface UserRepository  {
   List<User> findAll();
   Optional<User> findById(UUID id);
   void save(User user);
+  void delete(User user);
+  void inactiveUser(UUID id, String updatedBy);
   User findByUsername(String username);
   Boolean existsByUsername(String username);
   Boolean existsByEmail(Email email);

@@ -8,5 +8,7 @@ import java.util.UUID;
 public interface RoleRepository {
   List<Role> findAll();
   Optional<Role> findById(UUID id);
+  Optional<Role> findByName(String name);
   void save(Role role);
+
 }

@@ -38,6 +38,20 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   @Override
+  public void delete(User user) {
+    jpaUserRepository.delete(user);
+  }
+
+  @Override
+  public void inactiveUser(UUID id, String updatedBy) {
+    jpaUserRepository.inactivateUser(id, updatedBy);
+  }
+
+  public boolean existsById(UUID id) {
+    return jpaUserRepository.existsById(id);
+  }
+
+  @Override
   public User findByUsername(String username) {
     return jpaUserRepository.findByUsername(username);
   }

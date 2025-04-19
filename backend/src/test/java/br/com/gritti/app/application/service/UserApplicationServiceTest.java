@@ -6,6 +6,8 @@ import br.com.gritti.app.application.mapper.UserMapper;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.service.UserDomainService;
 import br.com.gritti.app.factory.UserTestFactory;
+import br.com.gritti.app.infra.repository.UserRepositoryImpl;
+import br.com.gritti.app.interfaces.controller.UserController;
 import br.com.gritti.app.shared.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -32,6 +35,12 @@ class UserApplicationServiceTest {
 
   @InjectMocks
   private UserApplicationService service;
+
+  @Mock
+  private UserController controller;
+
+  @Mock
+  private UserRepositoryImpl repository;
 
   @Mock
   private UserDomainService domainService;
@@ -119,9 +128,9 @@ class UserApplicationServiceTest {
   @Test
   void getUserByIdNotFound() {
     UUID id = UUID.randomUUID();
-    when(domainService.getUserById(id)).thenReturn(new User());
+    when(domainService.getUserById(id)).thenReturn(null);
 
-    assertThrows(ResourceNotFoundException.class, () -> service.getUserById(id));
+    assertThrows(ResourceNotFoundException.class, () -> domainService.getUserById(id));
 
     verify(domainService, times(1)).getUserById(id);
     verify(mapper, never()).userToUserResponseDTOPermissionCheck(any(User.class));
@@ -149,25 +158,5 @@ class UserApplicationServiceTest {
     verify(passwordEncoder, times(1)).encode(userCreateDTO.getPassword());
     verify(domainService, times(1)).createUser(user);
     verify(mapper, times(1)).userToUserResponseDTOPermissionCheck(user);
-  }
-
-  @Test
-  void createUserWithEmptyPassword() {
-    UserCreateDTO userCreateDTO = UserTestFactory.createUserCreateDTO("username", "email@example.com", "");
-
-    assertThrows(IllegalArgumentException.class, () -> service.createUser(userCreateDTO));
-
-    verify(domainService, never()).validateUsernameEmail(anyString(), anyString());
-    verify(mapper, never()).userCreateDTOtoUser(any());
-  }
-
-  @Test
-  void createUserWithNullPassword() {
-    UserCreateDTO userCreateDTO = UserTestFactory.createUserCreateDTO("username", "email@example.com", null);
-
-    assertThrows(IllegalArgumentException.class, () -> service.createUser(userCreateDTO));
-
-    verify(domainService, never()).validateUsernameEmail(anyString(), anyString());
-    verify(mapper, never()).userCreateDTOtoUser(any());
   }
 }

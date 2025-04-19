@@ -2,14 +2,12 @@ package br.com.gritti.app.application.mapper;
 
 import br.com.gritti.app.application.dto.UserCreateDTO;
 import br.com.gritti.app.application.dto.UserResponseDTO;
+import br.com.gritti.app.application.dto.UserUpdateDTO;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.valueobject.Email;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -20,6 +18,26 @@ public interface UserMapper {
   @Mapping(target = "password", ignore = true)
   @Mapping(target = "email", source = "email")
   User userCreateDTOtoUser(UserCreateDTO userCreateDTO);
+
+  default void updateUser(User user, User entity) {
+    if(user.getUsername() != null) {
+      entity.setUsername(user.getUsername());
+    }
+
+    if(user.getFullName() != null) {
+      entity.setFullName(user.getFullName());
+    }
+
+    if(user.getEmail() != null) {
+      entity.setEmail(user.getEmail());
+    }
+
+    if(user.getPassword() != null) {
+      entity.setPassword(user.getPassword());
+    }
+  }
+
+  User userUpdateDTOtoUser(UserUpdateDTO userUpdateDTO);
 
   @Mapping(target = "createdBy", ignore = true)
   @Mapping(target = "createdAt", ignore = true)

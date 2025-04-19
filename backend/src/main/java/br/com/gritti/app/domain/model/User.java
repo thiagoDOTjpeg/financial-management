@@ -4,6 +4,7 @@ import br.com.gritti.app.domain.valueobject.Email;
 import br.com.gritti.app.domain.enums.AccountStatus;
 import br.com.gritti.app.infra.entity.Auditable;
 import jakarta.persistence.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -62,8 +63,10 @@ public class User extends Auditable implements UserDetails, Serializable {
         return permissions;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRoles(Role role) {
+        if(role != null || !roles.contains(role)) {
+            roles.add(role);
+        }
     }
 
     public AccountStatus getAccountStatus() {

@@ -34,8 +34,15 @@ public class RoleRepositoryImpl implements RoleRepository {
   }
 
   @Override
+  public Optional<Role> findByName(String name) {
+    return jpaRoleRepository.findByName(name);
+  }
+
+  @Override
   public void save(Role role) {
     log.info("REPOSITORY: Request received from domain and saving role {} in the database", role);
     jpaRoleRepository.save(role);
   }
+
+
 }

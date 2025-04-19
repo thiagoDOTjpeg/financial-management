@@ -60,7 +60,7 @@ class AuthDomainServiceTest {
     User mockUser = new User();
     mockUser.setUsername(username);
     mockUser.setPassword(password);
-    mockUser.setRoles(List.of(new Role(UUID.randomUUID(),"ROLE_USER")));
+    mockUser.setRoles(new Role(UUID.randomUUID(),"ROLE_USER"));
 
     Token expectedToken = new Token(username, true,
             new Date(),
@@ -91,7 +91,7 @@ class AuthDomainServiceTest {
     User mockUser = new User();
     mockUser.setUsername(username);
     mockUser.setPassword(password);
-    mockUser.setRoles(List.of(new Role(UUID.randomUUID(),"ROLE_USER")));
+    mockUser.setRoles(new Role(UUID.randomUUID(),"ROLE_USER"));
 
     when(repository.findByUsername(username)).thenReturn(null);
 
@@ -136,7 +136,7 @@ class AuthDomainServiceTest {
     User mockUser = new User();
     mockUser.setUsername(username);
     mockUser.setPassword(password);
-    mockUser.setRoles(List.of(new Role(UUID.randomUUID(),"ROLE_USER")));
+    mockUser.setRoles(new Role(UUID.randomUUID(),"ROLE_USER"));
     Token token = new Token(username, true,
             new Date(),
             new Date(System.currentTimeMillis() + 1000 * 60 * 10),
@@ -158,7 +158,7 @@ class AuthDomainServiceTest {
     User mockUser = new User();
     mockUser.setUsername(username);
     mockUser.setPassword(password);
-    mockUser.setRoles(List.of(new Role(UUID.randomUUID(),"ROLE_USER")));
+    mockUser.setRoles(new Role(UUID.randomUUID(),"ROLE_USER"));
 
     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
     SecurityContext context = mock(SecurityContext.class);

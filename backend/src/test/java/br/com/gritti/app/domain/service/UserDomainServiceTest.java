@@ -56,14 +56,13 @@ class UserDomainServiceTest {
   @Test
   void getUserById() {
     User user = UserTestFactory.createUser(1);
-    Optional<User> userOptional = Optional.of(user);
 
     when(repository.findById(user.getId())).thenReturn(Optional.of(user));
 
     User resultUser = service.getUserById(user.getId());
 
     assertNotNull(resultUser);
-    assertEquals(userOptional, resultUser);
+    assertEquals(user, resultUser);
 
     verify(repository, times(1)).findById(user.getId());
   }

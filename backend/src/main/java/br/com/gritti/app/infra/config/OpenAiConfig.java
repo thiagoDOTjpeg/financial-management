@@ -23,7 +23,7 @@ public class OpenAiConfig {
     contact.setEmail("thiago.gritti12@gmail.com");
 
     Info information = new Info()
-            .title("Financial management system")
+            .title("Financial Management System")
             .version("1.0.0")
             .description("""
                     A comprehensive financial management system that provides user authentication,\s
