@@ -9,8 +9,10 @@ import br.com.gritti.app.interfaces.controller.docs.UserControllerDocs;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +22,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/user")
-@Tag(name = "Users", description = "Operações relacionadas a usuários")
+@Tag(name = "User", description = "Operações relacionadas a usuários")
 public class UserController implements UserControllerDocs {
   @Autowired
   private UserApplicationService userApplicationService;
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
-  public ResponseEntity<List<UserResponseDTO>> getUsers() {
+  public ResponseEntity<CollectionModel<UserResponseDTO>> getUsers() {
     return ResponseEntity.ok(userApplicationService.getUsers());
   }
 
@@ -49,8 +51,8 @@ public class UserController implements UserControllerDocs {
 
   @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
                                   produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
   public ResponseEntity<UserResponseDTO> updateUser(@PathVariable UUID id,@RequestBody UserUpdateDTO userDTO) {
-    if(userDTO == null) throw new IllegalArgumentException("The request cannot be empty");
     return ResponseEntity.ok().body(userApplicationService.updateUser(id, userDTO));
   }
 

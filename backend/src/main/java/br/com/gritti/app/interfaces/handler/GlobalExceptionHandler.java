@@ -26,6 +26,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(exceptionMessage, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  @ExceptionHandler(UserIsInactiveException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllUserIsInactiveException(Exception ex, WebRequest request) {
+    ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(),
+            request.getDescription(false));
+    return new ResponseEntity<>(exceptionMessage, HttpStatus.FORBIDDEN);
+  }
+
   @ExceptionHandler(InvalidEmailException.class)
   public final ResponseEntity<ExceptionMessage> handleAllEmailExceptions(Exception ex, WebRequest request) {
     ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(),

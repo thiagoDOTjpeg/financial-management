@@ -6,19 +6,18 @@ import br.com.gritti.app.application.dto.UserUpdateDTO;
 import br.com.gritti.app.application.mapper.UserMapper;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.service.UserDomainService;
-import br.com.gritti.app.interfaces.controller.UserController;
-import br.com.gritti.app.shared.exceptions.ResourceNotFoundException;
+import br.com.gritti.app.shared.util.UserHateoasUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,29 +35,22 @@ public class UserApplicationService {
   private PasswordEncoder encoder;
 
 
-  public List<UserResponseDTO> getUsers() {
+  public CollectionModel<UserResponseDTO> getUsers() {
     log.info("APPLICATION: Received request in application and passing to domain to get all users");
-
-    List<UserResponseDTO> usersDTOs = userDomainService.getUsers().stream().map(userMapper::userToUserResponseDTOPermissionCheck).toList();
-    usersDTOs.forEach(u -> {
-      u.add(linkTo(methodOn(UserController.class).getUserById(u.getId())).withSelfRel().withType("GET"));
-      u.add(linkTo(methodOn(UserController.class).getUsers()).withRel("users").withType("GET"));
-    });
-    return usersDTOs;
+    return CollectionModel.of(userDomainService.getUsers().stream().map(userMapper::userToUserResponseDTOPermissionCheck).peek(UserHateoasUtil::addLinks).toList());
   }
 
   public UserResponseDTO getUserById(UUID id) {
-      log.info("APPLICATION: Received request in application and passing to domain to find a user by id: {}", id);
+      log.info("APPLICATION: Received request in application and passing to domain to find a user by id");
       
       User user = userDomainService.getUserById(id);
       UserResponseDTO userDTO = userMapper.userToUserResponseDTOPermissionCheck(user);
-      userDTO.add(linkTo(methodOn(UserController.class).getUserById(id)).withSelfRel().withType("GET"));
-      userDTO.add(linkTo(methodOn(UserController.class).getUsers()).withRel("users").withType("GET"));
+      UserHateoasUtil.addLinks(userDTO);
       return userDTO;
   }
 
   public UserResponseDTO createUser(UserCreateDTO userDTO) {
-    log.info("APPLICATION: Received request in application and passing to domain to create a new user: {}", userDTO);
+    log.info("APPLICATION: Received request in application and passing to domain to create a new user");
 
     userDomainService.validateUsernameEmail(userDTO.getEmail(), userDTO.getUsername());
     User user = userMapper.userCreateDTOtoUser(userDTO);
@@ -68,28 +60,27 @@ public class UserApplicationService {
   }
 
   public UserResponseDTO updateUser(UUID id, UserUpdateDTO userDTO) {
-    log.info("APPLICATION: received request in application and passing to domain to update a user: {}", id);
+    log.info("APPLICATION: received request in application and passing to domain to update a user");
     User user = userMapper.userUpdateDTOtoUser(userDTO);
     User updatedUser = userDomainService.updateUser(id, user);
     return userMapper.userToUserResponseDTOPermissionCheck(updatedUser);
   }
 
   public void deleteUser(UUID id) {
-    log.info("APPLICATION: Received request in application and passing to domain to delete a user: {}", id);
+    log.info("APPLICATION: Received request in application and passing to domain to delete a user");
     userDomainService.deleteUser(id);
   }
 
   public UserResponseDTO inactivateUser(UUID id) {
-    log.info("APPLICATION: Received request in application and passing to domain to inactivate user: {}", id);
+    log.info("APPLICATION: Received request in application and passing to domain to inactivate user");
     return userMapper.userToUserResponseDTOPermissionCheck(userDomainService.inactivateUser(id));
   }
 
   public UserResponseDTO assignRoleToUser(UUID userId, String roleName) {
-    log.info("APPLICATION: Received request in application and passing to domain to assign role {} to user", roleName);
+    log.info("APPLICATION: Received request in application and passing to domain to assign role to user");
 
     UserResponseDTO dto = userMapper.userToUserResponseDTOPermissionCheck(userDomainService.assignRoleToUser(userId, roleName));
-    dto.add(linkTo(methodOn(UserController.class).getUserById(dto.getId())).withSelfRel().withType("GET"));
-    dto.add(linkTo(methodOn(UserController.class).getUsers()).withRel("users").withType("GET"));
+    UserHateoasUtil.addLinks(dto);
     return dto;
   }
 }

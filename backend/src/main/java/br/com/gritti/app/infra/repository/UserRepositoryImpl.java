@@ -23,7 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
 
   @Override
   public List<User> findAll() {
-    log.info("Request received from domain and finding all users from the jpa repository");
+    log.info("REPO: Request received from domain and finding all users from the jpa repository");
     return jpaUserRepository.findAll();
   }
 

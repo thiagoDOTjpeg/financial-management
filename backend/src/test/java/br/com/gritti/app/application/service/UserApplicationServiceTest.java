@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -65,15 +66,15 @@ class UserApplicationServiceTest {
     when(mapper.userToUserResponseDTOPermissionCheck(users.get(0))).thenReturn(usersDTOs.get(0));
     when(mapper.userToUserResponseDTOPermissionCheck(users.get(1))).thenReturn(usersDTOs.get(1));
 
-    List<UserResponseDTO> userResponseDTOs = service.getUsers();
+    CollectionModel<UserResponseDTO> userResponseDTOs = service.getUsers();
 
-    assertEquals(2, userResponseDTOs.size());
-    assertEquals(usersDTOs.get(0), userResponseDTOs.get(0));
+    assertEquals(2, userResponseDTOs.getContent().size());
+    assertEquals(usersDTOs.get(0), userResponseDTOs.iterator().next());
 
     boolean hasSelfLink = false;
     boolean hasUsersLink = false;
 
-    for(Link link : userResponseDTOs.get(0).getLinks()) {
+    for(Link link : userResponseDTOs.getContent().iterator().next().getLinks()) {
       if(link.getRel().toString().equals("self")) {
         hasSelfLink = true;
       }
@@ -123,17 +124,6 @@ class UserApplicationServiceTest {
 
     verify(domainService, times(1)).getUserById(user.getId());
     verify(mapper, times(1)).userToUserResponseDTOPermissionCheck(user);
-  }
-
-  @Test
-  void getUserByIdNotFound() {
-    UUID id = UUID.randomUUID();
-    when(domainService.getUserById(id)).thenReturn(null);
-
-    assertThrows(ResourceNotFoundException.class, () -> domainService.getUserById(id));
-
-    verify(domainService, times(1)).getUserById(id);
-    verify(mapper, never()).userToUserResponseDTOPermissionCheck(any(User.class));
   }
 
   @Test

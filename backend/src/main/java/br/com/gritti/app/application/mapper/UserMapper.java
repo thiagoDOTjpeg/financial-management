@@ -20,20 +20,25 @@ public interface UserMapper {
   User userCreateDTOtoUser(UserCreateDTO userCreateDTO);
 
   default void updateUser(User user, User entity) {
+    boolean changed = false;
     if(user.getUsername() != null) {
       entity.setUsername(user.getUsername());
+      changed = true;
     }
-
     if(user.getFullName() != null) {
       entity.setFullName(user.getFullName());
+      changed = true;
     }
-
-    if(user.getEmail() != null) {
+    if(user.getEmail().getValue() != null) {
+      changed = true;
       entity.setEmail(user.getEmail());
     }
-
     if(user.getPassword() != null) {
+      changed = true;
       entity.setPassword(user.getPassword());
+    }
+    if(!changed) {
+      throw new IllegalArgumentException("Only Username/Fullname/Password and Email are allowed to change");
     }
   }
 

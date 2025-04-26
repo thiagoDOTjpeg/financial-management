@@ -19,10 +19,6 @@ public class AuthApplicationService {
   }
 
   public Token refreshToken(String username, String refreshToken) {
-   Token token = authDomainService.refreshToken(username, refreshToken);
-    if(token == null) {
-      throw new BadCredentialsException("Invalid client request!");
-    }
-    return token;
+    return authDomainService.refreshToken(username, refreshToken);
   }
 }

@@ -5,6 +5,7 @@ import br.com.gritti.app.domain.valueobject.Email;
 import br.com.gritti.app.factory.UserTestFactory;
 import br.com.gritti.app.infra.repository.UserRepositoryImpl;
 import br.com.gritti.app.shared.exceptions.EmailAlreadyExistsException;
+import br.com.gritti.app.shared.exceptions.ResourceNotFoundException;
 import br.com.gritti.app.shared.exceptions.UsernameAlreadyExistsException;
 import br.com.gritti.app.shared.exceptions.UsernameNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -68,6 +71,14 @@ class UserDomainServiceTest {
   }
 
   @Test
+  void shouldThrowUserNotFoundException() {
+    UUID userId = UUID.randomUUID();
+    when(repository.findById(userId)).thenReturn(Optional.empty());
+
+    assertThrows(ResourceNotFoundException.class, () -> service.getUserById(userId));
+  }
+
+  @Test
   void createUser() {
     User user = UserTestFactory.createUser(1);
 
@@ -86,7 +97,7 @@ class UserDomainServiceTest {
 
     when(repository.findByUsername(username)).thenReturn(user);
 
-    User resultUser = repository.findByUsername(username);
+    User resultUser = service.loadUserByUsername(username);
 
     assertNotNull(resultUser);
     assertEquals(user.getId(), resultUser.getId());

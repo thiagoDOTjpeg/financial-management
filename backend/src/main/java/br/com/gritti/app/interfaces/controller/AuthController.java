@@ -3,6 +3,7 @@ package br.com.gritti.app.interfaces.controller;
 import br.com.gritti.app.application.service.AuthApplicationService;
 import br.com.gritti.app.domain.valueobject.AccountCredentials;
 import br.com.gritti.app.domain.valueobject.Token;
+import br.com.gritti.app.interfaces.controller.docs.AuthControllerDocs;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Auth Controller", description = "Operações relacionadas a autenticação")
-public class AuthController {
+@Tag(name = "Auth", description = "Operações relacionadas a autenticação")
+public class AuthController implements AuthControllerDocs {
 
   public final AuthApplicationService authApplicationService;
 
@@ -26,7 +27,7 @@ public class AuthController {
   }
 
   @PostMapping("/signin")
-  @Operation(summary = "Obter o Token de autenticação", description = "Retorna o Access Token e o Refresh Token")
+  @Override
   public ResponseEntity<Token> signin(@RequestBody AccountCredentials data) {
     if(data == null || data.getUsername() == null || data.getUsername().isBlank() || data.getPassword() == null || data.getPassword().isBlank()) {
       throw new BadCredentialsException("Invalid credentials");
@@ -36,7 +37,7 @@ public class AuthController {
   }
 
   @PostMapping("/refresh")
-  @Operation(summary = "Renovar o token de autenticação", description = "Renova o Access Token através do Refresh Token")
+  @Override
   public ResponseEntity<Token> refreshToken(@RequestHeader("Authorization") String refreshToken) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     if(refreshToken == null || refreshToken.isEmpty() || username == null || username.isEmpty()) {

@@ -22,33 +22,15 @@ public class UserResponseDTO extends RepresentationModel<UserResponseDTO> implem
   private String fullName;
   private String email;
 
-  @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy ")
   private Date lastLogin;
   private AccountStatus accountStatus;
   private List<String> roles = new ArrayList<>();
 
-  @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
   private LocalDateTime createdAt;
   private String createdBy;
 
-  @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
   private LocalDateTime updatedAt;
   private String updatedBy;
-
-  public UserResponseDTO(UUID id, String username, String fullName, Email email, Date lastLogin, AccountStatus accountStatus,
-                         List<String> roles, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
-    this.id = id;
-    this.username = username;
-    this.fullName = fullName;
-    this.email = email.getValue();
-    this.lastLogin = lastLogin;
-    this.accountStatus = accountStatus;
-    this.roles = roles;
-    this.createdAt = createdAt;
-    this.createdBy = createdBy;
-    this.updatedAt = updatedAt;
-    this.updatedBy = updatedBy;
-  }
 
   public UserResponseDTO() {
   }

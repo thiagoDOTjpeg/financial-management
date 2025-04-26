@@ -51,7 +51,8 @@ public class UserDomainService implements UserDetailsService {
 
   public User createUser(User user) {
     log.info("DOMAIN: Request received from application and creating user in the repository: " + user);
-
+    Role role = roleRepositoryImpl.findByName("ROLE_USER").orElseThrow(() -> new ResourceNotFoundException("Role with not found"));
+    user.setRoles(role);
     userRepositoryImpl.save(user);
     return user;
   }
@@ -60,6 +61,7 @@ public class UserDomainService implements UserDetailsService {
   public User updateUser(UUID id, User newUser) {
     User entity = userRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
     userMapper.updateUser(newUser, entity);
+    userRepositoryImpl.save(entity);
     return entity;
   }
 
@@ -92,7 +94,7 @@ public class UserDomainService implements UserDetailsService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) {
+  public User loadUserByUsername(String username) {
     User user = userRepositoryImpl.findByUsername(username);
     if(user != null) {
       return user;
@@ -110,5 +112,4 @@ public class UserDomainService implements UserDetailsService {
       throw new UsernameAlreadyExistsException("Username " + username + " already exists");
     }
   }
-
 }
