@@ -14,6 +14,8 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,10 +40,10 @@ public class UserDomainService implements UserDetailsService {
   private UserMapper userMapper;
 
 
-  public List<User> getUsers() {
+  public Page<User> getUsers(Pageable pageable) {
     log.info("DOMAIN: Request received from application and getting all user from the repository");
 
-    return userRepositoryImpl.findAll();
+    return userRepositoryImpl.findAll(pageable);
   }
 
   public User getUserById(UUID id) {

@@ -6,15 +6,23 @@ import br.com.gritti.app.application.dto.UserUpdateDTO;
 import br.com.gritti.app.application.mapper.UserMapper;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.service.UserDomainService;
+import br.com.gritti.app.interfaces.controller.UserController;
 import br.com.gritti.app.shared.util.UserHateoasUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 import java.util.Collection;
@@ -34,10 +42,21 @@ public class UserApplicationService {
   @Autowired
   private PasswordEncoder encoder;
 
+  @Autowired
+  private PagedResourcesAssembler<UserResponseDTO> assembler;
 
-  public CollectionModel<UserResponseDTO> getUsers() {
+
+  public PagedModel<EntityModel<UserResponseDTO>> getUsers(Pageable pageable) {
     log.info("APPLICATION: Received request in application and passing to domain to get all users");
-    return CollectionModel.of(userDomainService.getUsers().stream().map(userMapper::userToUserResponseDTOPermissionCheck).peek(UserHateoasUtil::addLinks).toList());
+    Page<User> users = userDomainService.getUsers(pageable);
+    Page<UserResponseDTO> usersWithLinks = users.map(u -> {
+      UserResponseDTO userDTO = userMapper.userToUserResponseDTOPermissionCheck(u);
+      UserHateoasUtil.addLinks(userDTO);
+      return userDTO;
+    });
+
+    Link findAllLinks = linkTo(methodOn(UserController.class).getUsers(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))).withSelfRel();
+    return assembler.toModel(usersWithLinks, findAllLinks);
   }
 
   public UserResponseDTO getUserById(UUID id) {

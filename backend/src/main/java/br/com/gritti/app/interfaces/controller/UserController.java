@@ -12,7 +12,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +34,14 @@ public class UserController implements UserControllerDocs {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
-  public ResponseEntity<CollectionModel<UserResponseDTO>> getUsers() {
-    return ResponseEntity.ok(userApplicationService.getUsers());
+  public ResponseEntity<PagedModel<EntityModel<UserResponseDTO>>> getUsers(
+          @RequestParam(value = "page", defaultValue = "0") Integer page,
+          @RequestParam(value = "size", defaultValue = "12") Integer size,
+          @RequestParam(value = "direction", defaultValue = "asc") String direction
+  ) {
+    Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+    Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "fullName"));
+    return ResponseEntity.ok(userApplicationService.getUsers(pageable));
   }
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

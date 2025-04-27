@@ -13,7 +13,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserHateoasUtil {
   public static void addLinks(UserResponseDTO userResponseDTO) {
     userResponseDTO.add(linkTo(methodOn(UserController.class).getUserById(userResponseDTO.getId())).withSelfRel().withType("GET"));
-    userResponseDTO.add(linkTo(methodOn(UserController.class).getUsers()).withRel("users").withType("GET"));
+    userResponseDTO.add(linkTo(methodOn(UserController.class).getUsers(0, 12, "asc")).withRel("users").withType("GET"));
     userResponseDTO.add(linkTo(methodOn(UserController.class).updateUser(userResponseDTO.getId(), new UserUpdateDTO())).withRel("update").withType("PUT"));
     userResponseDTO.add(linkTo(methodOn(UserController.class).createUser(new UserCreateDTO())).withRel("create").withType("POST"));
     userResponseDTO.add(linkTo(methodOn(UserController.class).deleteUser(userResponseDTO.getId())).withRel("delete-user").withType("DELETE"));

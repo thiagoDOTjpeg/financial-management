@@ -7,6 +7,8 @@ import br.com.gritti.app.infra.persistence.JpaUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,9 +24,9 @@ public class UserRepositoryImpl implements UserRepository {
   private JpaUserRepository jpaUserRepository;
 
   @Override
-  public List<User> findAll() {
+  public Page<User> findAll(Pageable pageable) {
     log.info("REPO: Request received from domain and finding all users from the jpa repository");
-    return jpaUserRepository.findAll();
+    return jpaUserRepository.findAll(pageable);
   }
 
   @Override
