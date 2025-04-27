@@ -51,14 +51,19 @@ public class TokenProvider {
   }
 
   public Token refreshToken(String refreshToken) {
-    if(refreshToken.contains("Bearer "))
-      refreshToken = refreshToken.substring("Bearer ".length());
+    if(!refreshToken.startsWith("Bearer ")) throw new InvalidJWTAuthenticationException("Invalid refresh token");
+    refreshToken = refreshToken.substring("Bearer ".length());
 
-      JWTVerifier verifier = JWT.require(algorithm).build();
-      DecodedJWT jwt = verifier.verify(refreshToken);
-      String username = jwt.getSubject();
-      List<String> permissions = jwt.getClaim("permissions").asList(String.class);
-    return createToken(username, permissions);
+    JWTVerifier verifier = JWT.require(algorithm).build();
+    DecodedJWT jwt = verifier.verify(refreshToken);
+    String username = jwt.getSubject();
+    List<String> permissions = jwt.getClaim("permissions").asList(String.class);
+
+    Date now = new Date();
+    Date validity = new Date(now.getTime() + validityInMilliseconds);
+    String accessToken = createAccessToken(username, permissions, now, validity);
+
+    return new Token(username, true, now, validity, accessToken, refreshToken);
   }
 
   private String createAccessToken(String username, List<String> permissions, Date now, Date validity) {

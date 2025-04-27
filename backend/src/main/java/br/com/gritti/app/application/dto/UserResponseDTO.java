@@ -4,6 +4,7 @@ import br.com.gritti.app.domain.enums.AccountStatus;
 import br.com.gritti.app.domain.valueobject.Email;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Relation(collectionRelation = "user")
 public class UserResponseDTO extends RepresentationModel<UserResponseDTO> implements Serializable {
   @Serial
   private static final long serialVersionUID = 1L;
