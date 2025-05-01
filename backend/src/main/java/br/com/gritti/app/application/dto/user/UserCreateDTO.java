@@ -1,12 +1,21 @@
-package br.com.gritti.app.application.dto;
+package br.com.gritti.app.application.dto.user;
 
-import br.com.gritti.app.domain.valueobject.Email;
 
-public class UserUpdateDTO {
+public class UserCreateDTO {
   private String username;
   private String fullName;
-  private Email email;
+  private String email;
   private String password;
+
+  public UserCreateDTO(String username, String fullName, String email, String password) {
+    this.username = username;
+    this.fullName = fullName;
+    this.email = email;
+    this.password = password;
+  }
+
+  public UserCreateDTO() {
+  }
 
   public String getUsername() {
     return username;
@@ -24,11 +33,11 @@ public class UserUpdateDTO {
     this.fullName = fullName;
   }
 
-  public Email getEmail() {
+  public String getEmail() {
     return email;
   }
 
-  public void setEmail(Email email) {
+  public void setEmail(String email) {
     this.email = email;
   }
 

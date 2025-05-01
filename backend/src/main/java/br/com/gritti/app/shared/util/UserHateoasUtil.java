@@ -1,9 +1,9 @@
 package br.com.gritti.app.shared.util;
 
-import br.com.gritti.app.application.dto.UserAssignRoleDTO;
-import br.com.gritti.app.application.dto.UserCreateDTO;
-import br.com.gritti.app.application.dto.UserResponseDTO;
-import br.com.gritti.app.application.dto.UserUpdateDTO;
+import br.com.gritti.app.application.dto.user.UserAssignRoleDTO;
+import br.com.gritti.app.application.dto.user.UserCreateDTO;
+import br.com.gritti.app.application.dto.user.UserResponseDTO;
+import br.com.gritti.app.application.dto.user.UserUpdateDTO;
 import br.com.gritti.app.domain.enums.AccountStatus;
 import br.com.gritti.app.interfaces.controller.UserController;
 

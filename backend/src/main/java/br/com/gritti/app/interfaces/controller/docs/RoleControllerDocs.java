@@ -1,6 +1,6 @@
 package br.com.gritti.app.interfaces.controller.docs;
 
-import br.com.gritti.app.application.dto.UserResponseDTO;
+import br.com.gritti.app.application.dto.user.UserResponseDTO;
 import br.com.gritti.app.domain.model.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

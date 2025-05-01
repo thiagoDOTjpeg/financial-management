@@ -18,27 +18,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
-import java.util.List;
 import java.util.UUID;
 
 @Service
 public class UserDomainService implements UserDetailsService {
   private final Logger log = LoggerFactory.getLogger(UserDomainService.class.getName());
 
-  @Autowired
-  private UserRepositoryImpl userRepositoryImpl;
+  private final UserRepositoryImpl userRepositoryImpl;
+
+  private final RoleRepositoryImpl roleRepositoryImpl;
+
+  private final UserMapper userMapper;
 
   @Autowired
-  private RoleRepositoryImpl roleRepositoryImpl;
-
-  @Autowired
-  private UserMapper userMapper;
-
+  public UserDomainService(UserRepositoryImpl userRepositoryImpl, RoleRepositoryImpl roleRepositoryImpl, UserMapper userMapper) {
+    this.userRepositoryImpl = userRepositoryImpl;
+    this.roleRepositoryImpl = roleRepositoryImpl;
+    this.userMapper = userMapper;
+  }
 
   public Page<User> getUsers(Pageable pageable) {
     log.info("DOMAIN: Request received from application and getting all user from the repository");
@@ -47,12 +47,13 @@ public class UserDomainService implements UserDetailsService {
   }
 
   public User getUserById(UUID id) {
-    log.info("DOMAIN: Request received from application and getting user { " + id + " } from the repository");
+    log.info("DOMAIN: Request received from application and getting user { {} } from the repository", id);
     return userRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
   }
 
   public User createUser(User user) {
-    log.info("DOMAIN: Request received from application and creating user in the repository: " + user);
+    log.info("DOMAIN: Request received from application and creating user in the repository: {}", user);
+    validateUsernameEmailForCreate(user.getEmail(), user.getUsername());
     Role role = roleRepositoryImpl.findByName("ROLE_USER").orElseThrow(() -> new ResourceNotFoundException("Role with not found"));
     user.setRoles(role);
     userRepositoryImpl.save(user);
@@ -62,13 +63,14 @@ public class UserDomainService implements UserDetailsService {
   @Transactional
   public User updateUser(UUID id, User newUser) {
     User entity = userRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
+    validateUsernameEmailForUpdate(id, newUser.getEmail(), newUser.getUsername());
     userMapper.updateUser(newUser, entity);
     userRepositoryImpl.save(entity);
     return entity;
   }
 
   public void deleteUser(UUID id) {
-    log.info("DOMAIN: Request received from application and removing user " + id + " and passing to the repository");
+    log.info("DOMAIN: Request received from application and removing user {} and passing to the repository", id);
     User user = userRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
     userRepositoryImpl.delete(user);
   }
@@ -83,7 +85,7 @@ public class UserDomainService implements UserDetailsService {
   }
 
   public User assignRoleToUser(UUID userId, String roleName) {
-    log.info("DOMAIN: Request received from application and adding role " + roleName + " to user " + userId);
+    log.info("DOMAIN: Request received from application and adding role {} to user {}", roleName, userId);
     User user = userRepositoryImpl.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
     Role role = roleRepositoryImpl.findByName(roleName).orElseThrow(() -> new ResourceNotFoundException("Role with name " + roleName + " not found"));
     if(!user.getPermissions().toString().contains(roleName)) {
@@ -105,12 +107,21 @@ public class UserDomainService implements UserDetailsService {
     }
   }
 
-  public void validateUsernameEmail(String email, String username) {
-    Email emailObj = new Email(email);
-    if(userRepositoryImpl.existsByEmail(emailObj)) {
+  public void validateUsernameEmailForCreate(Email email, String username) {
+    if(userRepositoryImpl.existsByEmail(email)) {
       throw new EmailAlreadyExistsException("Email " + email + " already exists");
     }
     if(userRepositoryImpl.existsByUsername(username)) {
+      throw new UsernameAlreadyExistsException("Username " + username + " already exists");
+    }
+  }
+
+  public void validateUsernameEmailForUpdate(UUID id, Email email, String username) {
+    User existingUser = userRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
+    if(userRepositoryImpl.existsByEmail(email) && !existingUser.getEmail().equals(email)) {
+      throw new EmailAlreadyExistsException("Email " + email + " already exists");
+    }
+    if(userRepositoryImpl.existsByUsername(username) && !existingUser.getUsername().equals(username)) {
       throw new UsernameAlreadyExistsException("Username " + username + " already exists");
     }
   }

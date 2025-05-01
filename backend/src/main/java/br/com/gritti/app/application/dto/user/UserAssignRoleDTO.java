@@ -1,4 +1,4 @@
-package br.com.gritti.app.application.dto;
+package br.com.gritti.app.application.dto.user;
 
 public class UserAssignRoleDTO {
   private String roleName;

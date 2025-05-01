@@ -1,7 +1,7 @@
 package br.com.gritti.app.factory;
 
-import br.com.gritti.app.application.dto.UserCreateDTO;
-import br.com.gritti.app.application.dto.UserResponseDTO;
+import br.com.gritti.app.application.dto.user.UserCreateDTO;
+import br.com.gritti.app.application.dto.user.UserResponseDTO;
 import br.com.gritti.app.domain.model.Role;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.valueobject.Email;

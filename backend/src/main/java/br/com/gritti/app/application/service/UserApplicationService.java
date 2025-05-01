@@ -1,12 +1,13 @@
 package br.com.gritti.app.application.service;
 
-import br.com.gritti.app.application.dto.UserCreateDTO;
-import br.com.gritti.app.application.dto.UserResponseDTO;
-import br.com.gritti.app.application.dto.UserUpdateDTO;
+import br.com.gritti.app.application.dto.user.UserCreateDTO;
+import br.com.gritti.app.application.dto.user.UserResponseDTO;
+import br.com.gritti.app.application.dto.user.UserUpdateDTO;
 import br.com.gritti.app.application.mapper.UserMapper;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.service.UserDomainService;
 import br.com.gritti.app.interfaces.controller.UserController;
+import br.com.gritti.app.shared.util.SecurityUtil;
 import br.com.gritti.app.shared.util.UserHateoasUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
@@ -25,32 +25,31 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Service
 public class UserApplicationService {
   private final Logger log = LoggerFactory.getLogger(UserApplicationService.class.getName());
+  private final UserDomainService userDomainService;
+  private final UserMapper userMapper;
+  private final PasswordEncoder encoder;
+  private final PagedResourcesAssembler<UserResponseDTO> assembler;
 
   @Autowired
-  private UserDomainService userDomainService;
-
-  @Autowired
-  private UserMapper userMapper;
-
-  @Autowired
-  private PasswordEncoder encoder;
-
-  @Autowired
-  private PagedResourcesAssembler<UserResponseDTO> assembler;
-
+  public UserApplicationService(UserDomainService userDomainService, UserMapper userMapper, PasswordEncoder encoder, PagedResourcesAssembler<UserResponseDTO> assembler) {
+    this.userDomainService = userDomainService;
+    this.userMapper = userMapper;
+    this.encoder = encoder;
+    this.assembler = assembler;
+  }
 
   public PagedModel<EntityModel<UserResponseDTO>> getUsers(Pageable pageable) {
     log.info("APPLICATION: Received request in application and passing to domain to get all users");
+    boolean isAdmin = SecurityUtil.isAdmin();
+
     Page<User> users = userDomainService.getUsers(pageable);
     Page<UserResponseDTO> usersWithLinks = users.map(u -> {
-      UserResponseDTO userDTO = userMapper.userToUserResponseDTOPermissionCheck(u);
+      UserResponseDTO userDTO = userMapper.userToUserResponseDTO(u, isAdmin);
       UserHateoasUtil.addLinks(userDTO);
       return userDTO;
     });
@@ -61,44 +60,52 @@ public class UserApplicationService {
 
   public UserResponseDTO getUserById(UUID id) {
       log.info("APPLICATION: Received request in application and passing to domain to find a user by id");
-      
+      boolean isAdmin = SecurityUtil.isAdmin();
+
       User user = userDomainService.getUserById(id);
-      UserResponseDTO userDTO = userMapper.userToUserResponseDTOPermissionCheck(user);
+      UserResponseDTO userDTO = userMapper.userToUserResponseDTO(user, isAdmin);
       UserHateoasUtil.addLinks(userDTO);
       return userDTO;
   }
 
   public UserResponseDTO createUser(UserCreateDTO userDTO) {
     log.info("APPLICATION: Received request in application and passing to domain to create a new user");
+    boolean isAdmin = SecurityUtil.isAdmin();
 
-    userDomainService.validateUsernameEmail(userDTO.getEmail(), userDTO.getUsername());
+
     User user = userMapper.userCreateDTOtoUser(userDTO);
     user.setPassword(encoder.encode(userDTO.getPassword()));
     User userCreated = userDomainService.createUser(user);
-    return userMapper.userToUserResponseDTOPermissionCheck(userCreated);
+    return userMapper.userToUserResponseDTO(userCreated, isAdmin);
   }
 
   public UserResponseDTO updateUser(UUID id, UserUpdateDTO userDTO) {
     log.info("APPLICATION: received request in application and passing to domain to update a user");
+    boolean isAdmin = SecurityUtil.isAdmin();
+
     User user = userMapper.userUpdateDTOtoUser(userDTO);
     User updatedUser = userDomainService.updateUser(id, user);
-    return userMapper.userToUserResponseDTOPermissionCheck(updatedUser);
+    return userMapper.userToUserResponseDTO(updatedUser, isAdmin);
   }
 
   public void deleteUser(UUID id) {
     log.info("APPLICATION: Received request in application and passing to domain to delete a user");
+
     userDomainService.deleteUser(id);
   }
 
   public UserResponseDTO inactivateUser(UUID id) {
     log.info("APPLICATION: Received request in application and passing to domain to inactivate user");
-    return userMapper.userToUserResponseDTOPermissionCheck(userDomainService.inactivateUser(id));
+    boolean isAdmin = SecurityUtil.isAdmin();
+
+    return userMapper.userToUserResponseDTO(userDomainService.inactivateUser(id), isAdmin);
   }
 
   public UserResponseDTO assignRoleToUser(UUID userId, String roleName) {
     log.info("APPLICATION: Received request in application and passing to domain to assign role to user");
+    boolean isAdmin = SecurityUtil.isAdmin();
 
-    UserResponseDTO dto = userMapper.userToUserResponseDTOPermissionCheck(userDomainService.assignRoleToUser(userId, roleName));
+    UserResponseDTO dto = userMapper.userToUserResponseDTO(userDomainService.assignRoleToUser(userId, roleName), isAdmin);
     UserHateoasUtil.addLinks(dto);
     return dto;
   }

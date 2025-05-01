@@ -1,15 +1,14 @@
 package br.com.gritti.app.interfaces.controller.docs;
 
-import br.com.gritti.app.application.dto.UserAssignRoleDTO;
-import br.com.gritti.app.application.dto.UserCreateDTO;
-import br.com.gritti.app.application.dto.UserResponseDTO;
-import br.com.gritti.app.application.dto.UserUpdateDTO;
+import br.com.gritti.app.application.dto.user.UserAssignRoleDTO;
+import br.com.gritti.app.application.dto.user.UserCreateDTO;
+import br.com.gritti.app.application.dto.user.UserResponseDTO;
+import br.com.gritti.app.application.dto.user.UserUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-import java.util.List;
 import java.util.UUID;
 
 public interface UserControllerDocs {

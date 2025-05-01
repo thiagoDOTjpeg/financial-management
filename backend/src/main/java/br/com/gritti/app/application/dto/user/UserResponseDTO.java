@@ -1,8 +1,6 @@
-package br.com.gritti.app.application.dto;
+package br.com.gritti.app.application.dto.user;
 
 import br.com.gritti.app.domain.enums.AccountStatus;
-import br.com.gritti.app.domain.valueobject.Email;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 

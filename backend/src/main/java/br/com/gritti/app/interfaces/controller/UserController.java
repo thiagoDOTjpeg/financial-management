@@ -1,36 +1,37 @@
 package br.com.gritti.app.interfaces.controller;
 
-import br.com.gritti.app.application.dto.UserAssignRoleDTO;
-import br.com.gritti.app.application.dto.UserCreateDTO;
-import br.com.gritti.app.application.dto.UserResponseDTO;
-import br.com.gritti.app.application.dto.UserUpdateDTO;
+import br.com.gritti.app.application.dto.user.UserAssignRoleDTO;
+import br.com.gritti.app.application.dto.user.UserCreateDTO;
+import br.com.gritti.app.application.dto.user.UserResponseDTO;
+import br.com.gritti.app.application.dto.user.UserUpdateDTO;
 import br.com.gritti.app.application.service.UserApplicationService;
 import br.com.gritti.app.interfaces.controller.docs.UserControllerDocs;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/user")
 @Tag(name = "User", description = "Operações relacionadas a usuários")
 public class UserController implements UserControllerDocs {
+  private final UserApplicationService userApplicationService;
+
   @Autowired
-  private UserApplicationService userApplicationService;
+  public UserController(UserApplicationService userApplicationService) {
+    this.userApplicationService = userApplicationService;
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
@@ -57,7 +58,8 @@ public class UserController implements UserControllerDocs {
     if(userDTO == null) {
       throw new IllegalArgumentException("The request cannot be empty");
     }
-    return ResponseEntity.ok(userApplicationService.createUser(userDTO));
+    URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
+    return ResponseEntity.created(location).body(userApplicationService.createUser(userDTO));
   }
 
   @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
