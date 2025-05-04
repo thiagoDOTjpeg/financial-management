@@ -33,10 +33,7 @@ public interface UserControllerDocs {
                       @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                       @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
               })
-  public ResponseEntity<PagedModel<EntityModel<UserResponseDTO>>> getUsers(
-          @RequestParam(value = "page", defaultValue = "0") Integer page,
-          @RequestParam(value = "size", defaultValue = "12") Integer size,
-          @RequestParam(value = "direction", defaultValue = "asc") String direction
+  public ResponseEntity<PagedModel<EntityModel<UserResponseDTO>>> getUsers(Integer page, Integer size, String direction
   );
 
   @Operation(summary = "Buscar usuário específico pelo ID",

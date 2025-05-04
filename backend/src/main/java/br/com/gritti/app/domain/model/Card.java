@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "cards")
@@ -15,7 +16,7 @@ public class Card extends Auditable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(name = "credit_limit", nullable = false)
     private int creditLimit;
@@ -27,11 +28,11 @@ public class Card extends Auditable implements Serializable {
     @JoinColumn(name = "id_bank_account")
     private BankAccount bankAccount;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

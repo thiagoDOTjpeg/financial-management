@@ -8,6 +8,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "invoices")
@@ -17,7 +18,7 @@ public class Invoice extends Auditable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(nullable = false, unique = true)
     @Temporal(TemporalType.DATE)
@@ -42,11 +43,11 @@ public class Invoice extends Auditable implements Serializable {
     @JoinColumn(name = "id_installments")
     private Installment installment;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

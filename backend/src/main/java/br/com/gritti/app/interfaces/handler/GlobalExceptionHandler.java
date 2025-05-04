@@ -40,6 +40,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(InvalidBalanceException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllInvalidBalanceExceptions(Exception ex, WebRequest request) {
+    ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(),
+        request.getDescription(false));
+    return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(BadCredentialsException.class)
   public final ResponseEntity<ExceptionMessage> handleAllBadCredentialsExceptions(Exception ex, WebRequest request) {
     ExceptionMessage exceptionMessage = new ExceptionMessage(new Date(), ex.getMessage(),

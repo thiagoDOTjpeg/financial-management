@@ -1,7 +1,9 @@
 package br.com.gritti.app.domain.service;
 
+import br.com.gritti.app.application.mapper.BankAccountMapper;
 import br.com.gritti.app.domain.model.BankAccount;
 import br.com.gritti.app.infra.repository.BankAccountRepositoryImpl;
+import br.com.gritti.app.shared.exceptions.InvalidBalanceException;
 import br.com.gritti.app.shared.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +18,16 @@ public class BankAccountDomainService {
   private final Logger log = org.slf4j.LoggerFactory.getLogger(BankAccountDomainService.class);
 
   private final BankAccountRepositoryImpl bankAccountRepositoryImpl;
+  private final BankAccountMapper bankAccountMapper;
 
   @Autowired
-  public BankAccountDomainService(BankAccountRepositoryImpl bankAccountRepositoryImpl) {
+  public BankAccountDomainService(BankAccountRepositoryImpl bankAccountRepositoryImpl, BankAccountMapper bankAccountMapper) {
     this.bankAccountRepositoryImpl = bankAccountRepositoryImpl;
+    this.bankAccountMapper = bankAccountMapper;
   }
 
   public Page<BankAccount> getAccounts(Pageable pageable) {
     log.info("DOMAIN: Request received from application and getting all bank accounts from the repository");
-
     return bankAccountRepositoryImpl.findAll(pageable);
   }
 
@@ -34,16 +37,19 @@ public class BankAccountDomainService {
     return bankAccountRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bank account with id " + id + " not found"));
   }
 
-  public BankAccount createAccount(BankAccount account) {
+  public void createAccount(BankAccount account) {
     log.info("DOMAIN: Request received from application and creating a new bank account from the repository");
+    if(account.getBalance() == null) account.setBalance(0.0);
+    if(account.getBalance() < 0) throw new InvalidBalanceException("Invalid balance for bank account");
     bankAccountRepositoryImpl.save(account);
-    return account;
   }
 
   public BankAccount updateAccount(UUID id, BankAccount account) {
     log.info("DOMAIN: Request received from application and updating the bank account with id {}", account.getId());
+    if(account.getBalance() != null && account.getBalance() < 0) throw new InvalidBalanceException("Invalid balance for bank account");
     BankAccount entity = bankAccountRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bank account with id " + id + " not found"));
-    bankAccountRepositoryImpl.save(account);
+    bankAccountMapper.updateBankAccount(account, entity);
+    bankAccountRepositoryImpl.save(entity);
     return entity;
   }
 

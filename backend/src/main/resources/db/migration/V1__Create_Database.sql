@@ -55,7 +55,7 @@ create table public.bank_account
     updated_by varchar(255),
     balance    double precision,
     bank_name  varchar(255),
-    id_user_id uuid
+    id_user uuid
         constraint fk6e7hqh006av9jvj1u6h31d7u2
             references public.users
 );

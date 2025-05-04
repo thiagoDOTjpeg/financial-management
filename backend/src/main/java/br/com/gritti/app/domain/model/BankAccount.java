@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "bank_account")
@@ -15,20 +16,21 @@ public class BankAccount extends Auditable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     private String bankName;
 
     private Double balance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User id_user;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_user")
+    private User user;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -48,12 +50,12 @@ public class BankAccount extends Auditable implements Serializable {
         this.balance = balance;
     }
 
-    public User getId_user() {
-        return id_user;
+    public User getUser() {
+        return user;
     }
 
-    public void setId_user(User id_user) {
-        this.id_user = id_user;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

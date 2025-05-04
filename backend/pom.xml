@@ -163,6 +163,14 @@
         </dependency>
 
         <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.6.3</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
         </dependency>

@@ -2,8 +2,11 @@ package br.com.gritti.app.interfaces.controller;
 
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
+import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
 import br.com.gritti.app.application.service.BankAccountApplicationService;
+import br.com.gritti.app.interfaces.controller.docs.BankAccountControllerDocs;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -14,17 +17,16 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/bankaccount")
 @Tag(name = "Bank Account", description = "Operações relacionadas a contas de bancos")
-public class BankAccountController {
+public class BankAccountController implements BankAccountControllerDocs {
   private final Logger log = org.slf4j.LoggerFactory.getLogger(BankAccountController.class);
   private final BankAccountApplicationService bankAccountApplicationService;
 
@@ -34,6 +36,7 @@ public class BankAccountController {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
   public ResponseEntity<PagedModel<EntityModel<BankAccountResponseDTO>>> getBankAccounts(
           @RequestParam(value = "page", defaultValue = "0") Integer page,
           @RequestParam(value = "size", defaultValue = "12") Integer size,
@@ -45,22 +48,33 @@ public class BankAccountController {
     return ResponseEntity.ok(bankAccountApplicationService.getAccounts(pageable));
   }
 
-  public ResponseEntity<BankAccountResponseDTO> getAccountById(UUID id) {
+  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
+  public ResponseEntity<BankAccountResponseDTO> getAccountById(@PathVariable UUID id) {
     log.info("CONTROLLER: Request received from the client and passing to the application to get bank account with id {}", id);
     return ResponseEntity.ok(bankAccountApplicationService.getAccountById(id));
   }
 
-  public ResponseEntity<BankAccountResponseDTO> createAccount(BankAccountCreateDTO bankAccountCreateDTO) {
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
+  public ResponseEntity<BankAccountResponseDTO> createAccount(@RequestBody @Valid BankAccountCreateDTO bankAccountCreateDTO) {
     log.info("CONTROLLER: Request received from the client and passing to the application to create a new bank account");
-    return ResponseEntity.ok(bankAccountApplicationService.createAccount(bankAccountCreateDTO));
+    URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
+    return ResponseEntity.created(location).body(bankAccountApplicationService.createAccount(bankAccountCreateDTO));
   }
 
-  public ResponseEntity<BankAccountResponseDTO> updateAccount(UUID id, BankAccountResponseDTO bankAccountDTO) {
-
+  @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
+  public ResponseEntity<BankAccountResponseDTO> updateAccount(@PathVariable UUID id, @RequestBody @Valid BankAccountUpdateDTO bankAccountDTO) {
+    log.info("CONTROLLER: Request received from the client and passing to the application to update a bank account");
+    return ResponseEntity.ok(bankAccountApplicationService.updateAccount(id, bankAccountDTO));
   }
 
-  public ResponseEntity<?> deleteAccount(UUID id) {
-
+  @DeleteMapping("/{id}")
+  @Override
+  public ResponseEntity<?> deleteAccount(@PathVariable UUID id) {
+    log.info("CONTROLLER: Request received from the client and passing to the application to delete a bank account");
+    bankAccountApplicationService.deleteAccount(id);
+    return ResponseEntity.noContent().build();
   }
-
 }

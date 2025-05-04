@@ -4,6 +4,7 @@ import br.com.gritti.app.application.dto.user.UserAssignRoleDTO;
 import br.com.gritti.app.application.dto.user.UserCreateDTO;
 import br.com.gritti.app.application.dto.user.UserResponseDTO;
 import br.com.gritti.app.application.dto.user.UserUpdateDTO;
+import br.com.gritti.app.application.valueobjects.UserMinimalVO;
 import br.com.gritti.app.domain.enums.AccountStatus;
 import br.com.gritti.app.interfaces.controller.UserController;
 
@@ -21,5 +22,9 @@ public class UserHateoasUtil {
     if(userResponseDTO.getAccountStatus() == AccountStatus.ACTIVE) {
       userResponseDTO.add(linkTo(methodOn(UserController.class).inactivateUser(userResponseDTO.getId())).withRel("inactivate-user").withType("PATCH"));
     }
+  }
+
+  public static void addLinkGetMinimalVO(UserMinimalVO userMinimalVO) {
+    userMinimalVO.add(linkTo(methodOn(UserController.class).getUserById(userMinimalVO.getId())).withSelfRel().withType("GET"));
   }
 }

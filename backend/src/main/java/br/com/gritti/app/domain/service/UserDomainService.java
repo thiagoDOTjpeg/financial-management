@@ -62,6 +62,7 @@ public class UserDomainService implements UserDetailsService {
 
   @Transactional
   public User updateUser(UUID id, User newUser) {
+    log.info("DOMAIN: Request received from application and updating user {} and passing to the repository", id);
     User entity = userRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
     validateUsernameEmailForUpdate(id, newUser.getEmail(), newUser.getUsername());
     userMapper.updateUser(newUser, entity);

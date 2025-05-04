@@ -2,11 +2,14 @@ package br.com.gritti.app.application.service;
 
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
+import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
 import br.com.gritti.app.application.mapper.BankAccountMapper;
 import br.com.gritti.app.domain.model.BankAccount;
 import br.com.gritti.app.domain.service.BankAccountDomainService;
+import br.com.gritti.app.domain.service.UserDomainService;
 import br.com.gritti.app.interfaces.controller.BankAccountController;
 import br.com.gritti.app.shared.util.BankAccountHateoasUtil;
+import br.com.gritti.app.shared.util.UserHateoasUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,12 +31,14 @@ public class BankAccountApplicationService {
   private final BankAccountDomainService bankAccountDomainService;
   private final BankAccountMapper bankAccountMapper;
   private final PagedResourcesAssembler<BankAccountResponseDTO> assembler;
+  private final UserDomainService userDomainService;
 
   @Autowired
-  public BankAccountApplicationService(BankAccountDomainService bankAccountDomainService, BankAccountMapper bankAccountMapper, PagedResourcesAssembler<BankAccountResponseDTO> assembler) {
+  public BankAccountApplicationService(BankAccountDomainService bankAccountDomainService, BankAccountMapper bankAccountMapper, PagedResourcesAssembler<BankAccountResponseDTO> assembler, UserDomainService userDomainService) {
     this.bankAccountDomainService = bankAccountDomainService;
     this.bankAccountMapper = bankAccountMapper;
     this.assembler = assembler;
+    this.userDomainService = userDomainService;
   }
 
   public PagedModel<EntityModel<BankAccountResponseDTO>> getAccounts(Pageable pageable) {
@@ -42,10 +47,11 @@ public class BankAccountApplicationService {
     Page<BankAccountResponseDTO> accountsWithLinks = accounts.map(a -> {
       BankAccountResponseDTO accountDto = bankAccountMapper.accountToAccountResponseDTO(a);
       BankAccountHateoasUtil.addLinks(accountDto);
+      UserHateoasUtil.addLinkGetMinimalVO(accountDto.getUser());
       return accountDto;
     });
 
-    Link findAllLinks = linkTo(methodOn(BankAccountController.class).getBankAccounts(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))).withSelfRel();
+    Link findAllLinks = linkTo(methodOn(BankAccountController.class).getBankAccounts(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort().toString())).withSelfRel();
     return assembler.toModel(accountsWithLinks, findAllLinks);
   }
 
@@ -54,19 +60,22 @@ public class BankAccountApplicationService {
     BankAccount account = bankAccountDomainService.getAccountById(id);
     BankAccountResponseDTO accountDto = bankAccountMapper.accountToAccountResponseDTO(account);
     BankAccountHateoasUtil.addLinks(accountDto);
+    UserHateoasUtil.addLinkGetMinimalVO(accountDto.getUser());
     return accountDto;
   }
 
   public BankAccountResponseDTO createAccount(BankAccountCreateDTO accountCreateDTO) {
     log.info("APPLICATION: Request received from controller and passing to the domain to create a new bank account");
     BankAccount account = bankAccountMapper.accountCreateDTOtoAccount(accountCreateDTO);
+    account.setUser(userDomainService.getUserById(accountCreateDTO.getUserId()));
     bankAccountDomainService.createAccount(account);
     return bankAccountMapper.accountToAccountResponseDTO(account);
   }
 
-  public BankAccountResponseDTO updateAccount(UUID id, BankAccount account) {
+  public BankAccountResponseDTO updateAccount(UUID id, BankAccountUpdateDTO account) {
     log.info("APPLICATION: Request received from controller and passing to the domain to update a bank account by id: {}", id);
-    BankAccount updatedAccount = bankAccountDomainService.updateAccount(id, account);
+    BankAccount accountUpdate = bankAccountMapper.accountUpdateDTOtoAccount(account);
+    BankAccount updatedAccount = bankAccountDomainService.updateAccount(id, accountUpdate);
     return bankAccountMapper.accountToAccountResponseDTO(updatedAccount);
   }
 

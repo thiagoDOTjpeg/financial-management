@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "installments")
@@ -17,7 +18,7 @@ public class Installment extends Auditable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(name = "number_installment", nullable = false)
     private Integer numberInstallment;
@@ -34,11 +35,11 @@ public class Installment extends Auditable implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Invoice> invoices;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

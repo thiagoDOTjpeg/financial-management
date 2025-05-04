@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "categories")
@@ -16,7 +17,7 @@ public class Category extends Auditable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(nullable = false)
     private String name;
@@ -27,11 +28,11 @@ public class Category extends Auditable implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private User id_user;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
