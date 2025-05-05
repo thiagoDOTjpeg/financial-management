@@ -23,24 +23,25 @@ public class RoleRepositoryImpl implements RoleRepository {
 
   @Override
   public List<Role> findAll() {
-    log.info("REPOSITORY: Request received from domain and getting all roles from the database");
+    log.info("REPO: Request received from domain and getting all roles from the database");
     return jpaRoleRepository.findAll();
   }
 
   @Override
   public Optional<Role> findById(UUID id) {
-    log.info("REPOSITORY: Request received from domain and getting role with id {} from the database", id);
+    log.info("REPO: Request received from domain and getting role with id {} from the database", id);
     return jpaRoleRepository.findById(id);
   }
 
   @Override
   public Optional<Role> findByName(String name) {
+    log.info("REPO: Request received from domain and getting role with name {} from the database", name);
     return jpaRoleRepository.findByName(name);
   }
 
   @Override
   public void save(Role role) {
-    log.info("REPOSITORY: Request received from domain and saving role {} in the database", role);
+    log.info("REPO: Request received from domain and saving role {} in the database", role);
     jpaRoleRepository.save(role);
   }
 

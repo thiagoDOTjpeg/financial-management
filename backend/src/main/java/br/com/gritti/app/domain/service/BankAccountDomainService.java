@@ -31,6 +31,11 @@ public class BankAccountDomainService {
     return bankAccountRepositoryImpl.findAll(pageable);
   }
 
+  public Page<BankAccount> getAccounts(Pageable pageable, String username) {
+    log.info("DOMAIN: Request received from application and getting all bank accounts from the repository and filtering by username: {}", username);
+    return bankAccountRepositoryImpl.findAllByUsername(pageable, username);
+  }
+
   public BankAccount getAccountById(UUID id) {
     log.info("DOMAIN: Request received from application and getting bank account by id from the repository");
 

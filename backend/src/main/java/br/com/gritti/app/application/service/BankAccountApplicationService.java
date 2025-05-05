@@ -9,6 +9,7 @@ import br.com.gritti.app.domain.service.BankAccountDomainService;
 import br.com.gritti.app.domain.service.UserDomainService;
 import br.com.gritti.app.interfaces.controller.BankAccountController;
 import br.com.gritti.app.shared.util.BankAccountHateoasUtil;
+import br.com.gritti.app.shared.util.SecurityUtil;
 import br.com.gritti.app.shared.util.UserHateoasUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -34,16 +36,31 @@ public class BankAccountApplicationService {
   private final UserDomainService userDomainService;
 
   @Autowired
-  public BankAccountApplicationService(BankAccountDomainService bankAccountDomainService, BankAccountMapper bankAccountMapper, PagedResourcesAssembler<BankAccountResponseDTO> assembler, UserDomainService userDomainService) {
+  public BankAccountApplicationService(BankAccountDomainService bankAccountDomainService, BankAccountMapper bankAccountMapper,
+                                       PagedResourcesAssembler<BankAccountResponseDTO> assembler, UserDomainService userDomainService) {
     this.bankAccountDomainService = bankAccountDomainService;
     this.bankAccountMapper = bankAccountMapper;
     this.assembler = assembler;
     this.userDomainService = userDomainService;
   }
 
-  public PagedModel<EntityModel<BankAccountResponseDTO>> getAccounts(Pageable pageable) {
+  public PagedModel<EntityModel<BankAccountResponseDTO>> getAccounts(Pageable pageable, String username) {
     log.info("APPLICATION: Request received from controller and passing to domain to get all bank accounts");
-    Page<BankAccount> accounts = bankAccountDomainService.getAccounts(pageable);
+    String currentUsername = SecurityUtil.getCurrentUsername();
+    boolean isAdmin = SecurityUtil.isAdmin();
+    Page<BankAccount> accounts;
+    if(username != null && !username.isBlank()) {
+      if(!isAdmin && !username.equals(currentUsername)){
+        throw new AccessDeniedException("Access denied, you don't have permission to access this resource");
+      }
+      accounts = bankAccountDomainService.getAccounts(pageable, username);
+    } else if(!isAdmin){
+      username = currentUsername;
+      accounts = bankAccountDomainService.getAccounts(pageable, username);
+    } else {
+      accounts = bankAccountDomainService.getAccounts(pageable);
+    }
+
     Page<BankAccountResponseDTO> accountsWithLinks = accounts.map(a -> {
       BankAccountResponseDTO accountDto = bankAccountMapper.accountToAccountResponseDTO(a);
       BankAccountHateoasUtil.addLinks(accountDto);
@@ -51,7 +68,7 @@ public class BankAccountApplicationService {
       return accountDto;
     });
 
-    Link findAllLinks = linkTo(methodOn(BankAccountController.class).getBankAccounts(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort().toString())).withSelfRel();
+    Link findAllLinks = linkTo(methodOn(BankAccountController.class).getBankAccounts(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort().toString(), "")).withSelfRel();
     return assembler.toModel(accountsWithLinks, findAllLinks);
   }
 

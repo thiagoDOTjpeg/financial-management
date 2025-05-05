@@ -24,14 +24,14 @@ public interface BankAccountControllerDocs {
           responses = {
           @ApiResponse(description = "Success", responseCode = "200", content = {
                   @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                          array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))),
+                          array = @ArraySchema(schema = @Schema(implementation = BankAccountResponseDTO.class))),
           }),
           @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
           @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
           @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
           @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
   })
-  public ResponseEntity<PagedModel<EntityModel<BankAccountResponseDTO>>> getBankAccounts(Integer page, Integer size, String direction);
+  public ResponseEntity<PagedModel<EntityModel<BankAccountResponseDTO>>> getBankAccounts(Integer page, Integer size, String direction, String username);
 
   @Operation(summary = "Consulta uma conta bancária pelo ID.",
           description = "Busca e retorna os dados detalhados de uma conta bancária específica, de acordo com o identificador (UUID) informado. " +
@@ -39,7 +39,7 @@ public interface BankAccountControllerDocs {
           responses = {
           @ApiResponse(description = "Success", responseCode = "200", content = {
                   @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                          array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))),
+                          array = @ArraySchema(schema = @Schema(implementation = BankAccountResponseDTO.class))),
           }),
           @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
           @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -53,7 +53,7 @@ public interface BankAccountControllerDocs {
           responses = {
           @ApiResponse(description = "Success", responseCode = "200", content = {
                   @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                          array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))),
+                          array = @ArraySchema(schema = @Schema(implementation = BankAccountResponseDTO.class))),
           }),
           @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
           @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -68,7 +68,7 @@ public interface BankAccountControllerDocs {
           responses = {
           @ApiResponse(description = "Success", responseCode = "200", content = {
                   @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                          array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))),
+                          array = @ArraySchema(schema = @Schema(implementation = BankAccountResponseDTO.class))),
           }),
           @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
           @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -83,7 +83,7 @@ public interface BankAccountControllerDocs {
           responses = {
           @ApiResponse(description = "Success", responseCode = "200", content = {
                   @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                          array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))),
+                          array = @ArraySchema(schema = @Schema(implementation = BankAccountResponseDTO.class))),
           }),
           @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
           @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

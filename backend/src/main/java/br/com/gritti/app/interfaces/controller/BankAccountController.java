@@ -40,12 +40,13 @@ public class BankAccountController implements BankAccountControllerDocs {
   public ResponseEntity<PagedModel<EntityModel<BankAccountResponseDTO>>> getBankAccounts(
           @RequestParam(value = "page", defaultValue = "0") Integer page,
           @RequestParam(value = "size", defaultValue = "12") Integer size,
-          @RequestParam(value = "direction", defaultValue = "asc") String direction
+          @RequestParam(value = "direction", defaultValue = "asc") String direction,
+          @RequestParam(value = "username", required = false) String username
   ) {
     log.info("CONTROLLER: Request received from the client and passing to the application to get all bank accounts");
     Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
     Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "bankName"));
-    return ResponseEntity.ok(bankAccountApplicationService.getAccounts(pageable));
+    return ResponseEntity.ok(bankAccountApplicationService.getAccounts(pageable, username));
   }
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

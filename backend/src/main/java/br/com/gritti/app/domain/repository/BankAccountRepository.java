@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface BankAccountRepository {
   Page<BankAccount> findAll(Pageable pageable);
+  Page<BankAccount> findAllByUsername(Pageable pageable, String username);
   Optional<BankAccount> findById(UUID id);
   void save(BankAccount account);
   void delete(BankAccount account);
