@@ -64,7 +64,7 @@ public class User extends Auditable implements UserDetails, Serializable {
     }
 
     public void setRoles(Role role) {
-        if(role != null || !roles.contains(role)) {
+        if(role != null && !roles.contains(role)) {
             roles.add(role);
         }
     }

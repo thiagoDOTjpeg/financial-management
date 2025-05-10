@@ -1,9 +1,6 @@
 package br.com.gritti.app.interfaces.controller.docs;
 
-import br.com.gritti.app.application.dto.user.UserAssignRoleDTO;
-import br.com.gritti.app.application.dto.user.UserCreateDTO;
-import br.com.gritti.app.application.dto.user.UserResponseDTO;
-import br.com.gritti.app.application.dto.user.UserUpdateDTO;
+import br.com.gritti.app.application.dto.user.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,7 +10,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 import java.util.UUID;
@@ -35,6 +32,21 @@ public interface UserControllerDocs {
               })
   public ResponseEntity<PagedModel<EntityModel<UserResponseDTO>>> getUsers(Integer page, Integer size, String direction
   );
+
+  @Operation(summary = "Buscar contas bancárias do usuário pelo ID",
+          description =  "Retorna as contas bancárias associadas a um usuário específico identificado pelo UUID fornecido, incluindo detalhes das contas e informações bancárias",
+          tags = {"User"},
+          responses = {
+                  @ApiResponse(description = "Success", responseCode = "200", content = {
+                          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                  array = @ArraySchema(schema = @Schema(implementation = UserResponseDTO.class))),
+                  }),
+                  @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                  @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                  @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                  @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+          })
+  ResponseEntity<UserBankAccountsResponseDTO> getUserBankAccounts(@PathVariable UUID id);
 
   @Operation(summary = "Buscar usuário específico pelo ID",
           description =  "Retorna os dados detalhados de um único usuário identificado pelo UUID fornecido, incluindo informações pessoais e permissões associadas",

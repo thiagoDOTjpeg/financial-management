@@ -6,6 +6,7 @@ import br.com.gritti.app.infra.repository.BankAccountRepositoryImpl;
 import br.com.gritti.app.shared.exceptions.InvalidBalanceException;
 import br.com.gritti.app.shared.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @Service
 public class BankAccountDomainService {
-  private final Logger log = org.slf4j.LoggerFactory.getLogger(BankAccountDomainService.class);
+  private final Logger log = LoggerFactory.getLogger(BankAccountDomainService.class);
 
   private final BankAccountRepositoryImpl bankAccountRepositoryImpl;
   private final BankAccountMapper bankAccountMapper;
@@ -38,7 +39,6 @@ public class BankAccountDomainService {
 
   public BankAccount getAccountById(UUID id) {
     log.info("DOMAIN: Request received from application and getting bank account by id from the repository");
-
     return bankAccountRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bank account with id " + id + " not found"));
   }
 

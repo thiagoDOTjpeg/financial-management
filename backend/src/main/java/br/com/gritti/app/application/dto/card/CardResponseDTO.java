@@ -1,36 +1,37 @@
-package br.com.gritti.app.application.dto.bankaccount;
+package br.com.gritti.app.application.dto.card;
 
-import br.com.gritti.app.application.valueobjects.UserMinimalVO;
+import br.com.gritti.app.application.valueobjects.BankAccountMinimalVO;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Relation(collectionRelation = "bank-account")
-public class BankAccountResponseDTO extends RepresentationModel<BankAccountResponseDTO> {
-
+@Relation(collectionRelation = "card")
+public class CardResponseDTO extends RepresentationModel<CardResponseDTO> {
   private UUID id;
-  private String bankName;
-  private Double balance;
-  private UserMinimalVO user;
+  private int creditLimit;
+  private String cardBrand;
+  private BankAccountMinimalVO bankAccount;
+
   private LocalDateTime createdAt;
   private String createdBy;
   private LocalDateTime updatedAt;
   private String updatedBy;
 
-  public BankAccountResponseDTO(UUID id, String bankName, Double balance, UserMinimalVO user, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
+  public CardResponseDTO() {
+  }
+
+  public CardResponseDTO(UUID id, int creditLimit, String cardBrand, BankAccountMinimalVO bankAccount,
+                         LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
     this.id = id;
-    this.bankName = bankName;
-    this.balance = balance;
-    this.user = user;
+    this.creditLimit = creditLimit;
+    this.cardBrand = cardBrand;
+    this.bankAccount = bankAccount;
     this.createdAt = createdAt;
     this.createdBy = createdBy;
     this.updatedAt = updatedAt;
     this.updatedBy = updatedBy;
-  }
-
-  public BankAccountResponseDTO() {
   }
 
   public UUID getId() {
@@ -41,28 +42,28 @@ public class BankAccountResponseDTO extends RepresentationModel<BankAccountRespo
     this.id = id;
   }
 
-  public String getBankName() {
-    return bankName;
+  public int getCreditLimit() {
+    return creditLimit;
   }
 
-  public void setBankName(String bankName) {
-    this.bankName = bankName;
+  public void setCreditLimit(int creditLimit) {
+    this.creditLimit = creditLimit;
   }
 
-  public Double getBalance() {
-    return balance;
+  public String getCardBrand() {
+    return cardBrand;
   }
 
-  public void setBalance(Double balance) {
-    this.balance = balance;
+  public void setCardBrand(String cardBrand) {
+    this.cardBrand = cardBrand;
   }
 
-  public UserMinimalVO getUser() {
-    return user;
+  public BankAccountMinimalVO getBankAccount() {
+    return bankAccount;
   }
 
-  public void setUser(UserMinimalVO user) {
-    this.user = user;
+  public void setBankAccount(BankAccountMinimalVO bankAccount) {
+    this.bankAccount = bankAccount;
   }
 
   public LocalDateTime getCreatedAt() {

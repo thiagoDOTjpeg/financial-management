@@ -24,7 +24,7 @@ public class Card extends Auditable implements Serializable {
     @Column(name = "card_brand", nullable = false)
     private String cardBrand;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_bank_account")
     private BankAccount bankAccount;
 

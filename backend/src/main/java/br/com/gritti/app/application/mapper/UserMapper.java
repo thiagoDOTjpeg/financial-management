@@ -1,5 +1,6 @@
 package br.com.gritti.app.application.mapper;
 
+import br.com.gritti.app.application.dto.user.UserBankAccountsResponseDTO;
 import br.com.gritti.app.application.dto.user.UserCreateDTO;
 import br.com.gritti.app.application.dto.user.UserResponseDTO;
 import br.com.gritti.app.application.dto.user.UserUpdateDTO;
@@ -7,11 +8,11 @@ import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.valueobject.Email;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
-public interface UserMapper {
+import static br.com.gritti.app.application.util.AdminUtil.applyAdminProperties;
 
-  @Mapping(target = "email", source = "email")
-  UserCreateDTO userToUserCreateDTO(User user);
+@Mapper(componentModel = "spring")
+public interface UserMapper extends DefaultMapper{
+
 
   @Mapping(target = "password", ignore = true)
   @Mapping(target = "email", source = "email")
@@ -30,24 +31,26 @@ public interface UserMapper {
   @Mapping(target = "roles", ignore = true)
   UserResponseDTO userToUserResponseDTO(User user);
 
-  default UserResponseDTO userToUserResponseDTO(User user, boolean isAdmin) {
-    UserResponseDTO dto = userToUserResponseDTO(user);
-    if(isAdmin) {
-      dto.setRoles(user.getPermissions());
-      dto.setCreatedAt(user.getCreatedAt());
-      dto.setUpdatedAt(user.getUpdatedAt());
-      dto.setCreatedBy(user.getCreatedBy());
-      dto.setUpdatedBy(user.getUpdatedBy());
+  @Mapping(target = "createdBy", ignore = true)
+  @Mapping(target = "createdAt", ignore = true)
+  @Mapping(target = "updatedBy", ignore = true)
+  @Mapping(target = "updatedAt", ignore = true)
+  @Mapping(target = "roles", ignore = true)
+  UserBankAccountsResponseDTO userToUserBankAccountsResponseDTO(User user);
 
+  default UserBankAccountsResponseDTO userToUserBankAccountsResponseDTO(User user, boolean isAdmin) {
+    UserBankAccountsResponseDTO dto = userToUserBankAccountsResponseDTO(user);
+    if(isAdmin) {
+      applyAdminProperties(user, dto);
     }
     return dto;
   }
 
-  default Email stringToEmail(String email) {
-    return email != null ? new Email(email) : null;
-  }
-
-  default String emailToString(Email email) {
-    return email != null ? email.getValue() : null;
+  default UserResponseDTO userToUserResponseDTO(User user, boolean isAdmin) {
+    UserResponseDTO dto = userToUserResponseDTO(user);
+    if(isAdmin) {
+      applyAdminProperties(user, dto);
+    }
+    return dto;
   }
 }

@@ -1,6 +1,7 @@
 package br.com.gritti.app.application.mapper;
 
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
+import br.com.gritti.app.application.dto.bankaccount.BankAccountDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
 import br.com.gritti.app.domain.model.BankAccount;
@@ -11,7 +12,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
-public interface BankAccountMapper {
+public interface BankAccountMapper extends DefaultMapper {
 
   BankAccountResponseDTO accountToAccountResponseDTO(BankAccount account);
 
@@ -20,14 +21,8 @@ public interface BankAccountMapper {
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateBankAccount(BankAccount updatedAccount, @MappingTarget BankAccount account);
 
+  BankAccountDTO accountToAccountDTO(BankAccount account);
+
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   BankAccount accountUpdateDTOtoAccount(BankAccountUpdateDTO accountUpdateDTO);
-
-  default Email stringToEmail(String email) {
-    return email != null ? new Email(email) : null;
-  }
-
-  default String emailToString(Email email) {
-    return email != null ? email.getValue() : null;
-  }
 }

@@ -1,12 +1,18 @@
 package br.com.gritti.app.application.service;
 
+import br.com.gritti.app.application.dto.bankaccount.BankAccountDTO;
+import br.com.gritti.app.application.dto.user.UserBankAccountsResponseDTO;
 import br.com.gritti.app.application.dto.user.UserCreateDTO;
 import br.com.gritti.app.application.dto.user.UserResponseDTO;
 import br.com.gritti.app.application.dto.user.UserUpdateDTO;
+import br.com.gritti.app.application.mapper.BankAccountMapper;
 import br.com.gritti.app.application.mapper.UserMapper;
+import br.com.gritti.app.domain.model.BankAccount;
 import br.com.gritti.app.domain.model.User;
+import br.com.gritti.app.domain.service.BankAccountDomainService;
 import br.com.gritti.app.domain.service.UserDomainService;
 import br.com.gritti.app.interfaces.controller.UserController;
+import br.com.gritti.app.shared.util.BankAccountHateoasUtil;
 import br.com.gritti.app.shared.util.SecurityUtil;
 import br.com.gritti.app.shared.util.UserHateoasUtil;
 import org.slf4j.Logger;
@@ -25,22 +31,29 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class UserApplicationService {
   private final Logger log = LoggerFactory.getLogger(UserApplicationService.class.getName());
   private final UserDomainService userDomainService;
+  private final BankAccountDomainService bankAccountDomainService;;
   private final UserMapper userMapper;
+  private final BankAccountMapper bankAccountMapper;
   private final PasswordEncoder encoder;
   private final PagedResourcesAssembler<UserResponseDTO> assembler;
 
   @Autowired
-  public UserApplicationService(UserDomainService userDomainService, UserMapper userMapper, PasswordEncoder encoder, PagedResourcesAssembler<UserResponseDTO> assembler) {
+  public UserApplicationService(UserDomainService userDomainService, UserMapper userMapper,
+                                PasswordEncoder encoder, PagedResourcesAssembler<UserResponseDTO> assembler,
+                                BankAccountDomainService bankAccountDomainService, BankAccountMapper bankAccountMapper) {
     this.userDomainService = userDomainService;
     this.userMapper = userMapper;
     this.encoder = encoder;
     this.assembler = assembler;
+    this.bankAccountDomainService = bankAccountDomainService;
+    this.bankAccountMapper = bankAccountMapper;
   }
 
   public PagedModel<EntityModel<UserResponseDTO>> getUsers(Pageable pageable) {
@@ -59,13 +72,27 @@ public class UserApplicationService {
   }
 
   public UserResponseDTO getUserById(UUID id) {
-      log.info("APPLICATION: Received request in application and passing to domain to find a user by id");
-      boolean isAdmin = SecurityUtil.isAdmin();
+    log.info("APPLICATION: Received request in application and passing to domain to find a user by id");
+    boolean isAdmin = SecurityUtil.isAdmin();
 
-      User user = userDomainService.getUserById(id);
-      UserResponseDTO userDTO = userMapper.userToUserResponseDTO(user, isAdmin);
-      UserHateoasUtil.addLinks(userDTO);
-      return userDTO;
+    User user = userDomainService.getUserById(id);
+    UserResponseDTO userDTO = userMapper.userToUserResponseDTO(user, isAdmin);
+    UserHateoasUtil.addLinks(userDTO);
+    return userDTO;
+  }
+
+  public UserBankAccountsResponseDTO getUserBankAccounts(UUID id) {
+    log.info("APPLICATION: Received request in application and passing to domain to find a user bank accounts");
+    boolean isAdmin = SecurityUtil.isAdmin();
+    User user = userDomainService.getUserById(id);
+    List<BankAccountDTO> bankAccounts = bankAccountDomainService.getAccounts(Pageable.unpaged(), user.getUsername()).getContent().stream().map(b -> {
+      BankAccountDTO dto = bankAccountMapper.accountToAccountDTO(b);
+      BankAccountHateoasUtil.addLinkGet(dto);
+      return dto;
+    }).toList();
+    UserBankAccountsResponseDTO userBankAccountsResponseDTO = userMapper.userToUserBankAccountsResponseDTO(user, isAdmin);
+    userBankAccountsResponseDTO.setBankAccounts(bankAccounts);
+    return userBankAccountsResponseDTO;
   }
 
   public UserResponseDTO createUser(UserCreateDTO userDTO) {
