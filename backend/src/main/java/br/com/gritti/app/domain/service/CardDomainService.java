@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,12 +35,17 @@ public class CardDomainService {
 
   public Page<Card> getCards(Pageable pageable, String username) {
     log.info("DOMAIN: Request received from application and getting all cards from the repository and filtering by username: {}", username);
-    return cardRepositoryImpl.findAll(pageable);
+    return cardRepositoryImpl.findAllByUsername(pageable, username);
   }
 
   public Card getCardById(UUID id) {
     log.info("DOMAIN: Request received from application and getting card with id {} from the repository", id);
     return cardRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Card with id " + id + " not found"));
+  }
+
+  public List<Card> getCardsByAccount(UUID bankAccountId) {
+    log.info("DOMAIN: Request received from application and getting all cards from the repository and filtering by bank account id: {}", bankAccountId);
+    return cardRepositoryImpl.findCardByAccount(bankAccountId);
   }
 
   public void createCard(Card card, UUID bankAccountId) {

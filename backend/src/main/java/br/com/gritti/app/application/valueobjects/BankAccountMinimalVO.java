@@ -8,16 +8,14 @@ import java.util.UUID;
 public class BankAccountMinimalVO extends RepresentationModel<BankAccountMinimalVO> {
   private UUID id;
   private String bankName;
-  private Double balance;
   private UserMinimalVO user;
 
   public BankAccountMinimalVO() {
   }
 
-  public BankAccountMinimalVO(UUID id, String bankName, Double balance, UserMinimalVO user) {
+  public BankAccountMinimalVO(UUID id, String bankName, UserMinimalVO user) {
     this.id = id;
     this.bankName = bankName;
-    this.balance = balance;
     this.user = user;
   }
 
@@ -35,14 +33,6 @@ public class BankAccountMinimalVO extends RepresentationModel<BankAccountMinimal
 
   public void setBankName(String bankName) {
     this.bankName = bankName;
-  }
-
-  public Double getBalance() {
-    return balance;
-  }
-
-  public void setBalance(Double balance) {
-    this.balance = balance;
   }
 
   public UserMinimalVO getUser() {

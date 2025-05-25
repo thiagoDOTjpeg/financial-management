@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +28,18 @@ public class CardRepositoryImpl implements CardRepository {
   public Page<Card> findAll(Pageable pageable ) {
     log.info("REPO: Request received from domain and finding all cards from the database");
     return jpaCardRepository.findAll(pageable);
+  }
+
+  @Override
+  public Page<Card> findAllByUsername(Pageable pageable, String username) {
+    log.info("REPO: Request received from domain and finding all cards from the database and filtering by username: {}", username);
+    return jpaCardRepository.findAllByUsername(username, pageable);
+  }
+
+  @Override
+  public List<Card> findCardByAccount(UUID bankAccountId) {
+    log.info("REPO: Request received from domain and finding all cards from the database and filtering by bank account id: {}", bankAccountId);
+    return jpaCardRepository.findCardByAccount(bankAccountId);
   }
 
   @Override

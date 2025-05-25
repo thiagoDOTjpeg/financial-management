@@ -6,6 +6,9 @@ security:
       secret-key: eoflamengo
       expire-length: 3600000
 spring:
+  jackson:
+    deserialization:
+      accept-empty-string-as-null-object: true
   datasource:
     url: jdbc:postgresql://localhost:5432/financial_management
     username: admin

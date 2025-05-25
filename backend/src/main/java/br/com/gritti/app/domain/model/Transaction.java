@@ -32,12 +32,13 @@ public class Transaction extends Auditable implements Serializable {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Installment> installment;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_category")
     private Category category;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_installment")
+    private Installment installment;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_invoice")
@@ -75,11 +76,11 @@ public class Transaction extends Auditable implements Serializable {
         this.paymentType = paymentType;
     }
 
-    public List<Installment> getInstallment() {
+    public Installment getInstallment() {
         return installment;
     }
 
-    public void setInstallment(List<Installment> installment) {
+    public void setInstallment(Installment installment) {
         this.installment = installment;
     }
 

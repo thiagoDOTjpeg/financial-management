@@ -26,7 +26,8 @@ public class Category extends Auditable implements Serializable {
     private CategoryType type;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private User id_user;
+    @JoinColumn(name = "id_user_id")
+    private User user;
 
     public UUID getId() {
         return id;
@@ -52,12 +53,12 @@ public class Category extends Auditable implements Serializable {
         this.type = type;
     }
 
-    public User getId_user() {
-        return id_user;
+    public User getUser() {
+        return user;
     }
 
-    public void setId_user(User id_user) {
-        this.id_user = id_user;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

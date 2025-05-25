@@ -7,7 +7,7 @@ import org.springframework.hateoas.server.core.Relation;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Relation(collectionRelation = "card")
+@Relation(collectionRelation = "cards")
 public class CardResponseDTO extends RepresentationModel<CardResponseDTO> {
   private UUID id;
   private int creditLimit;

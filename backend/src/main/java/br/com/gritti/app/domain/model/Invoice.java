@@ -91,6 +91,14 @@ public class Invoice extends Auditable implements Serializable {
         this.card = card;
     }
 
+    public Installment getInstallment() {
+        return installment;
+    }
+
+    public void setInstallment(Installment installment) {
+        this.installment = installment;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Invoice invoice)) return false;

@@ -9,19 +9,11 @@ public class BankAccountDTO extends RepresentationModel<BankAccountDTO> {
   private UUID id;
   private String bankName;
   private Double balance;
-  private LocalDateTime createdAt;
-  private String createdBy;
-  private LocalDateTime updatedAt;
-  private String updatedBy;
 
-  public BankAccountDTO(UUID id, String bankName, Double balance, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
+  public BankAccountDTO(UUID id, String bankName, Double balance) {
     this.id = id;
     this.bankName = bankName;
     this.balance = balance;
-    this.createdAt = createdAt;
-    this.createdBy = createdBy;
-    this.updatedAt = updatedAt;
-    this.updatedBy = updatedBy;
   }
 
   public BankAccountDTO() {
@@ -51,35 +43,5 @@ public class BankAccountDTO extends RepresentationModel<BankAccountDTO> {
     this.balance = balance;
   }
 
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
 
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public String getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(String createdBy) {
-    this.createdBy = createdBy;
-  }
-
-  public LocalDateTime getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
-  public String getUpdatedBy() {
-    return updatedBy;
-  }
-
-  public void setUpdatedBy(String updatedBy) {
-    this.updatedBy = updatedBy;
-  }
 }

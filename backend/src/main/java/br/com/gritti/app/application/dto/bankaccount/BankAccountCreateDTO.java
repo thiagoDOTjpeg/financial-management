@@ -1,17 +1,18 @@
 package br.com.gritti.app.application.dto.bankaccount;
 
-import java.util.UUID;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 public class BankAccountCreateDTO  {
+  @NotBlank(message = "Bank name Cannot Be Blank")
   private String bankName;
+  @NotNull(message = "Balance Cannot Be Null")
   private Double balance;
-  private UUID userId;
 
-  public BankAccountCreateDTO(String bankName, Double balance, UUID userId) {
+  public BankAccountCreateDTO(String bankName, Double balance) {
     this.bankName = bankName;
     this.balance = balance;
-    this.userId = userId;
   }
 
   public BankAccountCreateDTO() {
@@ -31,13 +32,5 @@ public class BankAccountCreateDTO  {
 
   public void setBalance(Double balance) {
     this.balance = balance;
-  }
-
-  public UUID getUserId() {
-    return userId;
-  }
-
-  public void setUserId(UUID userId) {
-    this.userId = userId;
   }
 }

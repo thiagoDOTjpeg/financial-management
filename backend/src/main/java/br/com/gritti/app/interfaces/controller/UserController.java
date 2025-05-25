@@ -63,11 +63,8 @@ public class UserController implements UserControllerDocs {
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
-  public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO userDTO) {
+  public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreateDTO userDTO) {
     log.info("CONTROLLER: Request received from the client and passing to the application to create a new user");
-    if(userDTO == null) {
-      throw new IllegalArgumentException("The request cannot be empty");
-    }
     URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
     return ResponseEntity.created(location).body(userApplicationService.createUser(userDTO));
   }
@@ -75,7 +72,7 @@ public class UserController implements UserControllerDocs {
   @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
                                   produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
-  public ResponseEntity<UserResponseDTO> updateUser(@PathVariable UUID id,@RequestBody UserUpdateDTO userDTO) {
+  public ResponseEntity<UserResponseDTO> updateUser(@PathVariable UUID id, @Valid @RequestBody UserUpdateDTO userDTO) {
     log.info("CONTROLLER: Request received from the client and passing to the application to update a user");
     return ResponseEntity.ok().body(userApplicationService.updateUser(id, userDTO));
   }

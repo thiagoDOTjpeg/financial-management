@@ -2,7 +2,11 @@ package br.com.gritti.app.interfaces.controller;
 
 import br.com.gritti.app.application.dto.card.CardCreateDTO;
 import br.com.gritti.app.application.dto.card.CardResponseDTO;
+import br.com.gritti.app.application.dto.card.CardUpdateDTO;
 import br.com.gritti.app.application.service.CardApplicationService;
+import br.com.gritti.app.interfaces.controller.docs.CardControllerDocs;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +26,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/card")
-public class CardController {
+@Tag(name = "Card", description = "Operações relacionadas a cartões")
+public class CardController implements CardControllerDocs {
   private final Logger log = LoggerFactory.getLogger(CardController.class);
   private final CardApplicationService cardApplicationService;
 
@@ -32,6 +37,7 @@ public class CardController {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
   public ResponseEntity<PagedModel<EntityModel<CardResponseDTO>>> getCards(
           @RequestParam(value = "page", defaultValue = "0") Integer page,
           @RequestParam(value = "size", defaultValue = "12") Integer size,
@@ -45,12 +51,15 @@ public class CardController {
   }
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
+
   public ResponseEntity<CardResponseDTO> getCardById(@PathVariable UUID id) {
     log.info("CONTROLLER: Request received from the client and passing to the application to get card with id {}", id);
     return ResponseEntity.ok(cardApplicationService.getCardById(id));
   }
 
-  @GetMapping(value = "/{id}")
+  @DeleteMapping(value = "/{id}")
+  @Override
   public ResponseEntity<?> deleteCard(@PathVariable UUID id) {
     log.info("CONTROLLER: Request received from the client and passing to the application to delete card with id {}", id);
     cardApplicationService.deleteCard(id);
@@ -58,23 +67,19 @@ public class CardController {
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Override
   public ResponseEntity<CardResponseDTO> createCard(
-          @RequestBody CardCreateDTO cardCreateDTO,
+          @Valid @RequestBody CardCreateDTO cardCreateDTO,
           @RequestParam(value = "bankAccountId", required = true) UUID bankAccountId) {
     log.info("CONTROLLER: Request received from the client and passing to the application to save a new card");
-    if(cardCreateDTO == null || bankAccountId == null) {
-      throw new IllegalArgumentException("The request or bank account id cannot be empty");
-    }
     URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
     return ResponseEntity.created(location).body(cardApplicationService.createCard(cardCreateDTO, bankAccountId));
   }
 
   @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public CardResponseDTO updateCard(@PathVariable UUID id, @RequestBody CardCreateDTO cardCreateDTO) {
+  @Override
+  public CardResponseDTO updateCard(@PathVariable UUID id, @Valid @RequestBody CardUpdateDTO cardUpdateDTO) {
     log.info("CONTROLLER: Request received from the client and passing to the application to update a card");
-    if(cardCreateDTO == null) {
-      throw new IllegalArgumentException("The request cannot be empty");
-    }
-    return cardApplicationService.updateCard(id, cardCreateDTO);
+    return cardApplicationService.updateCard(id, cardUpdateDTO);
   }
 }

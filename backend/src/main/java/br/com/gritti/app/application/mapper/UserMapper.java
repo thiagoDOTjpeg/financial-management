@@ -29,6 +29,8 @@ public interface UserMapper extends DefaultMapper{
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   @Mapping(target = "roles", ignore = true)
+  @Mapping(target = "email", ignore = true)
+  @Mapping(target = "fullName", ignore = true)
   UserResponseDTO userToUserResponseDTO(User user);
 
   @Mapping(target = "createdBy", ignore = true)
@@ -36,6 +38,8 @@ public interface UserMapper extends DefaultMapper{
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "updatedAt", ignore = true)
   @Mapping(target = "roles", ignore = true)
+  @Mapping(target = "email", ignore = true)
+  @Mapping(target = "fullName", ignore = true)
   UserBankAccountsResponseDTO userToUserBankAccountsResponseDTO(User user);
 
   default UserBankAccountsResponseDTO userToUserBankAccountsResponseDTO(User user, boolean isAdmin) {

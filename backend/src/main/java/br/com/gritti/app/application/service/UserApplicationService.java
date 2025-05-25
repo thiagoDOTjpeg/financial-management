@@ -7,14 +7,13 @@ import br.com.gritti.app.application.dto.user.UserResponseDTO;
 import br.com.gritti.app.application.dto.user.UserUpdateDTO;
 import br.com.gritti.app.application.mapper.BankAccountMapper;
 import br.com.gritti.app.application.mapper.UserMapper;
-import br.com.gritti.app.domain.model.BankAccount;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.service.BankAccountDomainService;
 import br.com.gritti.app.domain.service.UserDomainService;
 import br.com.gritti.app.interfaces.controller.UserController;
-import br.com.gritti.app.shared.util.BankAccountHateoasUtil;
+import br.com.gritti.app.shared.util.hateoas.BankAccountHateoasUtil;
 import br.com.gritti.app.shared.util.SecurityUtil;
-import br.com.gritti.app.shared.util.UserHateoasUtil;
+import br.com.gritti.app.shared.util.hateoas.UserHateoasUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +66,11 @@ public class UserApplicationService {
       return userDTO;
     });
 
-    Link findAllLinks = linkTo(methodOn(UserController.class).getUsers(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))).withSelfRel();
-    return assembler.toModel(usersWithLinks, findAllLinks);
+    Link findAllLinks = linkTo(methodOn(UserController.class).getUsers(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+    Link createLinks = linkTo(methodOn(UserController.class).createUser(new UserCreateDTO())).withRel("create-user");
+    PagedModel<EntityModel<UserResponseDTO>> usersPagedModel = assembler.toModel(usersWithLinks, findAllLinks);
+    usersPagedModel.add(createLinks);
+    return usersPagedModel;
   }
 
   public UserResponseDTO getUserById(UUID id) {

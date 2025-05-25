@@ -1,9 +1,9 @@
 package br.com.gritti.app.interfaces.controller.docs;
 
+import br.com.gritti.app.application.dto.bankaccount.BankAccountCardsResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
-import br.com.gritti.app.application.dto.user.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,7 +46,22 @@ public interface BankAccountControllerDocs {
           @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
           @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
   })
-  public ResponseEntity<BankAccountResponseDTO> getAccountById(UUID id) ;
+  public ResponseEntity<BankAccountResponseDTO> getAccountById(UUID id);
+
+  @Operation(summary = "Consulta uma conta bancária pelo ID.",
+          description = "Busca e retorna os dados detalhados de uma conta bancária específica, de acordo com o identificador (UUID) informado. " +
+                  "Caso não seja encontrada, retorna informação apropriada.",
+          responses = {
+                  @ApiResponse(description = "Success", responseCode = "200", content = {
+                          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                  array = @ArraySchema(schema = @Schema(implementation = BankAccountResponseDTO.class))),
+                  }),
+                  @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                  @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                  @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                  @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+          })
+  public ResponseEntity<BankAccountCardsResponseDTO> getAccountCards(UUID id) ;
 
   @Operation(summary = "Cadastra uma nova conta bancária.",
           description = "Recebe os dados de uma nova conta bancária e realiza seu cadastro no sistema. Retorna os dados da conta criada em caso de sucesso.",
@@ -81,10 +96,7 @@ public interface BankAccountControllerDocs {
   @Operation(summary = "Remove uma conta bancária.",
           description = "Exclui uma conta bancária identificada pelo UUID fornecido. Retorna resposta de sucesso ou erro, conforme o caso.",
           responses = {
-          @ApiResponse(description = "Success", responseCode = "200", content = {
-                  @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                          array = @ArraySchema(schema = @Schema(implementation = BankAccountResponseDTO.class))),
-          }),
+          @ApiResponse(description = "Success", responseCode = "200"),
           @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
           @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
           @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),

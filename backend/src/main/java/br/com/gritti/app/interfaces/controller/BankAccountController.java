@@ -1,5 +1,6 @@
 package br.com.gritti.app.interfaces.controller;
 
+import br.com.gritti.app.application.dto.bankaccount.BankAccountCardsResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
@@ -56,9 +57,16 @@ public class BankAccountController implements BankAccountControllerDocs {
     return ResponseEntity.ok(bankAccountApplicationService.getAccountById(id));
   }
 
+  @GetMapping(value = "/{id}/cards", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
+  public ResponseEntity<BankAccountCardsResponseDTO> getAccountCards(@PathVariable UUID id) {
+    log.info("CONTROLLER: Request received from the client and passing to the application to get bank account cards with the id {}", id);
+    return ResponseEntity.ok(bankAccountApplicationService.getAccountCards(id));
+  }
+
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
-  public ResponseEntity<BankAccountResponseDTO> createAccount(@RequestBody @Valid BankAccountCreateDTO bankAccountCreateDTO) {
+  public ResponseEntity<BankAccountResponseDTO> createAccount(@Valid @RequestBody BankAccountCreateDTO bankAccountCreateDTO) {
     log.info("CONTROLLER: Request received from the client and passing to the application to create a new bank account");
     URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
     return ResponseEntity.created(location).body(bankAccountApplicationService.createAccount(bankAccountCreateDTO));
@@ -66,7 +74,7 @@ public class BankAccountController implements BankAccountControllerDocs {
 
   @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
-  public ResponseEntity<BankAccountResponseDTO> updateAccount(@PathVariable UUID id, @RequestBody @Valid BankAccountUpdateDTO bankAccountDTO) {
+  public ResponseEntity<BankAccountResponseDTO> updateAccount(@PathVariable UUID id,  @Valid @RequestBody BankAccountUpdateDTO bankAccountDTO) {
     log.info("CONTROLLER: Request received from the client and passing to the application to update a bank account");
     return ResponseEntity.ok(bankAccountApplicationService.updateAccount(id, bankAccountDTO));
   }

@@ -29,8 +29,8 @@ public class Installment extends Auditable implements Serializable {
     @Column(name = "due_date")
     private Date dueDate;
 
-    @Column(name = "id_transaction")
-    private String idTransaction;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Transaction> transactions;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Invoice> invoices;
@@ -67,12 +67,12 @@ public class Installment extends Auditable implements Serializable {
         this.dueDate = dueDate;
     }
 
-    public String getIdTransaction() {
-        return idTransaction;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setIdTransaction(String idTransaction) {
-        this.idTransaction = idTransaction;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
     public List<Invoice> getInvoices() {
