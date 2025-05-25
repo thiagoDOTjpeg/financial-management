@@ -10,6 +10,10 @@ Financial Management é uma aplicação baseada em Java projetada para ajudar os
 
 Este projeto segue os princípios de Domain-Driven Design (DDD) e padrões de Clean Architecture para garantir a separação de responsabilidades e manutenibilidade.
 
+## Tempo Total Gasto
+
+<img src="https://wakatime.com/badge/user/b24e37ca-07cc-467d-8650-07a4382f3d90/project/338efde2-1f32-41ce-ad86-25cace6d7697.svg">
+
 ### Estrutura do Projeto
 
 ```
