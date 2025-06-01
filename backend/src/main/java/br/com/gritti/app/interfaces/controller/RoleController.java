@@ -44,7 +44,7 @@ public class RoleController implements RoleControllerDocs {
   public ResponseEntity<?> saveRole(@Valid @RequestBody Role role) {
     if(role == null) throw new IllegalArgumentException("Role cannot be null");
     log.info("CONTROLLER: Received request to save role {} and passing to the application", role);
-    roleApplicationService.save(role);
+    roleApplicationService.createRole(role);
     URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
     return ResponseEntity.created(location).body(role);
   }

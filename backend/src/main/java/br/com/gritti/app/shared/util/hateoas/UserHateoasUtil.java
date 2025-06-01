@@ -1,10 +1,9 @@
 package br.com.gritti.app.shared.util.hateoas;
 
 import br.com.gritti.app.application.dto.user.UserAssignRoleDTO;
-import br.com.gritti.app.application.dto.user.UserCreateDTO;
 import br.com.gritti.app.application.dto.user.UserResponseDTO;
 import br.com.gritti.app.application.dto.user.UserUpdateDTO;
-import br.com.gritti.app.application.valueobjects.UserMinimalVO;
+import br.com.gritti.app.application.dto.minimal.UserMinimalDTO;
 import br.com.gritti.app.domain.enums.AccountStatus;
 import br.com.gritti.app.interfaces.controller.UserController;
 
@@ -22,7 +21,7 @@ public class UserHateoasUtil {
     }
   }
 
-  public static void addLinkGetMinimalVO(UserMinimalVO userMinimalVO) {
-    userMinimalVO.add(linkTo(methodOn(UserController.class).getUserById(userMinimalVO.getId())).withSelfRel().withType("GET"));
+  public static void addLinkGetMinimalVO(UserMinimalDTO userMinimalDTO) {
+    userMinimalDTO.add(linkTo(methodOn(UserController.class).getUserById(userMinimalDTO.getId())).withSelfRel().withType("GET"));
   }
 }

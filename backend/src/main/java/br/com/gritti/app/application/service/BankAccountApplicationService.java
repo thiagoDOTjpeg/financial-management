@@ -40,16 +40,14 @@ public class BankAccountApplicationService {
   private final BankAccountMapper bankAccountMapper;
   private final CardMapper cardMapper;
   private final PagedResourcesAssembler<BankAccountResponseDTO> assembler;
-  private final UserDomainService userDomainService;
 
   @Autowired
   public BankAccountApplicationService(BankAccountDomainService bankAccountDomainService, BankAccountMapper bankAccountMapper,
-                                       PagedResourcesAssembler<BankAccountResponseDTO> assembler, UserDomainService userDomainService,
-                                       CardDomainService cardDomainService, CardMapper cardMapper) {
+                                       PagedResourcesAssembler<BankAccountResponseDTO> assembler, CardDomainService cardDomainService,
+                                       CardMapper cardMapper) {
     this.bankAccountDomainService = bankAccountDomainService;
     this.bankAccountMapper = bankAccountMapper;
     this.assembler = assembler;
-    this.userDomainService = userDomainService;
     this.cardDomainService = cardDomainService;
     this.cardMapper = cardMapper;
   }

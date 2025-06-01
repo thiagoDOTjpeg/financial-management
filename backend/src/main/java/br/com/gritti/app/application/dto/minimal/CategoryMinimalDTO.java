@@ -1,15 +1,15 @@
-package br.com.gritti.app.application.valueobjects;
+package br.com.gritti.app.application.dto.minimal;
 
 import br.com.gritti.app.domain.enums.CategoryType;
 
-public class CategoryMinimalVO {
+public class CategoryMinimalDTO {
   private String name;
   private CategoryType type;
 
-  public CategoryMinimalVO() {
+  public CategoryMinimalDTO() {
   }
 
-  public CategoryMinimalVO(String name, CategoryType type) {
+  public CategoryMinimalDTO(String name, CategoryType type) {
     this.name = name;
     this.type = type;
   }

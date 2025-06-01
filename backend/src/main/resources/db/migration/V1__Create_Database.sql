@@ -1,4 +1,4 @@
-create table public.installments
+create table installments
 (
     id                 uuid             not null
         primary key,
@@ -11,20 +11,20 @@ create table public.installments
     number_installment integer          not null
 );
 
-alter table public.installments
+alter table installments
     owner to admin;
 
-create table public.roles
+create table roles
 (
     id          uuid not null
         primary key,
     description varchar(255)
 );
 
-alter table public.roles
+alter table roles
     owner to admin;
 
-create table public.users
+create table users
 (
     id                      uuid         not null
         primary key,
@@ -50,10 +50,10 @@ create table public.users
             unique
 );
 
-alter table public.users
+alter table users
     owner to admin;
 
-create table public.bank_account
+create table bank_account
 (
     id         uuid not null
         primary key,
@@ -65,13 +65,13 @@ create table public.bank_account
     bank_name  varchar(255),
     id_user    uuid
         constraint fkfbm0dfx7wd57lmys2yb8wubu1
-            references public.users
+            references users
 );
 
-alter table public.bank_account
+alter table bank_account
     owner to admin;
 
-create table public.cards
+create table cards
 (
     id              uuid         not null
         primary key,
@@ -80,16 +80,18 @@ create table public.cards
     updated_at      timestamp(6),
     updated_by      varchar(255),
     card_brand      varchar(255) not null,
+    closing_day     integer      not null,
     credit_limit    integer      not null,
+    due_day         integer      not null,
     id_bank_account uuid
         constraint fkji04pt5gkqvw4mkgj6b8xab7c
-            references public.bank_account
+            references bank_account
 );
 
-alter table public.cards
+alter table cards
     owner to admin;
 
-create table public.categories
+create table categories
 (
     id         uuid         not null
         primary key,
@@ -103,55 +105,53 @@ create table public.categories
             check ((type)::text = ANY ((ARRAY ['EXPENSE'::character varying, 'INCOME'::character varying])::text[])),
     id_user_id uuid
         constraint fk6vba0phbnbkh0s9c8t0kr36my
-            references public.users
+            references users
 );
 
-alter table public.categories
+alter table categories
     owner to admin;
 
-create table public.invoices
+create table invoices
 (
-    id              uuid             not null
+    id            uuid             not null
         primary key,
-    created_at      timestamp(6),
-    created_by      varchar(255),
-    updated_at      timestamp(6),
-    updated_by      varchar(255),
-    billing_month   date             not null
+    created_at    timestamp(6),
+    created_by    varchar(255),
+    updated_at    timestamp(6),
+    updated_by    varchar(255),
+    billing_month date             not null
         constraint ukiehkncu77oq3k1x2m9hk3c8qr
             unique,
-    due_date        date             not null,
-    status          varchar(255)
+    closing_date  date             not null,
+    due_date      date             not null,
+    status        varchar(255)
         constraint invoices_status_check
-            check ((status)::text = ANY ((ARRAY ['PENDING'::character varying, 'PAID'::character varying])::text[])),
-    total_value     double precision not null,
-    id_card         uuid
+            check ((status)::text = ANY
+        ((ARRAY ['OPEN'::character varying, 'CLOSED'::character varying, 'PAID'::character varying])::text[])),
+    total_value   double precision not null,
+    id_card       uuid
         constraint fkbikm8xvig1pyaj8c3v903p7w
-            references public.cards,
-    id_installments uuid
-        constraint fklh9go7xyu0k43mgx3m83eac81
-            references public.installments
+            references cards
 );
 
-alter table public.invoices
+alter table invoices
     owner to admin;
 
-create table public.installments_invoices
+create table invoices_installments
 (
+    invoice_id     uuid not null
+        constraint fkhujhkpawwkhbduh91rww65okg
+            references invoices,
     installment_id uuid not null
-        constraint fkf2raglcgtl85equ3hvivxwxi
-            references public.installments,
-    invoices_id    uuid not null
-        constraint uk3s0yh3vcfhntjlgnos8ynm4nr
-            unique
-        constraint fk3ke2nfb7aenvhctar6t6fw8xh
-            references public.invoices
+        constraint fkl7rdth06l9kny1xt6femvf495
+            references installments,
+    primary key (invoice_id, installment_id)
 );
 
-alter table public.installments_invoices
+alter table invoices_installments
     owner to admin;
 
-create table public.transactions
+create table transactions
 (
     id             uuid             not null
         primary key,
@@ -167,43 +167,43 @@ create table public.transactions
     value          double precision not null,
     id_category    uuid
         constraint fk59c06vdshsj3u2teciqt9fg55
-            references public.categories,
+            references categories,
     id_installment uuid
         constraint fklm2u6hq0xmenoullwb50yrvci
-            references public.installments,
+            references installments,
     id_invoice     uuid
         constraint fkda34o0iciwsm1uhwg0cgv577f
-            references public.invoices
+            references invoices
 );
 
-alter table public.transactions
+alter table transactions
     owner to admin;
 
-create table public.installments_transactions
+create table installments_transactions
 (
     installment_id  uuid not null
         constraint fkd1fw0yd6w24e30390to6eik3p
-            references public.installments,
+            references installments,
     transactions_id uuid not null
         constraint ukmrko6ft62h2v60q1uxhnrbq5f
             unique
         constraint fkk62nwa97w1488varua7qxq474
-            references public.transactions
+            references transactions
 );
 
-alter table public.installments_transactions
+alter table installments_transactions
     owner to admin;
 
-create table public.user_permissions
+create table user_permissions
 (
     id_user uuid not null
         constraint fk1lpagg77vo4fhuk3vlsqckbpd
-            references public.users,
+            references users,
     id_role uuid not null
         constraint fkomn8wsdl2qx0wbblk0hlaudjr
-            references public.roles
+            references roles
 );
 
-alter table public.user_permissions
+alter table user_permissions
     owner to admin;
 

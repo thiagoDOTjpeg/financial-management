@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "installments")
@@ -32,8 +29,8 @@ public class Installment extends Auditable implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Transaction> transactions;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Invoice> invoices;
+    @ManyToMany(mappedBy = "installments")
+    private Set<Invoice> invoices = new HashSet<>();
 
     public UUID getId() {
         return id;
@@ -75,11 +72,11 @@ public class Installment extends Auditable implements Serializable {
         this.transactions = transactions;
     }
 
-    public List<Invoice> getInvoices() {
+    public Set<Invoice> getInvoices() {
         return invoices;
     }
 
-    public void setInvoices(List<Invoice> invoices) {
+    public void setInvoices(Set<Invoice> invoices) {
         this.invoices = invoices;
     }
 

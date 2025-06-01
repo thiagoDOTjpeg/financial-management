@@ -1,7 +1,7 @@
 package br.com.gritti.app.shared.util.hateoas;
 
 import br.com.gritti.app.application.dto.bankaccount.*;
-import br.com.gritti.app.application.valueobjects.BankAccountMinimalVO;
+import br.com.gritti.app.application.dto.minimal.BankAccountMinimalDTO;
 import br.com.gritti.app.interfaces.controller.BankAccountController;
 import br.com.gritti.app.interfaces.controller.UserController;
 
@@ -28,7 +28,7 @@ public class BankAccountHateoasUtil {
   public static void addLinkGet(BankAccountDTO bankAccountDTO) {
     bankAccountDTO.add(linkTo(methodOn(BankAccountController.class).getAccountById(bankAccountDTO.getId())).withSelfRel().withType("GET"));
   }
-  public static void addLinkGetMinimal(BankAccountMinimalVO bankAccountMinimalVO) {
-    bankAccountMinimalVO.add(linkTo(methodOn(BankAccountController.class).getAccountById(bankAccountMinimalVO.getId())).withSelfRel().withType("GET"));
+  public static void addLinkGetMinimal(BankAccountMinimalDTO bankAccountMinimalDTO) {
+    bankAccountMinimalDTO.add(linkTo(methodOn(BankAccountController.class).getAccountById(bankAccountMinimalDTO.getId())).withSelfRel().withType("GET"));
   }
 }

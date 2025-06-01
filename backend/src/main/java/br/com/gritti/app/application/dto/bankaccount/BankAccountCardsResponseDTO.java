@@ -1,8 +1,7 @@
 package br.com.gritti.app.application.dto.bankaccount;
 
-import br.com.gritti.app.application.valueobjects.CardMinimalVO;
-import br.com.gritti.app.application.valueobjects.UserMinimalVO;
-import org.springframework.data.domain.Page;
+import br.com.gritti.app.application.dto.minimal.CardMinimalDTO;
+import br.com.gritti.app.application.dto.minimal.UserMinimalDTO;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
@@ -13,8 +12,8 @@ public class BankAccountCardsResponseDTO extends RepresentationModel<BankAccount
   private UUID id;
   private String bankName;
   private Double balance;
-  private UserMinimalVO user;
-  private List<CardMinimalVO> cards;
+  private UserMinimalDTO user;
+  private List<CardMinimalDTO> cards;
   private LocalDateTime createdAt;
   private String createdBy;
   private LocalDateTime updatedAt;
@@ -23,8 +22,8 @@ public class BankAccountCardsResponseDTO extends RepresentationModel<BankAccount
   public BankAccountCardsResponseDTO() {
   }
 
-  public BankAccountCardsResponseDTO(UUID id, String bankName, Double balance, UserMinimalVO user,
-                                     List<CardMinimalVO> cards, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
+  public BankAccountCardsResponseDTO(UUID id, String bankName, Double balance, UserMinimalDTO user,
+                                     List<CardMinimalDTO> cards, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
     this.id = id;
     this.bankName = bankName;
     this.balance = balance;
@@ -60,19 +59,19 @@ public class BankAccountCardsResponseDTO extends RepresentationModel<BankAccount
     this.balance = balance;
   }
 
-  public UserMinimalVO getUser() {
+  public UserMinimalDTO getUser() {
     return user;
   }
 
-  public void setUser(UserMinimalVO user) {
+  public void setUser(UserMinimalDTO user) {
     this.user = user;
   }
 
-  public List<CardMinimalVO> getCards() {
+  public List<CardMinimalDTO> getCards() {
     return cards;
   }
 
-  public void setCards(List<CardMinimalVO> cards) {
+  public void setCards(List<CardMinimalDTO> cards) {
     this.cards = cards;
   }
 

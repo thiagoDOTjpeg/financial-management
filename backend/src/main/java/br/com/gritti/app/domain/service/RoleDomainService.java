@@ -28,7 +28,7 @@ public class RoleDomainService {
     return roleRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Role with id " + id + " not found"));
   }
 
-  public void save(Role role) {
+  public void createRole(Role role) {
     log.info("DOMAIN: Request received from application and saving a new role from the repository");
     roleRepositoryImpl.save(role);
   }

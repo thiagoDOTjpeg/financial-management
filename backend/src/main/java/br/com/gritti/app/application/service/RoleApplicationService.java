@@ -27,8 +27,8 @@ public class RoleApplicationService {
     return roleDomainService.getRoleById(id);
   }
 
-  public void save(Role role) {
+  public void createRole(Role role) {
     log.info("APPLICATION: Request received from controller and saving a new role");
-    roleDomainService.save(role);
+    roleDomainService.createRole(role);
   }
 }

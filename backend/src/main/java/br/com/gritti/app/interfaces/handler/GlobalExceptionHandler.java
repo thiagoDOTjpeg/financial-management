@@ -51,6 +51,11 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(createExceptionMessage("Email is invalid", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(InvalidPaymentTypeException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllInvalidPaymentTypeExceptions(Exception ex, WebRequest request) {
+    return new ResponseEntity<>(createExceptionMessage("Email is invalid", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(InvalidBalanceException.class)
   public final ResponseEntity<ExceptionMessage> handleAllInvalidBalanceExceptions(Exception ex, WebRequest request) {
     return new ResponseEntity<>(createExceptionMessage("Invalid Balance", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);

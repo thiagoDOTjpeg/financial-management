@@ -38,13 +38,13 @@ public class TransactionDomainService {
     return transactionRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Transaction with id " + id + " not found"));
   }
 
-  public Transaction save(Transaction transaction) {
+  public Transaction createTransaction(Transaction transaction) {
     log.info("DOMAIN: Request received from application and saving a new transaction from the repository");
     transactionRepositoryImpl.save(transaction);
     return transaction;
   }
 
-  public void delete(UUID id) {
+  public void deleteTransaction(UUID id) {
     log.info("DOMAIN: Request received from application and deleting transaction with id {}", id);
     Transaction transaction = transactionRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Transaction with id " + id + " not found"));
     transactionRepositoryImpl.delete(transaction);

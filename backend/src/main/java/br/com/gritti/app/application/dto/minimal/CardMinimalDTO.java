@@ -1,18 +1,18 @@
-package br.com.gritti.app.application.valueobjects;
+package br.com.gritti.app.application.dto.minimal;
 
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.UUID;
 
-public class CardMinimalVO extends RepresentationModel<CardMinimalVO> {
+public class CardMinimalDTO extends RepresentationModel<CardMinimalDTO> {
   private UUID id;
   private int creditLimit;
   private String cardBrand;
 
-  public CardMinimalVO() {
+  public CardMinimalDTO() {
   }
 
-  public CardMinimalVO(UUID id, int creditLimit, String cardBrand) {
+  public CardMinimalDTO(UUID id, int creditLimit, String cardBrand) {
     this.id = id;
     this.creditLimit = creditLimit;
     this.cardBrand = cardBrand;

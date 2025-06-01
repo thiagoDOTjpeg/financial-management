@@ -1,6 +1,6 @@
 package br.com.gritti.app.application.dto.category;
 
-import br.com.gritti.app.application.valueobjects.UserMinimalVO;
+import br.com.gritti.app.application.dto.minimal.UserMinimalDTO;
 import br.com.gritti.app.domain.enums.CategoryType;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
@@ -12,12 +12,12 @@ public class CategoryResponseDTO extends RepresentationModel<CategoryResponseDTO
   private UUID id;
   private String name;
   private CategoryType type;
-  private UserMinimalVO user;
+  private UserMinimalDTO user;
 
   public CategoryResponseDTO() {
   }
 
-  public CategoryResponseDTO(UUID id, String name, CategoryType type, UserMinimalVO user) {
+  public CategoryResponseDTO(UUID id, String name, CategoryType type, UserMinimalDTO user) {
     this.id = id;
     this.name = name;
     this.type = type;
@@ -48,11 +48,11 @@ public class CategoryResponseDTO extends RepresentationModel<CategoryResponseDTO
     this.type = type;
   }
 
-  public UserMinimalVO getUser() {
+  public UserMinimalDTO getUser() {
     return user;
   }
 
-  public void setUser(UserMinimalVO user) {
+  public void setUser(UserMinimalDTO user) {
     this.user = user;
   }
 }

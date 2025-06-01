@@ -1,19 +1,18 @@
-package br.com.gritti.app.application.valueobjects;
+package br.com.gritti.app.application.dto.minimal;
 
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.core.Relation;
 
 import java.util.UUID;
 
-public class BankAccountMinimalVO extends RepresentationModel<BankAccountMinimalVO> {
+public class BankAccountMinimalDTO extends RepresentationModel<BankAccountMinimalDTO> {
   private UUID id;
   private String bankName;
-  private UserMinimalVO user;
+  private UserMinimalDTO user;
 
-  public BankAccountMinimalVO() {
+  public BankAccountMinimalDTO() {
   }
 
-  public BankAccountMinimalVO(UUID id, String bankName, UserMinimalVO user) {
+  public BankAccountMinimalDTO(UUID id, String bankName, UserMinimalDTO user) {
     this.id = id;
     this.bankName = bankName;
     this.user = user;
@@ -35,11 +34,11 @@ public class BankAccountMinimalVO extends RepresentationModel<BankAccountMinimal
     this.bankName = bankName;
   }
 
-  public UserMinimalVO getUser() {
+  public UserMinimalDTO getUser() {
     return user;
   }
 
-  public void setUser(UserMinimalVO user) {
+  public void setUser(UserMinimalDTO user) {
     this.user = user;
   }
 }

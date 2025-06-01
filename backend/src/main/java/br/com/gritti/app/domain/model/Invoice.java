@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "invoices")
@@ -35,13 +33,19 @@ public class Invoice extends Auditable implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dueDate;
 
+    @Column(name = "closing_date", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date closingDate;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_card")
     private Card card;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_installments")
-    private Installment installment;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "invoices_installments",
+            joinColumns = @JoinColumn(name = "invoice_id"),
+            inverseJoinColumns = @JoinColumn(name = "installment_id"))
+    private Set<Installment> installments = new HashSet<>();
 
     public UUID getId() {
         return id;
@@ -91,12 +95,20 @@ public class Invoice extends Auditable implements Serializable {
         this.card = card;
     }
 
-    public Installment getInstallment() {
-        return installment;
+    public Set<Installment> getInstallment() {
+        return installments;
     }
 
-    public void setInstallment(Installment installment) {
-        this.installment = installment;
+    public void setInstallment(Set<Installment> installment) {
+        this.installments = installment;
+    }
+
+    public Date getClosingDate() {
+        return closingDate;
+    }
+
+    public void setClosingDate(Date closingDate) {
+        this.closingDate = closingDate;
     }
 
     @Override

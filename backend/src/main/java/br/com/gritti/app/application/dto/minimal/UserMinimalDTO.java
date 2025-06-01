@@ -1,16 +1,14 @@
-package br.com.gritti.app.application.valueobjects;
+package br.com.gritti.app.application.dto.minimal;
 
-import br.com.gritti.app.domain.enums.AccountStatus;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.util.Date;
 import java.util.UUID;
 
-public class UserMinimalVO extends RepresentationModel<UserMinimalVO> {
+public class UserMinimalDTO extends RepresentationModel<UserMinimalDTO> {
   private UUID id;
   private String username;
 
-  public UserMinimalVO() {
+  public UserMinimalDTO() {
   }
 
   public UUID getId() {

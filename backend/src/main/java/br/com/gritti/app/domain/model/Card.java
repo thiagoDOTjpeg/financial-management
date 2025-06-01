@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,6 +21,12 @@ public class Card extends Auditable implements Serializable {
 
     @Column(name = "credit_limit", nullable = false)
     private int creditLimit;
+
+    @Column(name = "due_day", nullable = false)
+    private Integer dueDay;
+
+    @Column(name = "closing_day", nullable = false)
+    private Integer closingDay;
 
     @Column(name = "card_brand", nullable = false)
     private String cardBrand;
@@ -58,6 +65,22 @@ public class Card extends Auditable implements Serializable {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public Integer getDueDay() {
+        return dueDay;
+    }
+
+    public void setDueDay(Integer dueDay) {
+        this.dueDay = dueDay;
+    }
+
+    public Integer getClosingDay() {
+        return closingDay;
+    }
+
+    public void setClosingDay(Integer closingDay) {
+        this.closingDay = closingDay;
     }
 
     @Override

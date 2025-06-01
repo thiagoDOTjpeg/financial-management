@@ -1,6 +1,6 @@
 package br.com.gritti.app.application.dto.bankaccount;
 
-import br.com.gritti.app.application.valueobjects.UserMinimalVO;
+import br.com.gritti.app.application.dto.minimal.UserMinimalDTO;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -13,13 +13,13 @@ public class BankAccountResponseDTO extends RepresentationModel<BankAccountRespo
   private UUID id;
   private String bankName;
   private Double balance;
-  private UserMinimalVO user;
+  private UserMinimalDTO user;
   private LocalDateTime createdAt;
   private String createdBy;
   private LocalDateTime updatedAt;
   private String updatedBy;
 
-  public BankAccountResponseDTO(UUID id, String bankName, Double balance, UserMinimalVO user, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
+  public BankAccountResponseDTO(UUID id, String bankName, Double balance, UserMinimalDTO user, LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
     this.id = id;
     this.bankName = bankName;
     this.balance = balance;
@@ -57,11 +57,11 @@ public class BankAccountResponseDTO extends RepresentationModel<BankAccountRespo
     this.balance = balance;
   }
 
-  public UserMinimalVO getUser() {
+  public UserMinimalDTO getUser() {
     return user;
   }
 
-  public void setUser(UserMinimalVO user) {
+  public void setUser(UserMinimalDTO user) {
     this.user = user;
   }
 
