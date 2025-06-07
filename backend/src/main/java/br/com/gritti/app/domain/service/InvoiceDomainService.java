@@ -1,10 +1,9 @@
 package br.com.gritti.app.domain.service;
 
-import br.com.gritti.app.application.dto.invoice.InvoiceCreateDTO;
-import br.com.gritti.app.application.mapper.InvoiceMapper;
 import br.com.gritti.app.domain.enums.InvoiceStatus;
 import br.com.gritti.app.domain.model.Card;
 import br.com.gritti.app.domain.model.Invoice;
+import br.com.gritti.app.domain.valueobject.InvoiceData;
 import br.com.gritti.app.infra.repository.InvoiceRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +17,10 @@ import java.util.concurrent.TimeUnit;
 public class InvoiceDomainService {
 
   private final InvoiceRepositoryImpl invoiceRepositoryImpl;
-  private final InvoiceMapper invoiceMapper;
 
   @Autowired
-  public InvoiceDomainService(InvoiceRepositoryImpl invoiceRepositoryImpl, InvoiceMapper invoiceMapper) {
+  public InvoiceDomainService(InvoiceRepositoryImpl invoiceRepositoryImpl) {
     this.invoiceRepositoryImpl = invoiceRepositoryImpl;
-    this.invoiceMapper = invoiceMapper;
   }
 
   public Invoice getOrCreateInvoiceForDate(Date date, Card card) {
@@ -53,10 +50,10 @@ public class InvoiceDomainService {
       if(closedInvoice.isPresent()){
         return getOrCreateNextMonthInvoice(currentBillingMonth, card);
       } else {
-        InvoiceCreateDTO invoiceCreateDTO = new InvoiceCreateDTO();
-        invoiceCreateDTO.setBillingMonth(currentBillingMonth);
+        InvoiceData invoiceData = new InvoiceData();
+        invoiceData.setBillingMonth(currentBillingMonth);
 
-        return createNewInvoice(invoiceCreateDTO, card);
+        return createNewInvoice(invoiceData, card);
       }
     }
   }
@@ -72,14 +69,15 @@ public class InvoiceDomainService {
     if(nextInvoice.isPresent()){
       return nextInvoice.get();
     } else {
-      InvoiceCreateDTO invoiceCreateDTO = new InvoiceCreateDTO();
-      invoiceCreateDTO.setBillingMonth(nextBillingMonth);
-      return createNewInvoice(invoiceCreateDTO, card);
+      InvoiceData invoiceData = new InvoiceData();
+      invoiceData.setBillingMonth(nextBillingMonth);
+      return createNewInvoice(invoiceData, card);
     }
   }
 
-  private Invoice createNewInvoice(InvoiceCreateDTO invoiceCreateDTO, Card card) {
-    Invoice newInvoice = invoiceMapper.invoiceCreateDTOtoInvoice(invoiceCreateDTO);
+  private Invoice createNewInvoice(InvoiceData invoiceData, Card card) {
+    Invoice newInvoice = new Invoice();
+    newInvoice.setBillingMonth(invoiceData.getBillingMonth());
     newInvoice.setCard(card);
     newInvoice.setStatus(InvoiceStatus.OPEN);
     newInvoice.setTotalValue(0.0);

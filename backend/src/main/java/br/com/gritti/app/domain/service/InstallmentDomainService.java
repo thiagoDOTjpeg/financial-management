@@ -1,6 +1,7 @@
 package br.com.gritti.app.domain.service;
 
 import br.com.gritti.app.domain.model.Installment;
+import br.com.gritti.app.domain.valueobject.InstallmentData;
 import br.com.gritti.app.infra.repository.InstallmentRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +18,12 @@ public class InstallmentDomainService {
     this.installmentRepositoryImpl = installmentRepositoryImpl;
   }
 
-  public Installment createInstallment(Installment installment) {
+  public Installment createInstallment(InstallmentData installmentData) {
     log.info("DOMAIN: Request received from application and saving a new installment from the repository");
+    Installment installment = new Installment();
+    installment.setNumberInstallment(installmentData.getNumberInstallment());
+    installment.setInstallmentValue(installmentData.getInstallmentValue());
+    installment.setDueDate(installmentData.getDueDate());
     installmentRepositoryImpl.save(installment);
     return installment;
   }

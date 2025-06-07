@@ -34,6 +34,7 @@ public class AuthDomainService {
     String username = data.getUsername();
     String password = data.getPassword();
     User user = userRepositoryImpl.findByUsername(username);
+    if(user == null) throw new UsernameNotFoundException("Username not found");
     if(user.getAccountStatus() == AccountStatus.INACTIVE) throw new UserIsInactiveException("User is inactive");
 
     try {

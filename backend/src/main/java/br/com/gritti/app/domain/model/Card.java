@@ -23,10 +23,10 @@ public class Card extends Auditable implements Serializable {
     private int creditLimit;
 
     @Column(name = "due_day", nullable = false)
-    private Integer dueDay;
+    private int dueDay;
 
     @Column(name = "closing_day", nullable = false)
-    private Integer closingDay;
+    private int closingDay;
 
     @Column(name = "card_brand", nullable = false)
     private String cardBrand;
@@ -71,15 +71,15 @@ public class Card extends Auditable implements Serializable {
         return dueDay;
     }
 
-    public void setDueDay(Integer dueDay) {
+    public void setDueDay(int dueDay) {
         this.dueDay = dueDay;
     }
 
-    public Integer getClosingDay() {
+    public int getClosingDay() {
         return closingDay;
     }
 
-    public void setClosingDay(Integer closingDay) {
+    public void setClosingDay(int closingDay) {
         this.closingDay = closingDay;
     }
 

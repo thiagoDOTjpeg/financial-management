@@ -13,15 +13,15 @@ import java.util.UUID;
 
 @Repository
 public interface JpaUserRepository extends JpaRepository<User, UUID> {
-  @Query("SELECT u from User u WHERE u.username =:username")
-  User findByUsername(String username);
+  @Query("SELECT u from User u WHERE u.username = :username")
+  User findByUsername(@Param("username")String username);
 
-  @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.username =:username")
-  boolean existsByUsername(String username);
+  @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.username = :username")
+  boolean existsByUsername(@Param("username") String username);
 
 
-  @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.email =:email")
-  boolean existsByEmail(Email email);
+  @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.email = :email")
+  boolean existsByEmail(@Param("email") Email email);
 
   @Modifying(clearAutomatically = true)
   @Query("UPDATE User p SET p.accountStatus = 'INACTIVE', p.updatedAt = CURRENT_TIMESTAMP, p.updatedBy = :updatedBy WHERE p.id = :id")

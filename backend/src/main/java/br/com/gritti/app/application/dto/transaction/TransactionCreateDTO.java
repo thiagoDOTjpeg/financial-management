@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class TransactionCreateDTO {
   @NotNull(message = "Timestamp cannot be null")
-  private Date timestamp;
+  private Date timestamp = new Date();
 
   @Min(message = "Value cannot be negative", value = 0)
   private Double value;
