@@ -4,6 +4,8 @@ import br.com.gritti.app.application.dto.bankaccount.BankAccountCardsResponseDTO
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionCreateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -103,4 +105,18 @@ public interface BankAccountControllerDocs {
           @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
   })
   public ResponseEntity<?> deleteAccount(UUID id);
+
+  @Operation(summary = "Cria uma transação de transferência entre contas",
+          description = "Cria uma transação de transferência bancária entre contas do usuário",
+          responses = {
+                  @ApiResponse(description = "Success", responseCode = "200", content = {
+                          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                  array = @ArraySchema(schema = @Schema(implementation = TransactionResponseDTO.class))),
+                  }),
+                  @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                  @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                  @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                  @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+          })
+  public ResponseEntity<BankAccountResponseDTO> createTransfer(UUID id, TransactionCreateDTO transactionCreateDTO);
 }

@@ -76,6 +76,7 @@ public class TransactionApplicationService {
     transaction.setTimestamp(new Date());
 
     try {
+      if(transactionCreateDTO.getPaymentType() == PaymentType.TRANSFER) throw new BadRequestException("Wrong endpoint to make transfer");
       TransactionProcessingData processingData = new TransactionProcessingData();
       processingData.setCardId(cardId);
       processingData.setFromAccountId(transactionCreateDTO.getFromAccountId());
@@ -95,7 +96,7 @@ public class TransactionApplicationService {
       }
       return transactionDomainService.processTransaction(transaction, processingData);
     } catch (BadRequestException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Wrong endpoint to make transfer: ", e);
     }
   }
 

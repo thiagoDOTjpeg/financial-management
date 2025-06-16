@@ -4,6 +4,7 @@ import br.com.gritti.app.application.dto.bankaccount.BankAccountCardsResponseDTO
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionCreateDTO;
 import br.com.gritti.app.application.service.BankAccountApplicationService;
 import br.com.gritti.app.interfaces.controller.docs.BankAccountControllerDocs;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -86,4 +87,12 @@ public class BankAccountController implements BankAccountControllerDocs {
     bankAccountApplicationService.deleteAccount(id);
     return ResponseEntity.noContent().build();
   }
+
+  @PostMapping(value = "/{id}/transfer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
+  public ResponseEntity<BankAccountResponseDTO> createTransfer(@PathVariable("id") UUID id, @RequestBody TransactionCreateDTO transactionCreateDTO) {
+    return null;
+  }
+
+
 }

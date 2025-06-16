@@ -4,6 +4,7 @@ import br.com.gritti.app.application.dto.bankaccount.BankAccountCardsResponseDTO
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionResponseDTO;
 import br.com.gritti.app.application.mapper.BankAccountMapper;
 import br.com.gritti.app.application.mapper.CardMapper;
 import br.com.gritti.app.domain.model.BankAccount;
@@ -120,5 +121,9 @@ public class BankAccountApplicationService {
   public void deleteAccount(UUID id) {
     log.info("APPLICATION: Request received from controller and passing to the domain to delete a bank account by id: {}", id);
     bankAccountDomainService.deleteAccount(id);
+  }
+
+  public TransactionResponseDTO createTransfer(){
+
   }
 }
