@@ -5,10 +5,12 @@ import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
 import br.com.gritti.app.application.dto.transaction.TransactionCreateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionResponseDTO;
 import br.com.gritti.app.application.service.BankAccountApplicationService;
 import br.com.gritti.app.interfaces.controller.docs.BankAccountControllerDocs;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -90,8 +92,10 @@ public class BankAccountController implements BankAccountControllerDocs {
 
   @PostMapping(value = "/{id}/transfer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
-  public ResponseEntity<BankAccountResponseDTO> createTransfer(@PathVariable("id") UUID id, @RequestBody TransactionCreateDTO transactionCreateDTO) {
-    return null;
+  public ResponseEntity<TransactionResponseDTO> createTransfer(@PathVariable("id") UUID id, @RequestBody TransactionCreateDTO transactionCreateDTO) throws BadRequestException {
+    log.info("CONTROLLER: Request received from the client and passing to the application to create a new transfer");
+    transactionCreateDTO.setFromAccountId(id);
+    return ResponseEntity.ok(bankAccountApplicationService.createTransfer(transactionCreateDTO));
   }
 
 

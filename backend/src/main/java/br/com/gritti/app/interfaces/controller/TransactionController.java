@@ -6,6 +6,7 @@ import br.com.gritti.app.application.mapper.TransactionMapper;
 import br.com.gritti.app.application.service.TransactionApplicationService;
 import br.com.gritti.app.domain.model.Transaction;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class TransactionController {
   }
 
   @PostMapping(value = "/{cardId}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<TransactionResponseDTO> createTransaction(@RequestBody TransactionCreateDTO transactionCreateDTO, @PathVariable("cardId") UUID cardId) {
+  public ResponseEntity<TransactionResponseDTO> createTransaction(@RequestBody TransactionCreateDTO transactionCreateDTO, @PathVariable("cardId") UUID cardId) throws BadRequestException {
     log.info("CONTROLLER: Received request to create a new transaction and passing to the application");
     Transaction transaction = transactionApplicationService.createTransaction(transactionCreateDTO, cardId);
     return ResponseEntity.ok(transactionMapper.transactionToTransactionResponseDTO(transaction));

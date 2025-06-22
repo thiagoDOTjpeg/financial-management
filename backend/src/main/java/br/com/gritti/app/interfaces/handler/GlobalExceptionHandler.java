@@ -2,6 +2,7 @@ package br.com.gritti.app.interfaces.handler;
 
 import br.com.gritti.app.shared.exceptions.*;
 import jakarta.security.auth.message.AuthException;
+import org.apache.coyote.BadRequestException;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,11 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(createExceptionMessage(ex.getMessage() ,HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(BadRequestException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllBadRequestException(Exception  ex, WebRequest request) {
+    return new ResponseEntity<>(createExceptionMessage(ex.getMessage() ,HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(UserIsInactiveException.class)
   public final ResponseEntity<ExceptionMessage> handleAllUserIsInactiveException(Exception ex, WebRequest request) {
     return new ResponseEntity<>(createExceptionMessage("The user is Inactive" ,HttpStatus.FORBIDDEN, request.getDescription(false)), HttpStatus.FORBIDDEN);
@@ -53,7 +59,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(InvalidPaymentTypeException.class)
   public final ResponseEntity<ExceptionMessage> handleAllInvalidPaymentTypeExceptions(Exception ex, WebRequest request) {
-    return new ResponseEntity<>(createExceptionMessage("Email is invalid", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(createExceptionMessage("Payment Type is invalid", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(InvalidBalanceException.class)
@@ -74,7 +80,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(UsernameAlreadyExistsException.class)
   public final ResponseEntity<ExceptionMessage> handleAllUsernameAlreadyExistsExceptions(Exception ex,
       WebRequest request) {
-    return new ResponseEntity<>(createExceptionMessage("The Username already existe in the database", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(createExceptionMessage("The Username already exists in the database", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(UsernameNotFoundException.class)

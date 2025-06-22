@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.coyote.BadRequestException;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
@@ -118,5 +119,5 @@ public interface BankAccountControllerDocs {
                   @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                   @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
           })
-  public ResponseEntity<BankAccountResponseDTO> createTransfer(UUID id, TransactionCreateDTO transactionCreateDTO);
+  public ResponseEntity<TransactionResponseDTO> createTransfer(UUID id, TransactionCreateDTO transactionCreateDTO) throws BadRequestException;
 }

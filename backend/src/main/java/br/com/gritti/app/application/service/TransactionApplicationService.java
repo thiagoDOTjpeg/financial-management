@@ -70,19 +70,18 @@ public class TransactionApplicationService {
   }
 
   @Transactional
-  public Transaction createTransaction(TransactionCreateDTO transactionCreateDTO, UUID cardId) {
+  public Transaction createTransaction(TransactionCreateDTO transactionCreateDTO, UUID cardId) throws BadRequestException {
     log.info("APPLICATION: Request received from controller and passing to domain to create a new transaction");
-    Transaction transaction = transactionMapper.transactionCreateDTOtoTransaction(transactionCreateDTO);
-    transaction.setTimestamp(new Date());
+    if(transactionCreateDTO.getPaymentType().equals(PaymentType.TRANSFER)) throw new BadRequestException("Wrong endpoint to create a transfer transaction type");
+    TransactionProcessingData processingData = transactionMapper.transactionCreateDtoToTransactionProcessingData(transactionCreateDTO);
+    processingData.setCardId(cardId);
 
     try {
-      if(transactionCreateDTO.getPaymentType() == PaymentType.TRANSFER) throw new BadRequestException("Wrong endpoint to make transfer");
-      TransactionProcessingData processingData = new TransactionProcessingData();
       processingData.setCardId(cardId);
       processingData.setFromAccountId(transactionCreateDTO.getFromAccountId());
       processingData.setToAccountId(transactionCreateDTO.getToAccountId());
 
-      if(transaction.getPaymentType().name().equals(PaymentType.CREDIT.name()) &&
+      if(processingData.getPaymentType().name().equals(PaymentType.CREDIT.name()) &&
               transactionCreateDTO.getInstallmentValue() != null &&
               transactionCreateDTO.getNumberInstallment() != null
       ) {
@@ -94,7 +93,17 @@ public class TransactionApplicationService {
         );
         processingData.setInstallmentData(installmentData);
       }
-      return transactionDomainService.processTransaction(transaction, processingData);
+      return transactionDomainService.processTransaction(processingData);
+    } catch (BadRequestException e) {
+      throw new RuntimeException("Wrong endpoint to make transfer: ", e);
+    }
+  }
+
+  @Transactional
+  public Transaction createTransfer(TransactionProcessingData processingData) {
+    log.info("APPLICATION: Request received from controller and passing to domain to create a new transfer");
+    try {
+      return transactionDomainService.processTransaction(processingData);
     } catch (BadRequestException e) {
       throw new RuntimeException("Wrong endpoint to make transfer: ", e);
     }

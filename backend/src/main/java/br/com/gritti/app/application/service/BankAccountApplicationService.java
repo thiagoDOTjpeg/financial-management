@@ -4,18 +4,23 @@ import br.com.gritti.app.application.dto.bankaccount.BankAccountCardsResponseDTO
 import br.com.gritti.app.application.dto.bankaccount.BankAccountCreateDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountResponseDTO;
 import br.com.gritti.app.application.dto.bankaccount.BankAccountUpdateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionCreateDTO;
 import br.com.gritti.app.application.dto.transaction.TransactionResponseDTO;
 import br.com.gritti.app.application.mapper.BankAccountMapper;
 import br.com.gritti.app.application.mapper.CardMapper;
+import br.com.gritti.app.application.mapper.TransactionMapper;
+import br.com.gritti.app.domain.enums.PaymentType;
 import br.com.gritti.app.domain.model.BankAccount;
 import br.com.gritti.app.domain.model.Card;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.service.BankAccountDomainService;
 import br.com.gritti.app.domain.service.CardDomainService;
 import br.com.gritti.app.domain.service.UserDomainService;
+import br.com.gritti.app.domain.valueobject.TransactionProcessingData;
 import br.com.gritti.app.interfaces.controller.BankAccountController;
 import br.com.gritti.app.shared.util.hateoas.BankAccountHateoasUtil;
 import br.com.gritti.app.shared.util.SecurityUtil;
+import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,7 +42,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class BankAccountApplicationService {
   private final Logger log = org.slf4j.LoggerFactory.getLogger(BankAccountApplicationService.class);
   private final BankAccountDomainService bankAccountDomainService;
+  private final TransactionApplicationService transactionApplicationService;
   private final CardDomainService cardDomainService;
+  private final TransactionMapper transactionMapper;
   private final BankAccountMapper bankAccountMapper;
   private final CardMapper cardMapper;
   private final PagedResourcesAssembler<BankAccountResponseDTO> assembler;
@@ -45,9 +52,11 @@ public class BankAccountApplicationService {
   @Autowired
   public BankAccountApplicationService(BankAccountDomainService bankAccountDomainService, BankAccountMapper bankAccountMapper,
                                        PagedResourcesAssembler<BankAccountResponseDTO> assembler, CardDomainService cardDomainService,
-                                       CardMapper cardMapper) {
+                                       CardMapper cardMapper, TransactionApplicationService transactionApplicationService, TransactionMapper transactionMapper) {
     this.bankAccountDomainService = bankAccountDomainService;
+    this.transactionApplicationService = transactionApplicationService;
     this.bankAccountMapper = bankAccountMapper;
+    this.transactionMapper = transactionMapper;
     this.assembler = assembler;
     this.cardDomainService = cardDomainService;
     this.cardMapper = cardMapper;
@@ -123,7 +132,12 @@ public class BankAccountApplicationService {
     bankAccountDomainService.deleteAccount(id);
   }
 
-  public TransactionResponseDTO createTransfer(){
-
+  public TransactionResponseDTO createTransfer(TransactionCreateDTO transactionCreateDTO) throws BadRequestException {
+    log.info("APPLICATION: Request received from the controller and passing to the domain to create a transfer");
+    if(transactionCreateDTO.getPaymentType() == PaymentType.CREDIT || transactionCreateDTO.getPaymentType() == PaymentType.DEBIT) throw new BadRequestException("Wrong endpoint for creating this type of transaction");
+    TransactionProcessingData processingData = transactionMapper.transactionCreateDtoToTransactionProcessingData(transactionCreateDTO);
+    processingData.setToAccountId(transactionCreateDTO.getToAccountId());
+    processingData.setFromAccountId(transactionCreateDTO.getFromAccountId());
+    return transactionMapper.transactionToTransactionResponseDTO(transactionApplicationService.createTransfer(processingData));
   }
 }

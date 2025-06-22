@@ -1,5 +1,6 @@
 package br.com.gritti.app.domain.service;
 
+import br.com.gritti.app.application.mapper.TransactionMapper;
 import br.com.gritti.app.domain.model.*;
 import br.com.gritti.app.domain.service.strategy.TransactionProcessingStrategy;
 import br.com.gritti.app.domain.service.strategy.TransactionProcessingStrategyFactory;
@@ -22,11 +23,14 @@ public class TransactionDomainService {
   private final Logger log = LoggerFactory.getLogger(TransactionDomainService.class);
 
   private final TransactionRepositoryImpl transactionRepositoryImpl;
+  private final TransactionMapper transactionMapper;
   private final TransactionProcessingStrategyFactory strategyFactory;
 
   @Autowired
-  public TransactionDomainService(TransactionRepositoryImpl transactionRepositoryImpl, TransactionProcessingStrategyFactory strategyFactory) {
+  public TransactionDomainService(TransactionRepositoryImpl transactionRepositoryImpl, TransactionProcessingStrategyFactory strategyFactory,
+                                  TransactionMapper transactionMapper) {
     this.transactionRepositoryImpl = transactionRepositoryImpl;
+    this.transactionMapper = transactionMapper;
     this.strategyFactory = strategyFactory;
   }
 
@@ -58,10 +62,10 @@ public class TransactionDomainService {
   }
 
   @Transactional
-  public Transaction processTransaction(Transaction transaction,
-                                        TransactionProcessingData transactionProcessingData) throws BadRequestException {
-    log.info("DOMAIN: Processing transaction with payment type: {}", transaction.getPaymentType());
-    TransactionProcessingStrategy strategy = strategyFactory.getStrategy(transaction.getPaymentType(), transactionProcessingData);
+  public Transaction processTransaction(TransactionProcessingData transactionProcessingData) throws BadRequestException {
+    log.info("DOMAIN: Processing transaction with payment type: {}", transactionProcessingData.getPaymentType());
+    TransactionProcessingStrategy strategy = strategyFactory.getStrategy(transactionProcessingData.getPaymentType(), transactionProcessingData);
+    Transaction transaction = transactionMapper.transactionProcessingDataToTransaction(transactionProcessingData);
     strategy.processTransaction(transaction, transactionProcessingData);
     return createTransaction(transaction);
   }
