@@ -1,36 +1,31 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres
-    container_name: postgresql
+  db:
+    image: postgres:16-alpine
+    container_name: financial_db
     environment:
-      POSTGRES_DB: financial_management
+      POSTGRES_DB: financial_management_db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin123
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - database_network
+    ports:
+      - "5432:5432"
+    restart: always
 
   pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4
+    image: elestio/pgadmin
+    container_name: meu_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_EMAIL: admin@email.com
       PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 8080
     ports:
-      - "5000:80"
+      - "5001:8080"
     depends_on:
-      - postgres
-    networks:
-      - database_network
-
-networks:
-  database_network:
-    driver: bridge
+      - db
+    restart: always
 
 volumes:
   postgres_data:

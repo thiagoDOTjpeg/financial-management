@@ -10,7 +10,7 @@ spring:
     deserialization:
       accept-empty-string-as-null-object: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/financial_management
+    url: jdbc:postgresql://localhost:5432/financial_management_db
     username: admin
     password: admin123
   jpa:
