@@ -1,5 +1,6 @@
 package br.com.gritti.app.infra.persistence;
 
+import br.com.gritti.app.domain.model.Invoice;
 import br.com.gritti.app.domain.model.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +16,7 @@ public interface JpaTransactionRepository extends JpaRepository<Transaction, UUI
 
   @Query("SELECT t from Transaction t WHERE t.category.user.username LIKE LOWER(CONCAT('%', :username, '%'))")
   public Page<Transaction> findAllByUsername(Pageable pageable, @Param("username") String username);
+
+  @Query("SELECT t from Transaction t WHERE t.invoice = :invoice")
+  public Page<Transaction> findTransactionByInvoiceId(Pageable pageable, @Param("invoice") Invoice invoice);
 }

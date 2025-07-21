@@ -5,6 +5,7 @@ import br.com.gritti.app.application.dto.category.CategoryResponseDTO;
 import br.com.gritti.app.application.dto.category.CategoryUpdateDTO;
 import br.com.gritti.app.application.mapper.CategoryMapper;
 import br.com.gritti.app.domain.model.Category;
+import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.service.CategoryDomainService;
 import br.com.gritti.app.interfaces.controller.CategoryController;
 import br.com.gritti.app.shared.util.SecurityUtil;
@@ -78,8 +79,10 @@ public class CategoryApplicationService {
 
   public CategoryResponseDTO createCategory(CategoryCreateDTO categoryCreateDTO) {
     log.info("APPLICATION: Request received from controller and passing to the domain to create a new category");
-    Category category = categoryMapper.categoryCreateDTOtoCard(categoryCreateDTO);
-    category.setUser(SecurityUtil.getCurrentUser());
+    Category category = categoryMapper.categoryCreateDTOtoCategory(categoryCreateDTO);
+    User currentUser = SecurityUtil.getCurrentUser();
+    if(currentUser == null)  throw new  AccessDeniedException("Access denied, you must be logged in to use this resource");
+    category.setUser(currentUser);
     categoryDomainService.createCategory(category);
     return categoryMapper.categoryToCategoryResponseDTO(category);
   }
@@ -91,7 +94,7 @@ public class CategoryApplicationService {
 
   public CategoryResponseDTO updateCategory(UUID id, CategoryUpdateDTO categoryUpdateDTO) {
     log.info("APPLICATION: Request received from controller and passing to the domain to update a category by id: {}", id);
-    Category category = categoryMapper.categoryUpdateDTOtoCard(categoryUpdateDTO);
+    Category category = categoryMapper.categoryUpdateDTOtoCategory(categoryUpdateDTO);
     Category updatedCategory = categoryDomainService.updateCategory(id, category);
     return categoryMapper.categoryToCategoryResponseDTO(updatedCategory);
   }

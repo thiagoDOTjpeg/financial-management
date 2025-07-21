@@ -3,12 +3,18 @@ package br.com.gritti.app.application.service;
 import br.com.gritti.app.application.dto.card.CardCreateDTO;
 import br.com.gritti.app.application.dto.card.CardResponseDTO;
 import br.com.gritti.app.application.dto.card.CardUpdateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionCreateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionResponseDTO;
 import br.com.gritti.app.application.mapper.CardMapper;
+import br.com.gritti.app.application.mapper.TransactionMapper;
+import br.com.gritti.app.domain.enums.PaymentType;
 import br.com.gritti.app.domain.model.Card;
+import br.com.gritti.app.domain.model.Transaction;
 import br.com.gritti.app.domain.service.CardDomainService;
 import br.com.gritti.app.interfaces.controller.CardController;
 import br.com.gritti.app.shared.util.hateoas.CardHateoasUtil;
 import br.com.gritti.app.shared.util.SecurityUtil;
+import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +27,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -31,14 +38,20 @@ public class CardApplicationService {
   private final Logger log = LoggerFactory.getLogger(CardApplicationService.class);
 
   private final CardMapper cardMapper;
+  private final TransactionMapper transactionMapper;
   private final CardDomainService cardDomainService;
+  private final TransactionApplicationService  transactionApplicationService;
   private final PagedResourcesAssembler<CardResponseDTO> assembler;
 
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
   public CardApplicationService(CardDomainService cardDomainService,
-                                CardMapper cardMapper, PagedResourcesAssembler<CardResponseDTO> assembler) {
+                                CardMapper cardMapper, PagedResourcesAssembler<CardResponseDTO> assembler,
+                                TransactionApplicationService transactionApplicationService, TransactionMapper transactionMapper) {
     this.cardMapper = cardMapper;
+    this.transactionMapper = transactionMapper;
     this.cardDomainService = cardDomainService;
+    this.transactionApplicationService = transactionApplicationService;
     this.assembler = assembler;
   }
 
@@ -63,19 +76,23 @@ public class CardApplicationService {
       return cardDto;
     });
 
-
     Link findAllLinks = linkTo(methodOn(CardController.class).getCards(pageable.getPageNumber(), pageable.getPageSize(), "asc", "")).withSelfRel();
     Link createLinks = linkTo(methodOn(CardController.class).createCard(new CardCreateDTO(), UUID.fromString("uuid-example"))).withRel("create-card");
     PagedModel<EntityModel<CardResponseDTO>> pagedModel = assembler.toModel(cardsWithLinks, findAllLinks);
     pagedModel.add(createLinks);
     return pagedModel;
-
   }
 
   public CardResponseDTO getCardById(UUID id) {
     log.info("APPLICATION: Request received from controller and passing to the domain to get a card by id: {}", id);
     Card card = cardDomainService.getCardById(id);
     return cardMapper.cardToCardResponseDTO(card);
+  }
+
+  public List<TransactionResponseDTO> createCardTransaction(UUID id, TransactionCreateDTO transactionCreateDTO) throws BadRequestException {
+    log.info("APPLICATION: Request received from controller and passing to the domain to create a card");
+    if(transactionCreateDTO.getPaymentType().equals(PaymentType.TRANSFER)) throw new IllegalArgumentException("Wrong endpoint for creating a TRANSFER transaction");
+    return transactionApplicationService.createTransaction(transactionCreateDTO, id);
   }
 
   public CardResponseDTO createCard(CardCreateDTO cardCreateDTO, UUID bankAccountId) {

@@ -8,7 +8,7 @@ import br.com.gritti.app.domain.valueobject.TransactionProcessingData;
 import br.com.gritti.app.shared.exceptions.InvalidBalanceException;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.util.*;
 
 @Component
 public class TransferTransactionStrategy implements TransactionProcessingStrategy {
@@ -19,7 +19,7 @@ public class TransferTransactionStrategy implements TransactionProcessingStrateg
   }
 
   @Override
-  public void processTransaction(Transaction transaction, TransactionProcessingData processingData)
+  public List<Transaction> processTransaction(Transaction transaction, TransactionProcessingData processingData)
           throws InvalidBalanceException {
     if (processingData.getFromAccountId() == null || processingData.getToAccountId() == null) {
       throw new IllegalArgumentException("From account id and to account id are required for transfer transactions");
@@ -39,5 +39,6 @@ public class TransferTransactionStrategy implements TransactionProcessingStrateg
     bankAccountDomainService.updateAccount(targetAccount.getId(), targetAccount);
 
     transaction.setTimestamp(new Date());
+    return Collections.singletonList(transaction);
   }
 }

@@ -5,12 +5,14 @@ import br.com.gritti.app.domain.model.Card;
 import br.com.gritti.app.domain.model.Invoice;
 import br.com.gritti.app.domain.valueobject.InvoiceData;
 import br.com.gritti.app.infra.repository.InvoiceRepositoryImpl;
+import br.com.gritti.app.shared.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -21,6 +23,10 @@ public class InvoiceDomainService {
   @Autowired
   public InvoiceDomainService(InvoiceRepositoryImpl invoiceRepositoryImpl) {
     this.invoiceRepositoryImpl = invoiceRepositoryImpl;
+  }
+
+  public Invoice getInvoiceById(UUID id) {
+    return invoiceRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Invoice with id " + id + " not found"));
   }
 
   public Invoice getOrCreateInvoiceForDate(Date date, Card card) {

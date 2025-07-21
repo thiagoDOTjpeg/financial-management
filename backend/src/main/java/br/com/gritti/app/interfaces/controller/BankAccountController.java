@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -92,7 +93,7 @@ public class BankAccountController implements BankAccountControllerDocs {
 
   @PostMapping(value = "/{id}/transfer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @Override
-  public ResponseEntity<TransactionResponseDTO> createTransfer(@PathVariable("id") UUID id, @RequestBody TransactionCreateDTO transactionCreateDTO) throws BadRequestException {
+  public ResponseEntity<List<TransactionResponseDTO>> createTransfer(@PathVariable("id") UUID id, @RequestBody TransactionCreateDTO transactionCreateDTO) throws BadRequestException {
     log.info("CONTROLLER: Request received from the client and passing to the application to create a new transfer");
     transactionCreateDTO.setFromAccountId(id);
     return ResponseEntity.ok(bankAccountApplicationService.createTransfer(transactionCreateDTO));

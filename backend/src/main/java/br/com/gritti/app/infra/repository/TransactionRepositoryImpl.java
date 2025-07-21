@@ -1,5 +1,6 @@
 package br.com.gritti.app.infra.repository;
 
+import br.com.gritti.app.domain.model.Invoice;
 import br.com.gritti.app.domain.model.Transaction;
 import br.com.gritti.app.domain.repository.TransactionRepository;
 import br.com.gritti.app.infra.persistence.JpaTransactionRepository;
@@ -35,6 +36,11 @@ public class TransactionRepositoryImpl implements TransactionRepository {
   @Override
   public Page<Transaction> findAllByUsername(Pageable pageable, String username) {
     return jpaTransactionRespository.findAllByUsername(pageable, username);
+  }
+
+  @Override
+  public Page<Transaction> findTransactionByInvoice(Pageable pageable, Invoice invoice) {
+    return jpaTransactionRespository.findTransactionByInvoiceId(pageable, invoice);
   }
 
   @Override

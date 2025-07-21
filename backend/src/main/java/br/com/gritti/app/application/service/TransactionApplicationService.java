@@ -24,20 +24,23 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class TransactionApplicationService {
 
   private final TransactionDomainService transactionDomainService;
+  private final InvoiceDomainService invoiceDomainService;
   private final TransactionMapper transactionMapper;
   private final PagedResourcesAssembler<TransactionResponseDTO> assembler;
   private final Logger log = LoggerFactory.getLogger(TransactionApplicationService.class);
 
   @Autowired
   public TransactionApplicationService(TransactionDomainService transactionDomainService, TransactionMapper transactionMapper,
-                                       PagedResourcesAssembler<TransactionResponseDTO> assembler) {
+                                       PagedResourcesAssembler<TransactionResponseDTO> assembler, InvoiceDomainService invoiceDomainService) {
     this.transactionDomainService = transactionDomainService;
+    this.invoiceDomainService = invoiceDomainService;
     this.transactionMapper = transactionMapper;
     this.assembler = assembler;
   }
@@ -63,6 +66,14 @@ public class TransactionApplicationService {
     return assembler.toModel(transactionsWithLinks);
   }
 
+  public PagedModel<EntityModel<TransactionResponseDTO>> getInvoiceTransactions(Pageable pageable, UUID invoiceId) {
+    log.info("APPLICATION: Request received from controller and passing to domain to get the {} transactions", invoiceId);
+    Invoice invoice = invoiceDomainService.getInvoiceById(invoiceId);
+    Page<Transaction> transactions = transactionDomainService.getInvoiceTransactions(pageable, invoice);
+    Page<TransactionResponseDTO> transactionsWithLinks = transactions.map(transactionMapper::transactionToTransactionResponseDTO);
+    return assembler.toModel(transactionsWithLinks);
+  }
+
   public TransactionResponseDTO getTransactionById(UUID id) {
     log.info("APPLICATION: Request received from controller and passing to domain to get a transaction by id: {}", id);
     Transaction transaction = transactionDomainService.getTransactionById(id);
@@ -70,7 +81,7 @@ public class TransactionApplicationService {
   }
 
   @Transactional
-  public Transaction createTransaction(TransactionCreateDTO transactionCreateDTO, UUID cardId) throws BadRequestException {
+  public List<TransactionResponseDTO> createTransaction(TransactionCreateDTO transactionCreateDTO, UUID cardId) throws BadRequestException {
     log.info("APPLICATION: Request received from controller and passing to domain to create a new transaction");
     if(transactionCreateDTO.getPaymentType().equals(PaymentType.TRANSFER)) throw new BadRequestException("Wrong endpoint to create a transfer transaction type");
     TransactionProcessingData processingData = transactionMapper.transactionCreateDtoToTransactionProcessingData(transactionCreateDTO);
@@ -93,14 +104,15 @@ public class TransactionApplicationService {
         );
         processingData.setInstallmentData(installmentData);
       }
-      return transactionDomainService.processTransaction(processingData);
+      List<Transaction> transactions = transactionDomainService.processTransaction(processingData);
+      return transactions.stream().map(transactionMapper::transactionToTransactionResponseDTO).toList();
     } catch (BadRequestException e) {
       throw new RuntimeException("Wrong endpoint to make transfer: ", e);
     }
   }
 
   @Transactional
-  public Transaction createTransfer(TransactionProcessingData processingData) {
+  public List<Transaction> createTransfer(TransactionProcessingData processingData) {
     log.info("APPLICATION: Request received from controller and passing to domain to create a new transfer");
     try {
       return transactionDomainService.processTransaction(processingData);

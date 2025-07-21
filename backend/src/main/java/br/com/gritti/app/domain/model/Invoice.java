@@ -95,12 +95,12 @@ public class Invoice extends Auditable implements Serializable {
         this.card = card;
     }
 
-    public Set<Installment> getInstallment() {
+    public Set<Installment> getInstallments() {
         return installments;
     }
 
-    public void setInstallment(Set<Installment> installment) {
-        this.installments = installment;
+    public void setInstallments(Set<Installment> installments) {
+        this.installments = installments;
     }
 
     public Date getClosingDate() {

@@ -9,34 +9,45 @@ import br.com.gritti.app.domain.service.InstallmentDomainService;
 import br.com.gritti.app.domain.service.InvoiceDomainService;
 import br.com.gritti.app.domain.service.strategy.TransactionProcessingStrategy;
 import br.com.gritti.app.domain.valueobject.TransactionProcessingData;
+import br.com.gritti.app.infra.repository.InvoiceRepositoryImpl;
+import br.com.gritti.app.infra.repository.TransactionRepositoryImpl;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Component
 public class InstallmentTransactionStrategy implements TransactionProcessingStrategy {
   private final CardDomainService cardDomainService;
   private final InvoiceDomainService invoiceDomainService;
+  private final InvoiceRepositoryImpl invoiceRepositoryImpl;
+  private final TransactionRepositoryImpl transactionRepositoryImpl;
   private final InstallmentDomainService installmentDomainService;
 
   public InstallmentTransactionStrategy(CardDomainService cardDomainService,
                                         InvoiceDomainService invoiceDomainService,
-                                        InstallmentDomainService installmentDomainService) {
+                                        InstallmentDomainService installmentDomainService,
+                                        InvoiceRepositoryImpl invoiceRepositoryImpl,
+                                        TransactionRepositoryImpl transactionRepositoryImpl) {
     this.cardDomainService = cardDomainService;
+    this.transactionRepositoryImpl = transactionRepositoryImpl;
+    this.invoiceRepositoryImpl = invoiceRepositoryImpl;
     this.invoiceDomainService = invoiceDomainService;
     this.installmentDomainService = installmentDomainService;
   }
 
   @Override
-  public void processTransaction(Transaction transaction, TransactionProcessingData processingData) {
+  public List<Transaction> processTransaction(Transaction transaction, TransactionProcessingData processingData) {
     if (processingData.getCardId() == null) {
       throw new IllegalArgumentException("Card id is required for installment transactions");
     }
 
     Card card = cardDomainService.getCardById(processingData.getCardId());
     Installment installment = installmentDomainService.createInstallment(processingData.getInstallmentData());
-    transaction.setInstallment(installment);
 
+    List<Transaction> transactionToCreate = new ArrayList<>();
     Calendar cal = Calendar.getInstance();
     cal.setTime(transaction.getTimestamp());
 
@@ -44,12 +55,23 @@ public class InstallmentTransactionStrategy implements TransactionProcessingStra
       if (i > 0) {
         cal.add(Calendar.MONTH, 1);
       }
-
+      Date installmentDate = cal.getTime();
       Invoice invoiceForInstallment = invoiceDomainService.getOrCreateInvoiceForDate(cal.getTime(), card);
-      invoiceForInstallment.getInstallment().add(installment);
-    }
 
-    Invoice firstInvoice = invoiceDomainService.getOrCreateInvoiceForDate(transaction.getTimestamp(), card);
-    transaction.setInvoice(firstInvoice);
+      Transaction installmentTransaction = new Transaction();
+      installmentTransaction.setCategory(transaction.getCategory());
+      installmentTransaction.setPaymentType(transaction.getPaymentType());
+      installmentTransaction.setTimestamp(installmentDate);
+      installmentTransaction.setValue(installment.getInstallmentValue());
+      installmentTransaction.setInstallment(installment);
+      installmentTransaction.setInvoice(invoiceForInstallment);
+
+      invoiceForInstallment.setTotalValue(invoiceForInstallment.getTotalValue() + installmentTransaction.getValue());
+      invoiceForInstallment.getInstallments().add(installment);
+      invoiceRepositoryImpl.save(invoiceForInstallment);
+      transactionRepositoryImpl.save(installmentTransaction);
+      transactionToCreate.add(installmentTransaction);
+    }
+    return transactionToCreate;
   }
 }

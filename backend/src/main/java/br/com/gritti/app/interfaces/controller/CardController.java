@@ -3,10 +3,13 @@ package br.com.gritti.app.interfaces.controller;
 import br.com.gritti.app.application.dto.card.CardCreateDTO;
 import br.com.gritti.app.application.dto.card.CardResponseDTO;
 import br.com.gritti.app.application.dto.card.CardUpdateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionCreateDTO;
+import br.com.gritti.app.application.dto.transaction.TransactionResponseDTO;
 import br.com.gritti.app.application.service.CardApplicationService;
 import br.com.gritti.app.interfaces.controller.docs.CardControllerDocs;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -56,6 +60,13 @@ public class CardController implements CardControllerDocs {
   public ResponseEntity<CardResponseDTO> getCardById(@PathVariable UUID id) {
     log.info("CONTROLLER: Request received from the client and passing to the application to get card with id {}", id);
     return ResponseEntity.ok(cardApplicationService.getCardById(id));
+  }
+
+  @PostMapping(value = "/{id}/transaction", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Override
+  public ResponseEntity<List<TransactionResponseDTO>> createCardTransaction(@PathVariable UUID id, @RequestBody TransactionCreateDTO dto) throws BadRequestException {
+    log.info("CONTROLLER:  Request received from the client and passing to the application to get card with id {}", id);
+    return ResponseEntity.ok(cardApplicationService.createCardTransaction(id, dto));
   }
 
   @DeleteMapping(value = "/{id}")

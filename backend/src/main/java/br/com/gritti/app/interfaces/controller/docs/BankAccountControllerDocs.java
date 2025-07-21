@@ -17,6 +17,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface BankAccountControllerDocs {
@@ -119,5 +120,5 @@ public interface BankAccountControllerDocs {
                   @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                   @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
           })
-  public ResponseEntity<TransactionResponseDTO> createTransfer(UUID id, TransactionCreateDTO transactionCreateDTO) throws BadRequestException;
+  public ResponseEntity<List<TransactionResponseDTO>> createTransfer(UUID id, TransactionCreateDTO transactionCreateDTO) throws BadRequestException;
 }

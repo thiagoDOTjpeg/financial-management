@@ -12,6 +12,7 @@ import br.com.gritti.app.application.mapper.TransactionMapper;
 import br.com.gritti.app.domain.enums.PaymentType;
 import br.com.gritti.app.domain.model.BankAccount;
 import br.com.gritti.app.domain.model.Card;
+import br.com.gritti.app.domain.model.Transaction;
 import br.com.gritti.app.domain.model.User;
 import br.com.gritti.app.domain.service.BankAccountDomainService;
 import br.com.gritti.app.domain.service.CardDomainService;
@@ -132,12 +133,13 @@ public class BankAccountApplicationService {
     bankAccountDomainService.deleteAccount(id);
   }
 
-  public TransactionResponseDTO createTransfer(TransactionCreateDTO transactionCreateDTO) throws BadRequestException {
+  public List<TransactionResponseDTO> createTransfer(TransactionCreateDTO transactionCreateDTO) throws BadRequestException {
     log.info("APPLICATION: Request received from the controller and passing to the domain to create a transfer");
     if(transactionCreateDTO.getPaymentType() == PaymentType.CREDIT || transactionCreateDTO.getPaymentType() == PaymentType.DEBIT) throw new BadRequestException("Wrong endpoint for creating this type of transaction");
     TransactionProcessingData processingData = transactionMapper.transactionCreateDtoToTransactionProcessingData(transactionCreateDTO);
     processingData.setToAccountId(transactionCreateDTO.getToAccountId());
     processingData.setFromAccountId(transactionCreateDTO.getFromAccountId());
-    return transactionMapper.transactionToTransactionResponseDTO(transactionApplicationService.createTransfer(processingData));
+    List<Transaction> transactions = transactionApplicationService.createTransfer(processingData);
+    return transactions.stream().map(transactionMapper::transactionToTransactionResponseDTO).toList();
   }
 }

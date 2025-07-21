@@ -45,8 +45,8 @@ public class CategoryController {
           @RequestParam(value = "username", required = false) String username
   ) {
     log.info("CONTROLLER: Request received from the client and passing to the application to get all categories");
-    Direction sortDireciton = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
-    Pageable pageable = PageRequest.of(page, size, Sort.by(sortDireciton, "name"));
+    Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+    Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "name"));
     return ResponseEntity.ok(categoryApplicationService.getCategories(pageable, username));
   }
 

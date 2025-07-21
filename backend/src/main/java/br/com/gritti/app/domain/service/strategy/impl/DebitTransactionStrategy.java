@@ -9,6 +9,9 @@ import br.com.gritti.app.domain.valueobject.TransactionProcessingData;
 import br.com.gritti.app.shared.exceptions.InvalidBalanceException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class DebitTransactionStrategy implements TransactionProcessingStrategy {
   private final CardDomainService cardDomainService;
@@ -18,7 +21,7 @@ public class DebitTransactionStrategy implements TransactionProcessingStrategy {
   }
 
   @Override
-  public void processTransaction(Transaction transaction, TransactionProcessingData processingData)
+  public List<Transaction> processTransaction(Transaction transaction, TransactionProcessingData processingData)
           throws InvalidBalanceException {
     if (processingData.getCardId() == null) {
       throw new IllegalArgumentException("Card id is required for debit transactions");
@@ -34,5 +37,6 @@ public class DebitTransactionStrategy implements TransactionProcessingStrategy {
     account.setBalance(account.getBalance() - transaction.getValue());
     card.setBankAccount(account);
     cardDomainService.updateCard(card.getId(), card);
+    return Collections.singletonList(transaction);
   }
 }
