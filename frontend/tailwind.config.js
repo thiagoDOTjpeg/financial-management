@@ -15,6 +15,7 @@ module.exports = {
           600: '#0284c7',
           700: '#0369a1',
         },
+        border: '#d1d5db',
         success: {
           50: '#f0fdf4',
           500: '#22c55e',
