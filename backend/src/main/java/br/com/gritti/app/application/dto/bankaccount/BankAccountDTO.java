@@ -2,7 +2,6 @@ package br.com.gritti.app.application.dto.bankaccount;
 
 import org.springframework.hateoas.RepresentationModel;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class BankAccountDTO extends RepresentationModel<BankAccountDTO> {
@@ -42,6 +41,5 @@ public class BankAccountDTO extends RepresentationModel<BankAccountDTO> {
   public void setBalance(Double balance) {
     this.balance = balance;
   }
-
 
 }

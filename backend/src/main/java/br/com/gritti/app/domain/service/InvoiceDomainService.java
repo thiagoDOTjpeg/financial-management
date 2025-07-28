@@ -7,6 +7,8 @@ import br.com.gritti.app.domain.valueobject.InvoiceData;
 import br.com.gritti.app.infra.repository.InvoiceRepositoryImpl;
 import br.com.gritti.app.shared.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -23,6 +25,14 @@ public class InvoiceDomainService {
   @Autowired
   public InvoiceDomainService(InvoiceRepositoryImpl invoiceRepositoryImpl) {
     this.invoiceRepositoryImpl = invoiceRepositoryImpl;
+  }
+
+  public Page<Invoice> getInvoices(Pageable pageable) {
+    return invoiceRepositoryImpl.findAll(pageable);
+  }
+
+  public Page<Invoice> getInvoices(Pageable pageable, String username) {
+    return invoiceRepositoryImpl.findAllByUsername(pageable, username);
   }
 
   public Invoice getInvoiceById(UUID id) {

@@ -49,12 +49,13 @@ public class TransactionApplicationService {
     log.info("APPLICATION: Request received from controller and passing to domain to get all transactions");
     String currentUsername = SecurityUtil.getCurrentUsername();
     boolean isAdmin = SecurityUtil.isAdmin();
+    String usernameToUse = isAdmin ? username : currentUsername;
     Page<Transaction> transactions;
     if(username != null && !username.isBlank()) {
       if(!isAdmin && !username.equals(currentUsername)){
         throw new AccessDeniedException("Access denied, you don't have permission to access this resource");
       }
-      transactions = transactionDomainService.getTransactions(pageable, username);
+      transactions = transactionDomainService.getTransactions(pageable, usernameToUse);
     } else if(!isAdmin){
       username = currentUsername;
       transactions = transactionDomainService.getTransactions(pageable, username);

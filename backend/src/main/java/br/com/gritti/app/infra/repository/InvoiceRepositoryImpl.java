@@ -3,6 +3,7 @@ package br.com.gritti.app.infra.repository;
 import br.com.gritti.app.domain.enums.InvoiceStatus;
 import br.com.gritti.app.domain.model.Card;
 import br.com.gritti.app.domain.model.Invoice;
+import br.com.gritti.app.domain.model.Transaction;
 import br.com.gritti.app.domain.repository.InvoiceRepository;
 import br.com.gritti.app.infra.persistence.JpaInvoiceRepository;
 import org.slf4j.Logger;
@@ -30,6 +31,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
   public Page<Invoice> findAll(Pageable pageable) {
     log.info("REPO: Request received from domain and finding all invoices from the database.");
     return jpaInvoiceRepository.findAll(pageable);
+  }
+
+  @Override
+  public Page<Invoice> findAllByUsername(Pageable pageable, String username) {
+    log.info("REPO: Request received from domain and finding all invoices from the database by username");
+    return jpaInvoiceRepository.findInvoiceByUsername(pageable, username);
   }
 
   @Override
