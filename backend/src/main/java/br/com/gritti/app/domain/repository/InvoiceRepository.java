@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public interface InvoiceRepository {
   Page<Invoice> findAll(Pageable pageable);
+  Page<Invoice> findAllByUsername(Pageable pageable, String username);
   Optional<Invoice> findById(UUID id);
   Optional<Invoice> findByBillingMonthAndCardAndStatus(Date billingMonth, Card card, InvoiceStatus status);
   void save(Invoice invoice);

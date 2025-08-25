@@ -7,12 +7,14 @@ import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -32,5 +34,18 @@ public class InvoiceController {
   public ResponseEntity<InvoiceResponseDTO> getInvoiceById(@PathVariable("invoiceId")UUID invoiceId){
     log.info("CONTROLLER: Received request to get invoice with id {} and passing to the application", invoiceId);
     return ResponseEntity.ok(invoiceApplicationService.getInvoiceById(invoiceId));
+  }
+
+  @GetMapping(value = "/invoices", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<PagedModel<EntityModel<InvoiceResponseDTO>>> getInvoices(
+          @RequestParam(value = "page", defaultValue = "0") Integer page,
+          @RequestParam(value = "size", defaultValue = "12") Integer size,
+          @RequestParam(value = "direction", defaultValue = "asc") String direction,
+          @RequestParam(value = "username", required = false) String username
+  ) {
+    log.info("CONTROLLER: Received request to get all invoices and passing to the application");
+    Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+    Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "billingMonth"));
+    return ResponseEntity.ok(invoiceApplicationService.getInvoices(pageable, username));
   }
 }

@@ -3,15 +3,15 @@ package br.com.gritti.app.application.dto.invoice;
 import br.com.gritti.app.application.dto.minimal.CardMinimalDTO;
 import br.com.gritti.app.application.dto.minimal.InstallmentMinimalDTO;
 import br.com.gritti.app.domain.enums.InvoiceStatus;
-import br.com.gritti.app.domain.model.Card;
-import br.com.gritti.app.domain.model.Installment;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Relation(collectionRelation = "invoices")
 public class InvoiceResponseDTO extends RepresentationModel<InvoiceResponseDTO> {
   private UUID id;
   private Date billingMonth;
@@ -25,7 +25,7 @@ public class InvoiceResponseDTO extends RepresentationModel<InvoiceResponseDTO> 
   }
 
   public InvoiceResponseDTO(UUID id, Date billingMonth, Double totalValue, InvoiceStatus status,
-                            Date closingDate, CardMinimalDTO card, Set<InstallmentMinimalDTO> installments) {
+      Date closingDate, CardMinimalDTO card, Set<InstallmentMinimalDTO> installments) {
     this.id = id;
     this.billingMonth = billingMonth;
     this.totalValue = totalValue;

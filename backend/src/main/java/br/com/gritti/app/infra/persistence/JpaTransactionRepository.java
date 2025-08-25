@@ -15,8 +15,8 @@ import java.util.UUID;
 public interface JpaTransactionRepository extends JpaRepository<Transaction, UUID> {
 
   @Query("SELECT t from Transaction t WHERE t.category.user.username LIKE LOWER(CONCAT('%', :username, '%'))")
-  public Page<Transaction> findAllByUsername(Pageable pageable, @Param("username") String username);
+  Page<Transaction> findAllByUsername(Pageable pageable, @Param("username") String username);
 
   @Query("SELECT t from Transaction t WHERE t.invoice = :invoice")
-  public Page<Transaction> findTransactionByInvoiceId(Pageable pageable, @Param("invoice") Invoice invoice);
+  Page<Transaction> findTransactionByInvoiceId(Pageable pageable, @Param("invoice") Invoice invoice);
 }
