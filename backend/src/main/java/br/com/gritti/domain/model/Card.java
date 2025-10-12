@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "cards")
-public class Card {
+public class Card extends AuditableEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "bank_account_id", nullable = false)
   private BankAccount bankAccount;
