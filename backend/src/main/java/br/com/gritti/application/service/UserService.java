@@ -3,6 +3,7 @@ package br.com.gritti.application.service;
 import br.com.gritti.shared.dto.request.user.CreateUserRequest;
 import br.com.gritti.shared.dto.request.user.UpdateUserRequest;
 import br.com.gritti.shared.dto.response.UserResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -16,7 +17,7 @@ public interface UserService {
 
   UserResponse getUserByUsername(String username);
 
-  PagedModel<EntityModel<UserResponse>> getAllUsers(Pageable pageable);
+  Page<UserResponse> getAllUsers(Pageable pageable);
 
   UserResponse updateUser(UUID id, UpdateUserRequest request);
 

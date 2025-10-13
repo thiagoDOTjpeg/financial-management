@@ -1,6 +1,7 @@
 package br.com.gritti.domain.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -9,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements GrantedAuthority {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
@@ -35,6 +36,11 @@ public class Role {
     this.description = builder.description;
     this.createdAt = builder.createdAt;
     this.users = builder.users;
+  }
+
+  @Override
+  public String getAuthority() {
+    return this.name;
   }
 
   public static class Builder {

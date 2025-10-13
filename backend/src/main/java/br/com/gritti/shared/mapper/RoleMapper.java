@@ -10,8 +10,8 @@ public class RoleMapper {
 
   public static Role toEntity(CreateRoleRequest request) {
     return new Role.Builder()
-            .name(request.getName())
-            .description(request.getDescription())
+            .name(request.name())
+            .description(request.description())
             .build();
   }
 

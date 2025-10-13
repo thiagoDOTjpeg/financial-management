@@ -13,25 +13,22 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
-  private final PagedResourcesAssembler<UserResponse> pagedResourcesAssembler;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,  PagedResourcesAssembler<UserResponse> pagedResourcesAssembler) {
+  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
-    this.pagedResourcesAssembler = pagedResourcesAssembler;
   }
 
   @Override
@@ -70,9 +67,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public PagedModel<EntityModel<UserResponse>> getAllUsers(Pageable pageable) {
-    Page<UserResponse> users = userRepository.findAll(pageable).map(UserMapper::toResponse);
-    return pagedResourcesAssembler.toModel(users);
+  public Page<UserResponse> getAllUsers(Pageable pageable) {
+    return userRepository.findAll(pageable).map(UserMapper::toResponse);
   }
 
   @Override
@@ -124,5 +120,10 @@ public class UserServiceImpl implements UserService {
   @Override
   public boolean existsByEmail(String email) {
     return userRepository.existsByEmail(email);
+  }
+
+  @Override
+  public User loadUserByUsername(String username) throws UsernameNotFoundException {
+    return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
   }
 }

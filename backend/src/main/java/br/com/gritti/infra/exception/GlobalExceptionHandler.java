@@ -1,129 +1,51 @@
 package br.com.gritti.infra.exception;
 
-import br.com.gritti.shared.exception.BusinessException;
-import br.com.gritti.shared.exception.ResourceNotFoundException;
+import br.com.gritti.shared.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 @RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
-  @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-    ErrorResponse error = new ErrorResponse(
-            HttpStatus.NOT_FOUND.value(),
-            ex.getMessage(),
-            LocalDateTime.now()
-    );
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  private ExceptionMessage createExceptionMessage(String message, HttpStatus status, String details) {
+    return new ExceptionMessage(new Date(), status.value(), status.getReasonPhrase(), message, details);
   }
 
   @ExceptionHandler(BusinessException.class)
-  public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
-    ErrorResponse error = new ErrorResponse(
-            HttpStatus.BAD_REQUEST.value(),
-            ex.getMessage(),
-            LocalDateTime.now()
-    );
-    error.setErrorCode(ex.getErrorCode());
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  public final ResponseEntity<ExceptionMessage> handleAllBusinessException(Exception ex, WebRequest request) {
+    return new ResponseEntity<>(createExceptionMessage("Erro ao aplicar lógica de negócio", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ValidationErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
-    Map<String, String> errors = new HashMap<>();
-    ex.getBindingResult().getAllErrors().forEach(error -> {
-      String fieldName = ((FieldError) error).getField();
-      String errorMessage = error.getDefaultMessage();
-      errors.put(fieldName, errorMessage);
-    });
-
-    ValidationErrorResponse response = new ValidationErrorResponse(
-            HttpStatus.BAD_REQUEST.value(),
-            "Erro de validação",
-            LocalDateTime.now(),
-            errors
-    );
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+  @ExceptionHandler(UsernameNotFoundException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllUsernameNotFound(Exception ex, WebRequest request) {
+    return new ResponseEntity<>(createExceptionMessage("Usuário não encontrado", HttpStatus.NOT_FOUND, request.getDescription(false)), HttpStatus.NOT_FOUND);
   }
+
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-    ErrorResponse error = new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            "Erro interno do servidor",
-            LocalDateTime.now()
-    );
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+  public final ResponseEntity<ExceptionMessage> handleAllExceptions(Exception ex, WebRequest request) {
+    return new ResponseEntity<>(createExceptionMessage("Um erro inesperado ocorreu", HttpStatus.INTERNAL_SERVER_ERROR, request.getDescription(false)), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  public static class ErrorResponse {
-    private int status;
-    private String message;
-    private LocalDateTime timestamp;
-    private String errorCode;
-
-    public ErrorResponse(int status, String message, LocalDateTime timestamp) {
-      this.status = status;
-      this.message = message;
-      this.timestamp = timestamp;
-    }
-
-    // Getters e Setters
-    public int getStatus() {
-      return status;
-    }
-
-    public void setStatus(int status) {
-      this.status = status;
-    }
-
-    public String getMessage() {
-      return message;
-    }
-
-    public void setMessage(String message) {
-      this.message = message;
-    }
-
-    public LocalDateTime getTimestamp() {
-      return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-      this.timestamp = timestamp;
-    }
-
-    public String getErrorCode() {
-      return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-      this.errorCode = errorCode;
-    }
+  @ExceptionHandler(InvalidJWTAuthenticationException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllJWTExceptions(Exception ex, WebRequest request) {
+    return new ResponseEntity<>(createExceptionMessage("Token inválido", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
   }
 
-  public static class ValidationErrorResponse extends ErrorResponse {
-    private Map<String, String> errors;
+  @ExceptionHandler(UserIsInactiveException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllUserIsInactive(Exception ex, WebRequest request) {
+    return new ResponseEntity<>(createExceptionMessage("O usuário está desativado", HttpStatus.FORBIDDEN, request.getDescription(false)), HttpStatus.FORBIDDEN);
+  }
 
-    public ValidationErrorResponse(int status, String message, LocalDateTime timestamp, Map<String, String> errors) {
-      super(status, message, timestamp);
-      this.errors = errors;
-    }
-
-    public Map<String, String> getErrors() {
-      return errors;
-    }
-
-    public void setErrors(Map<String, String> errors) {
-      this.errors = errors;
-    }
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public final ResponseEntity<ExceptionMessage> handleAllResourceNotFound(Exception ex, WebRequest request) {
+    return new ResponseEntity<>(createExceptionMessage("Recurso não encontrado", HttpStatus.NOT_FOUND, request.getDescription(false)), HttpStatus.NOT_FOUND);
   }
 }

@@ -2,14 +2,15 @@ package br.com.gritti.domain.model;
 
 import br.com.gritti.domain.enums.AccountStatus;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User extends AuditableEntity {
+public class User extends AuditableEntity implements UserDetails {
   @Column(nullable = false, unique = true, length = 100)
   private String username;
 
@@ -63,6 +64,14 @@ public class User extends AuditableEntity {
   public void removeRole(Role role) {
     roles.remove(role);
     role.getUsers().remove(this);
+  }
+
+  public List<String> getPermissions() {
+    List<String> permissions = new ArrayList<>();
+    for(Role role : roles) {
+      permissions.add(role.getDescription());
+    }
+    return permissions;
   }
 
   public User() {
@@ -165,6 +174,26 @@ public class User extends AuditableEntity {
     return username;
   }
 
+  @Override
+  public boolean isAccountNonExpired() {
+    return this.accountNonExpired;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return this.accountNonLocked;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return this.credentialsNonExpired;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return this.accountStatus == AccountStatus.ACTIVE;
+  }
+
   public void setUsername(String username) {
     this.username = username;
   }
@@ -175,6 +204,11 @@ public class User extends AuditableEntity {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.roles;
   }
 
   public String getPassword() {

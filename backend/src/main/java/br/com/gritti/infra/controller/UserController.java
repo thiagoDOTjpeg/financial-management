@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -50,11 +51,12 @@ public class UserController {
   public ResponseEntity<PagedModel<EntityModel<UserResponse>>> getAllUsers(
           @RequestParam(value = "page", defaultValue = "0") Integer page,
           @RequestParam(value = "size", defaultValue = "12") Integer size,
-          @RequestParam(value = "direction", defaultValue = "asc") String direction
+          @RequestParam(value = "direction", defaultValue = "asc") String direction,
+          PagedResourcesAssembler<UserResponse> pagedResourcesAssembler
   ) {
     Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
     Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "username"));
-    PagedModel<EntityModel<UserResponse>> users = userServiceImpl.getAllUsers(pageable);
+    PagedModel<EntityModel<UserResponse>> users = pagedResourcesAssembler.toModel(userServiceImpl.getAllUsers(pageable));
     return ResponseEntity.ok(users);
   }
 
