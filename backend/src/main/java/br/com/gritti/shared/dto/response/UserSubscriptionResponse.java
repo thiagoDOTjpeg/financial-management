@@ -3,11 +3,15 @@ package br.com.gritti.shared.dto.response;
 import br.com.gritti.domain.enums.SubscriptionStatus;
 import br.com.gritti.domain.model.SubscriptionPlan;
 import br.com.gritti.domain.model.User;
+import br.com.gritti.domain.model.UserSubscription;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class UserSubscriptionResponse {
+@Relation(collectionRelation = "user-subscription")
+public class UserSubscriptionResponse extends RepresentationModel<UserSubscriptionResponse> {
   private UUID id;
   private User user;
   private SubscriptionPlan plan;

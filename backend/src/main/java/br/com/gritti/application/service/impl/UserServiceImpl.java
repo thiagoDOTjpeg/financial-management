@@ -33,15 +33,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   public UserResponse createUser(CreateUserRequest request) {
-    if (userRepository.existsByUsername(request.getUsername())) {
+    if (userRepository.existsByUsername(request.username())) {
       throw new BusinessException("Username já está em uso", "USERNAME_ALREADY_EXISTS");
     }
 
-    if (userRepository.existsByEmail(request.getEmail())) {
+    if (userRepository.existsByEmail(request.email())) {
       throw new BusinessException("Email já está em uso", "EMAIL_ALREADY_EXISTS");
     }
 
-    String encodedPassword = passwordEncoder.encode(request.getPassword());
+    String encodedPassword = passwordEncoder.encode(request.password());
 
     User user = UserMapper.toEntity(request, encodedPassword);
     User savedUser = userRepository.save(user);
@@ -76,27 +76,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     User user = userRepository.findByIdAndNotDeleted(id)
             .orElseThrow(() -> new ResourceNotFoundException("Usuário", id));
 
-    if (request.getUsername() != null && !request.getUsername().equals(user.getUsername())) {
-      if (userRepository.existsByUsername(request.getUsername())) {
+    if (request.username() != null && !request.username().equals(user.getUsername())) {
+      if (userRepository.existsByUsername(request.username())) {
         throw new BusinessException("Username já está em uso", "USERNAME_ALREADY_EXISTS");
       }
-      user.setUsername(request.getUsername());
+      user.setUsername(request.username());
     }
 
-    if (request.getEmail() != null && !request.getEmail().equals(user.getEmail())) {
-      if (userRepository.existsByEmail(request.getEmail())) {
+    if (request.email() != null && !request.email().equals(user.getEmail())) {
+      if (userRepository.existsByEmail(request.email())) {
         throw new BusinessException("Email já está em uso", "EMAIL_ALREADY_EXISTS");
       }
-      user.setEmail(request.getEmail());
+      user.setEmail(request.email());
     }
 
-    if (request.getPassword() != null) {
-      String encodedPassword = passwordEncoder.encode(request.getPassword());
+    if (request.password() != null) {
+      String encodedPassword = passwordEncoder.encode(request.password());
       user.setPassword(encodedPassword);
     }
 
-    if (request.getFullName() != null) {
-      user.setFullName(request.getFullName());
+    if (request.fullName() != null) {
+      user.setFullName(request.fullName());
     }
 
     User updatedUser = userRepository.save(user);

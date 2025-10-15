@@ -13,10 +13,10 @@ public class UserMapper {
 
   public static User toEntity(CreateUserRequest request, String encodedPassword) {
     return new User.Builder()
-            .username(request.getUsername())
-            .email(request.getEmail())
+            .username(request.username())
+            .email(request.email())
             .password(encodedPassword)
-            .fullName(request.getFullName())
+            .fullName(request.fullName())
             .build();
   }
 

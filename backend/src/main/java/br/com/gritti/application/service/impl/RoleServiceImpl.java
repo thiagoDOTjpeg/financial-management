@@ -39,8 +39,8 @@ public class RoleServiceImpl implements RoleService {
   @Override
   public RoleResponse updateRole(UUID id, UpdateRoleRequest request) {
     Role role = roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Role não encontrada"));
-    role.setName(request.getName());
-    role.setDescription(request.getDescription());
+    role.setName(request.name());
+    role.setDescription(request.description());
     Role updatedRole = roleRepository.save(role);
     return RoleMapper.toResponse(updatedRole);
   }
