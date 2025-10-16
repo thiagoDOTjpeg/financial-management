@@ -60,6 +60,24 @@ public class SubscriptionPlan {
   public SubscriptionPlan() {
   }
 
+  public SubscriptionPlan(SubscriptionPlan subscriptionPlan) {
+    this.id = subscriptionPlan.getId();
+    this.name = subscriptionPlan.getName();
+    this.displayName = subscriptionPlan.getDisplayName();
+    this.price = subscriptionPlan.getPrice();
+    this.billingCycle = subscriptionPlan.getBillingCycle();
+    this.hasAds = subscriptionPlan.getHasAds();
+    this.maxBankAccounts = subscriptionPlan.getMaxBankAccounts();
+    this.maxCards = subscriptionPlan.getMaxCards();
+    this.hasBudgets = subscriptionPlan.getHasBudgets();
+    this.hasGoals = subscriptionPlan.getHasGoals();
+    this.hasReports = subscriptionPlan.getHasReports();
+    this.hasRecurringTransactions = subscriptionPlan.getHasRecurringTransactions();
+    this.isActive = subscriptionPlan.getActive();
+    this.createdAt = subscriptionPlan.getCreatedAt();
+    this.updatedAt = subscriptionPlan.getUpdatedAt();
+  }
+
   private SubscriptionPlan(Builder builder) {
     this.id = builder.id;
     this.name = builder.name;
@@ -73,9 +91,6 @@ public class SubscriptionPlan {
     this.hasGoals = builder.hasGoals;
     this.hasReports = builder.hasReports;
     this.hasRecurringTransactions = builder.hasRecurringTransactions;
-    this.isActive = builder.isActive;
-    this.createdAt = builder.createdAt;
-    this.updatedAt = builder.updatedAt;
   }
 
   public static class Builder {
@@ -91,9 +106,6 @@ public class SubscriptionPlan {
     private Boolean hasGoals;
     private Boolean hasReports;
     private Boolean hasRecurringTransactions;
-    private Boolean isActive;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     public Builder id(UUID id) {
       this.id = id;
@@ -151,21 +163,6 @@ public class SubscriptionPlan {
 
     public Builder hasRecurringTransactions(Boolean hasRecurringTransactions) {
       this.hasRecurringTransactions = hasRecurringTransactions;
-      return this;
-    }
-
-    public Builder isActive(Boolean isActive) {
-      this.isActive = isActive;
-      return this;
-    }
-
-    public Builder createdAt(LocalDateTime createdAt) {
-      this.createdAt = createdAt;
-      return this;
-    }
-
-    public Builder updatedAt(LocalDateTime updatedAt) {
-      this.updatedAt = updatedAt;
       return this;
     }
 

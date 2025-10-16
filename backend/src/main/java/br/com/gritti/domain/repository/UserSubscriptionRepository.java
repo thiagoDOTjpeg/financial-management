@@ -1,6 +1,6 @@
 package br.com.gritti.domain.repository;
 
-import br.com.gritti.domain.model.User;
+import br.com.gritti.domain.enums.SubscriptionStatus;
 import br.com.gritti.domain.model.UserSubscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,5 +20,10 @@ public interface UserSubscriptionRepository extends JpaRepository<UserSubscripti
   @Query("SELECT us FROM UserSubscription us WHERE us.user.id = :userId")
   Optional<UserSubscription> getUserSubscriptionByUserId(UUID userId);
 
-  UUID user(User user);
+  @Query("SELECT CASE WHEN COUNT(us) > 0 THEN TRUE ELSE FALSE END FROM UserSubscription us WHERE us.user.id = :userId")
+  Boolean verifyUserSubscription(UUID userId);
+
+  @Query("SELECT us FROM UserSubscription us JOIN FETCH us.user u JOIN FETCH us.plan WHERE us.user.id = :userId AND us.status = :status")
+  Optional<UserSubscription> findActiveSubscriptionByUserIdWithDetails(UUID userId, SubscriptionStatus status);
+
 }

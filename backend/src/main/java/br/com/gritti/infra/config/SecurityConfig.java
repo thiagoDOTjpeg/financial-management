@@ -37,10 +37,10 @@ public class SecurityConfig {
             .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(authorizeRequest -> authorizeRequest
                     .requestMatchers("/**").permitAll())
-            /*.requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh", "/swagger-ui/**", "/api-docs/**", "/api-docs", "/swagger-ui.html").permitAll()
-            .requestMatchers("/api/v1/user").permitAll()
-            .requestMatchers("/api/**").permitAll()
-            .requestMatchers("/users").denyAll())*/
+//            .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/refresh", "/swagger-ui/**", "/api-docs/**", "/api-docs", "/swagger-ui.html").permitAll()
+//            .requestMatchers("/api/v1/users").permitAll()
+//            .requestMatchers("/api/**").denyAll()
+//            .requestMatchers("/users").denyAll())
             .cors(cors -> {})
             .build();
   }

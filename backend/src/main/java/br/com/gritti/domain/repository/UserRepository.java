@@ -1,6 +1,10 @@
 package br.com.gritti.domain.repository;
 
 import br.com.gritti.domain.model.User;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,11 +17,15 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-  @Query("SELECT u FROM User u WHERE u.username = :username")
+  @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.username = :username")
   Optional<User> findByUsername(String username);
+
+  @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.id = :userId")
+  Optional<User> findByIdWithRoles(@Param("userId") UUID userId);
 
   Optional<User> findByEmail(String email);
 
+  @EntityGraph(attributePaths = {"roles", "subscription"})
   Optional<User> findByUsernameAndDeletedAtIsNull(String username);
 
   Optional<User> findByEmailAndDeletedAtIsNull(String email);
@@ -35,4 +43,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   @Query("SELECT u FROM User u WHERE u.id = :id AND u.deletedAt IS NULL")
   Optional<User> findByIdAndNotDeleted(@Param("id") UUID id);
 
+  @Override
+  @EntityGraph(attributePaths = {"roles", "subscription"})
+  Page<User> findAll(Pageable pageable);
 }

@@ -9,6 +9,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -92,6 +93,7 @@ public class TokenProvider {
             .strip();
   }
 
+  @Transactional()
   public Authentication getAuthentication(String token) {
     DecodedJWT decodedJWT = decodeToken(token);
     try{

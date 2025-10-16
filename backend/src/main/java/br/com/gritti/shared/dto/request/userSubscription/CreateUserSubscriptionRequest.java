@@ -1,33 +1,36 @@
 package br.com.gritti.shared.dto.request.userSubscription;
 
+import br.com.gritti.domain.enums.BillingCycle;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class CreateUserSubscriptionRequest {
-  private String planId;
-  private LocalDateTime expiresAt;
+  private UUID planId;
+  private BillingCycle billingCycle;
 
   public CreateUserSubscriptionRequest() {
   }
 
-  public CreateUserSubscriptionRequest(String planId, LocalDateTime expiresAt) {
+  public CreateUserSubscriptionRequest(UUID planId, BillingCycle billingCycle) {
     this.planId = planId;
-    this.expiresAt = expiresAt;
+    this.billingCycle = billingCycle;
   }
 
-  public String getPlanId() {
+  public UUID getPlanId() {
     return planId;
   }
 
-  public void setPlanId(String planId) {
+  public void setPlanId(UUID planId) {
     this.planId = planId;
   }
 
-  public LocalDateTime getExpiresAt() {
-    return expiresAt;
+  public BillingCycle getBillingCycle() {
+    return billingCycle;
   }
 
-  public void setExpiresAt(LocalDateTime expiresAt) {
-    this.expiresAt = expiresAt;
+  public void setBillingCycle(BillingCycle billingCycle) {
+    this.billingCycle = billingCycle;
   }
 }

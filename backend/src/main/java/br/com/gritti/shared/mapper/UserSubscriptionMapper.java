@@ -8,17 +8,11 @@ public class UserSubscriptionMapper {
   public UserSubscriptionMapper() {
   }
 
-  public static UserSubscription toEntity(CreateUserSubscriptionRequest request) {
-    return new  UserSubscription.Builder()
-            .expiresAt(request.getExpiresAt())
-            .build();
-  }
-
   public static UserSubscriptionResponse toResponse(UserSubscription userSubscription) {
     UserSubscriptionResponse userSubscriptionResponse = new UserSubscriptionResponse();
     userSubscriptionResponse.setId(userSubscription.getId());
-    userSubscriptionResponse.setUser(userSubscription.getUser());
-    userSubscriptionResponse.setPlan(userSubscription.getPlan());
+    userSubscriptionResponse.setUser(UserMapper.toResponse(userSubscription.getUser()));
+    userSubscriptionResponse.setPlan(SubscriptionPlanMapper.toResponse(userSubscription.getPlan()));
     userSubscriptionResponse.setStatus(userSubscription.getStatus());
     userSubscriptionResponse.setStartedAt(userSubscription.getStartedAt());
     userSubscriptionResponse.setExpiresAt(userSubscription.getExpiresAt());

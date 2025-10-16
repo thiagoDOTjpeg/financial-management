@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface SubscriptionPlanService {
   SubscriptionPlanResponse getById(UUID id);
   Page<SubscriptionPlanResponse> getAll(Pageable pageable);
-  SubscriptionPlanResponse updateTransaction(UUID id, UpdateSubscriptionPlan request);
+  SubscriptionPlanResponse updateSubscriptionPlan(UUID id, UpdateSubscriptionPlan request);
   SubscriptionPlanResponse createSubscriptionPlan(CreateSubscriptionPlanRequest request);
-  void deactivePlan(UUID id);
+  void deactivatePlan(UUID id);
 }

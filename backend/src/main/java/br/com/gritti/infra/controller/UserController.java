@@ -1,6 +1,7 @@
 package br.com.gritti.infra.controller;
 
 import br.com.gritti.application.service.impl.UserServiceImpl;
+import br.com.gritti.infra.security.AuthenticatedUserId;
 import br.com.gritti.shared.dto.request.user.CreateUserRequest;
 import br.com.gritti.shared.dto.request.user.UpdateUserRequest;
 import br.com.gritti.shared.dto.response.UserResponse;
@@ -49,11 +50,13 @@ public class UserController {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PagedModel<EntityModel<UserResponse>>> getAllUsers(
+          @AuthenticatedUserId UUID userId,
           @RequestParam(value = "page", defaultValue = "0") Integer page,
           @RequestParam(value = "size", defaultValue = "12") Integer size,
           @RequestParam(value = "direction", defaultValue = "asc") String direction,
           PagedResourcesAssembler<UserResponse> pagedResourcesAssembler
   ) {
+    System.out.println(userId);
     Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
     Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "username"));
     PagedModel<EntityModel<UserResponse>> users = pagedResourcesAssembler.toModel(userServiceImpl.getAllUsers(pageable));

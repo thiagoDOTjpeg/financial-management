@@ -1,7 +1,9 @@
 package br.com.gritti.application.service.impl;
 
 import br.com.gritti.application.service.UserService;
+import br.com.gritti.domain.model.Role;
 import br.com.gritti.domain.model.User;
+import br.com.gritti.domain.repository.RoleRepository;
 import br.com.gritti.domain.repository.UserRepository;
 import br.com.gritti.shared.dto.request.user.CreateUserRequest;
 import br.com.gritti.shared.dto.request.user.UpdateUserRequest;
@@ -18,17 +20,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
   private final UserRepository userRepository;
+  private final RoleRepository  roleRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.roleRepository = roleRepository;
   }
 
   @Override
@@ -42,8 +47,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     String encodedPassword = passwordEncoder.encode(request.password());
+    Role role = roleRepository.findById(UUID.fromString("5877f8f3-d047-4241-881c-fcf820a2f283")).orElseThrow(() -> new ResourceNotFoundException("Permissão não encontrada"));
 
     User user = UserMapper.toEntity(request, encodedPassword);
+    user.addRole(role);
     User savedUser = userRepository.save(user);
 
     return UserMapper.toResponse(savedUser);

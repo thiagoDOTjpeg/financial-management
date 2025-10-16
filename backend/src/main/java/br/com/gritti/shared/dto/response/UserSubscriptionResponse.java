@@ -13,8 +13,8 @@ import java.util.UUID;
 @Relation(collectionRelation = "user-subscription")
 public class UserSubscriptionResponse extends RepresentationModel<UserSubscriptionResponse> {
   private UUID id;
-  private User user;
-  private SubscriptionPlan plan;
+  private UserResponse user;
+  private SubscriptionPlanResponse plan;
   private SubscriptionStatus status;
   private LocalDateTime startedAt;
   private LocalDateTime expiresAt;
@@ -25,7 +25,7 @@ public class UserSubscriptionResponse extends RepresentationModel<UserSubscripti
   public UserSubscriptionResponse() {
   }
 
-  public UserSubscriptionResponse(UUID id, User user, SubscriptionPlan plan, SubscriptionStatus status, LocalDateTime startedAt,
+  public UserSubscriptionResponse(UUID id, UserResponse user, SubscriptionPlanResponse plan, SubscriptionStatus status, LocalDateTime startedAt,
                                   LocalDateTime expiresAt, LocalDateTime cancelledAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.id = id;
     this.user = user;
@@ -46,19 +46,19 @@ public class UserSubscriptionResponse extends RepresentationModel<UserSubscripti
     this.id = id;
   }
 
-  public User getUser() {
+  public UserResponse getUser() {
     return user;
   }
 
-  public void setUser(User user) {
+  public void setUser(UserResponse user) {
     this.user = user;
   }
 
-  public SubscriptionPlan getPlan() {
+  public SubscriptionPlanResponse getPlan() {
     return plan;
   }
 
-  public void setPlan(SubscriptionPlan plan) {
+  public void setPlan(SubscriptionPlanResponse plan) {
     this.plan = plan;
   }
 

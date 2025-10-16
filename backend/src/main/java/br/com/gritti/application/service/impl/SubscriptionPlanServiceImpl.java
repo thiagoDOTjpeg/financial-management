@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -37,20 +38,26 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
   }
 
   @Override
-  public SubscriptionPlanResponse updateTransaction(UUID id, UpdateSubscriptionPlan request) {
-    SubscriptionPlan response = subscriptionPlanRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Plano não encontrado"));
-    response.setName(request.name());
-    response.setDisplayName(request.displayName());
-    response.setPrice(request.price());
-    response.setBillingCycle(request.billingCycle());
-    response.setHasAds(request.hasAds());
-    response.setMaxBankAccounts(request.maxBankAccounts());
-    response.setMaxCards(request.maxCards());
-    response.setHasBudgets(request.hasBudgets());
-    response.setHasGoals(request.hasGoals());
-    response.setHasReports(request.hasReports());
-    response.setHasRecurringTransactions(request.hasRecurringTransactions());
-    return SubscriptionPlanMapper.toResponse(subscriptionPlanRepository.save(response));
+  public SubscriptionPlanResponse updateSubscriptionPlan(UUID id, UpdateSubscriptionPlan request) {
+    SubscriptionPlan oldPlan = subscriptionPlanRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Plano não encontrado"));
+    oldPlan.setActive(false);
+    oldPlan.setUpdatedAt(LocalDateTime.now());
+    subscriptionPlanRepository.save(oldPlan);
+    SubscriptionPlan newPlan = new SubscriptionPlan(oldPlan);
+
+    newPlan.setName(request.name());
+    newPlan.setDisplayName(request.displayName());
+    newPlan.setPrice(request.price());
+    newPlan.setBillingCycle(request.billingCycle());
+    newPlan.setHasAds(request.hasAds());
+    newPlan.setMaxBankAccounts(request.maxBankAccounts());
+    newPlan.setMaxCards(request.maxCards());
+    newPlan.setHasBudgets(request.hasBudgets());
+    newPlan.setHasGoals(request.hasGoals());
+    newPlan.setHasReports(request.hasReports());
+    newPlan.setHasRecurringTransactions(request.hasRecurringTransactions());
+
+    return SubscriptionPlanMapper.toResponse(subscriptionPlanRepository.save(newPlan));
   }
 
   @Override
@@ -60,7 +67,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
   }
 
   @Override
-  public void deactivePlan(UUID id) {
+  public void deactivatePlan(UUID id) {
     subscriptionPlanRepository.deactivatePlan(id);
   }
 }
