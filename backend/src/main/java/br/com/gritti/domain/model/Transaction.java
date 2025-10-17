@@ -173,110 +173,109 @@ public class Transaction extends AuditableEntity{
     public Transaction build() {
       return new Transaction(this);
     }
+  }
+  public User getUser() {
+    return user;
+  }
 
-    public User getUser() {
-      return user;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public void setUser(User user) {
-      this.user = user;
-    }
+  public Category getCategory() {
+    return category;
+  }
 
-    public Category getCategory() {
-      return category;
-    }
+  public void setCategory(Category category) {
+    this.category = category;
+  }
 
-    public void setCategory(Category category) {
-      this.category = category;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getDescription() {
-      return description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setDescription(String description) {
-      this.description = description;
-    }
+  public BigDecimal getAmount() {
+    return amount;
+  }
 
-    public BigDecimal getAmount() {
-      return amount;
-    }
+  public void setAmount(BigDecimal amount) {
+    this.amount = amount;
+  }
 
-    public void setAmount(BigDecimal amount) {
-      this.amount = amount;
-    }
+  public LocalDateTime getTransactionDate() {
+    return transactionDate;
+  }
 
-    public LocalDateTime getTransactionDate() {
-      return transactionDate;
-    }
+  public void setTransactionDate(LocalDateTime transactionDate) {
+    this.transactionDate = transactionDate;
+  }
 
-    public void setTransactionDate(LocalDateTime transactionDate) {
-      this.transactionDate = transactionDate;
-    }
+  public TransactionType getTransactionType() {
+    return transactionType;
+  }
 
-    public TransactionType getTransactionType() {
-      return transactionType;
-    }
+  public void setTransactionType(TransactionType transactionType) {
+    this.transactionType = transactionType;
+  }
 
-    public void setTransactionType(TransactionType transactionType) {
-      this.transactionType = transactionType;
-    }
+  public PaymentType getPaymentType() {
+    return paymentType;
+  }
 
-    public PaymentType getPaymentType() {
-      return paymentType;
-    }
+  public void setPaymentType(PaymentType paymentType) {
+    this.paymentType = paymentType;
+  }
 
-    public void setPaymentType(PaymentType paymentType) {
-      this.paymentType = paymentType;
-    }
+  public BankAccount getBankAccount() {
+    return bankAccount;
+  }
 
-    public BankAccount getBankAccount() {
-      return bankAccount;
-    }
+  public void setBankAccount(BankAccount bankAccount) {
+    this.bankAccount = bankAccount;
+  }
 
-    public void setBankAccount(BankAccount bankAccount) {
-      this.bankAccount = bankAccount;
-    }
+  public Invoice getInvoice() {
+    return invoice;
+  }
 
-    public Invoice getInvoice() {
-      return invoice;
-    }
+  public void setInvoice(Invoice invoice) {
+    this.invoice = invoice;
+  }
 
-    public void setInvoice(Invoice invoice) {
-      this.invoice = invoice;
-    }
+  public Installment getInstallment() {
+    return installment;
+  }
 
-    public Installment getInstallment() {
-      return installment;
-    }
+  public void setInstallment(Installment installment) {
+    this.installment = installment;
+  }
 
-    public void setInstallment(Installment installment) {
-      this.installment = installment;
-    }
+  public RecurringTransaction getRecurringTransaction() {
+    return recurringTransaction;
+  }
 
-    public RecurringTransaction getRecurringTransaction() {
-      return recurringTransaction;
-    }
+  public void setRecurringTransaction(RecurringTransaction recurringTransaction) {
+    this.recurringTransaction = recurringTransaction;
+  }
 
-    public void setRecurringTransaction(RecurringTransaction recurringTransaction) {
-      this.recurringTransaction = recurringTransaction;
-    }
+  public Integer getInstallmentNumber() {
+    return installmentNumber;
+  }
 
-    public Integer getInstallmentNumber() {
-      return installmentNumber;
-    }
+  public void setInstallmentNumber(Integer installmentNumber) {
+    this.installmentNumber = installmentNumber;
+  }
 
-    public void setInstallmentNumber(Integer installmentNumber) {
-      this.installmentNumber = installmentNumber;
-    }
+  public String getNotes() {
+    return notes;
+  }
 
-    public String getNotes() {
-      return notes;
-    }
-
-    public void setNotes(String notes) {
-      this.notes = notes;
-    }
+  public void setNotes(String notes) {
+    this.notes = notes;
   }
 }
 

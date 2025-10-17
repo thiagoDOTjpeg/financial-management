@@ -2,6 +2,8 @@ package br.com.gritti.shared.dto.request.transaction;
 
 import br.com.gritti.domain.enums.PaymentType;
 import br.com.gritti.domain.enums.TransactionType;
+import br.com.gritti.domain.model.BankAccount;
+import br.com.gritti.domain.model.Category;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 
@@ -9,9 +11,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record CreateTransactionRequest(
-        @NotNull(message = "O ID da categoria não pode ser nulo.")
-        @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "O ID da categoria não está em um formato UUID válido.")
-        String categoryId,
+        @NotNull(message = "A categoria não pode ser nulo.")
+        Category category,
 
         @NotBlank(message = "A descrição não pode estar em branco.")
         @Size(min = 3, max = 150, message = "A descrição deve ter entre 3 e 150 caracteres.")
@@ -30,6 +31,9 @@ public record CreateTransactionRequest(
 
         @NotNull(message = "O tipo de pagamento não pode ser nulo.")
         PaymentType paymentType,
+
+        @NotNull(message = "A conta bancária não pode ser nulo.")
+        BankAccount bankAccount,
 
         @Min(value = 1, message = "O número da parcela deve ser no mínimo 1.")
         @Nullable()

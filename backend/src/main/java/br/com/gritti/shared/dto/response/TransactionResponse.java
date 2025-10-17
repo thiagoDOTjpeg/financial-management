@@ -8,15 +8,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class TransactionResponse {
-  private User user;
   private Category category;
   private String description;
   private BigDecimal amount;
   private LocalDateTime transactionDate;
   private TransactionType transactionType;
   private PaymentType paymentType;
-  private BankAccount bankAccount;
-  private Invoice invoice;
+  private BankAccountResponse bankAccount;
+  private InvoiceResponse invoice;
   private Installment installment;
   private RecurringTransaction recurringTransaction;
   private Integer installmentNumber;
@@ -25,11 +24,10 @@ public class TransactionResponse {
   public TransactionResponse() {
   }
 
-  public TransactionResponse(User user, Category category, String description, BigDecimal amount,
+  public TransactionResponse(Category category, String description, BigDecimal amount,
                             LocalDateTime transactionDate, TransactionType transactionType, PaymentType paymentType,
-                            BankAccount bankAccount, Invoice invoice, Installment installment, RecurringTransaction recurringTransaction,
+                             BankAccountResponse bankAccount, InvoiceResponse invoice, Installment installment, RecurringTransaction recurringTransaction,
                             Integer installmentNumber, String notes) {
-    this.user = user;
     this.category = category;
     this.description = description;
     this.amount = amount;
@@ -43,15 +41,6 @@ public class TransactionResponse {
     this.installmentNumber = installmentNumber;
     this.notes = notes;
   }
-
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
-
   public Category getCategory() {
     return category;
   }
@@ -100,19 +89,19 @@ public class TransactionResponse {
     this.paymentType = paymentType;
   }
 
-  public BankAccount getBankAccount() {
+  public BankAccountResponse getBankAccount() {
     return bankAccount;
   }
 
-  public void setBankAccount(BankAccount bankAccount) {
+  public void setBankAccount(BankAccountResponse bankAccount) {
     this.bankAccount = bankAccount;
   }
 
-  public Invoice getInvoice() {
+  public InvoiceResponse getInvoice() {
     return invoice;
   }
 
-  public void setInvoice(Invoice invoice) {
+  public void setInvoice(InvoiceResponse invoice) {
     this.invoice = invoice;
   }
 

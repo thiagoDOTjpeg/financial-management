@@ -2,7 +2,6 @@ package br.com.gritti.shared.mapper;
 
 import br.com.gritti.domain.model.Transaction;
 import br.com.gritti.shared.dto.request.transaction.CreateTransactionRequest;
-import br.com.gritti.shared.dto.request.transaction.UpdateTransactionRequest;
 import br.com.gritti.shared.dto.response.TransactionResponse;
 
 public class TransactionMapper {
@@ -22,17 +21,17 @@ public class TransactionMapper {
 
   public static TransactionResponse toResponse(Transaction transaction) {
     TransactionResponse response = new TransactionResponse();
-    response.setCategory(response.getCategory());
-    response.setDescription(response.getDescription());
-    response.setAmount(response.getAmount());
-    response.setTransactionDate(response.getTransactionDate());
-    response.setPaymentType(response.getPaymentType());
-    response.setBankAccount(response.getBankAccount());
-    response.setInvoice(response.getInvoice());
-    response.setInstallment(response.getInstallment());
-    response.setRecurringTransaction(response.getRecurringTransaction());
-    response.setInstallmentNumber(response.getInstallmentNumber());
-    response.setNotes(response.getNotes());
+    response.setCategory(transaction.getCategory());
+    response.setDescription(transaction.getDescription());
+    response.setAmount(transaction.getAmount());
+    response.setTransactionDate(transaction.getTransactionDate());
+    response.setPaymentType(transaction.getPaymentType());
+//    response.setBankAccount(BankAccountMapper.toResponse(transaction.getBankAccount()));
+    response.setInvoice(InvoiceMapper.toResponse(transaction.getInvoice()));
+//    response.setInstallment(transaction.getInstallment());
+    response.setRecurringTransaction(transaction.getRecurringTransaction());
+    response.setInstallmentNumber(transaction.getInstallmentNumber());
+    response.setNotes(transaction.getNotes());
     return response;
   }
 }

@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(BusinessException.class)
   public final ResponseEntity<ExceptionMessage> handleAllBusinessException(Exception ex, WebRequest request) {
-    return new ResponseEntity<>(createExceptionMessage("Erro ao aplicar lógica de negócio", HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(createExceptionMessage(ex.getMessage(), HttpStatus.BAD_REQUEST, request.getDescription(false)), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(UsernameNotFoundException.class)
