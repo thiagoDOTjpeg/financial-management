@@ -1,45 +1,65 @@
 package br.com.gritti.shared.dto.request.transaction;
 
 import br.com.gritti.domain.enums.PaymentType;
+import br.com.gritti.domain.enums.RecurringFrequency;
 import br.com.gritti.domain.enums.TransactionType;
-import br.com.gritti.domain.model.BankAccount;
-import br.com.gritti.domain.model.Category;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.UUID;
 
 public record CreateTransactionRequest(
-        @NotNull(message = "A categoria não pode ser nulo.")
-        Category category,
+        @NotNull(message = "Categoria é obrigatória")
+        UUID categoryId,
 
-        @NotBlank(message = "A descrição não pode estar em branco.")
-        @Size(min = 3, max = 150, message = "A descrição deve ter entre 3 e 150 caracteres.")
+        @NotBlank(message = "Descrição é obrigatória")
+        @Size(max = 255)
         String description,
 
-        @NotNull(message = "O valor não pode ser nulo.")
-        @Positive(message = "O valor deve ser um número positivo.")
+        @NotNull(message = "Valor é obrigatório")
+        @DecimalMin(value = "0.01", message = "Valor deve ser maior que zero")
         BigDecimal amount,
 
-        @NotNull(message = "A data da transação não pode ser nula.")
-        @PastOrPresent(message = "A data da transação não pode ser no futuro.")
-        LocalDateTime transactionDate,
+        @NotNull(message = "Data é obrigatória")
+        LocalDate transactionDate,
 
-        @NotNull(message = "O tipo da transação não pode ser nulo.")
+        @NotNull(message = "Tipo de transação é obrigatório")
         TransactionType transactionType,
 
-        @NotNull(message = "O tipo de pagamento não pode ser nulo.")
+        @NotNull(message = "Tipo de pagamento é obrigatório")
         PaymentType paymentType,
 
-        @NotNull(message = "A conta bancária não pode ser nulo.")
-        BankAccount bankAccount,
-
-        @Min(value = 1, message = "O número da parcela deve ser no mínimo 1.")
-        @Nullable()
-        Integer installmentNumber,
-
-        @Size(max = 500, message = "As anotações devem ter no máximo 500 caracteres.")
-        String notes
+        UUID bankAccountId,
+        UUID cardId,
+        String notes,
+        @Min(value = 2, message = "Parcelamento mínimo: 2x")
+        @Max(value = 48, message = "Parcelamento máximo: 48x")
+        Integer installments,
+        Boolean isRecurring,
+        RecurringFrequency frequency,
+        Integer dayOfMonth,
+        LocalDate recurringEndDate,
+        UUID goalId
 ) {
+  @Override
+  public String toString() {
+    return "CreateTransactionRequest{" +
+            "categoryId=" + categoryId +
+            ", description='" + description + '\'' +
+            ", amount=" + amount +
+            ", transactionDate=" + transactionDate +
+            ", transactionType=" + transactionType +
+            ", paymentType=" + paymentType +
+            ", bankAccountId=" + bankAccountId +
+            ", cardId=" + cardId +
+            ", notes='" + notes + '\'' +
+            ", installments=" + installments +
+            ", isRecurring=" + isRecurring +
+            ", frequency=" + frequency +
+            ", dayOfMonth=" + dayOfMonth +
+            ", recurringEndDate=" + recurringEndDate +
+            ", goalId=" + goalId +
+            '}';
+  }
 }

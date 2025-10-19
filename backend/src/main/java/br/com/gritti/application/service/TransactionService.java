@@ -12,6 +12,6 @@ public interface TransactionService {
   TransactionResponse getById(UUID id);
   Page<TransactionResponse> getAll(Pageable pageable);
   TransactionResponse updateTransaction(UUID id, UpdateTransactionRequest request);
-  TransactionResponse createTransaction(CreateTransactionRequest request);
+  TransactionResponse createTransaction(UUID userId, CreateTransactionRequest request);
   void softDelete(UUID id);
 }

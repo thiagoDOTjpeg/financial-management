@@ -35,27 +35,28 @@ public class FinancialGoal extends AuditableEntity{
   @Column(name = "completed_at")
   private LocalDateTime completedAt;
 
-  @ManyToMany
-  @JoinTable(
-          name = "goal_transactions",
-          joinColumns = @JoinColumn(name = "goal_id"),
-          inverseJoinColumns = @JoinColumn(name = "transaction_id")
-  )
-  private Set<Transaction> contributions = new HashSet<>();
+  @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<GoalTransaction> contributions = new HashSet<>();
 
   public void markAsCompleted() {
     this.status = GoalStatus.COMPLETED;
     this.completedAt = LocalDateTime.now();
   }
 
-  public void addContribution(Transaction transaction) {
-    contributions.add(transaction);
+  public void addContribution(GoalTransaction contribution) {
+    contributions.add(contribution);
+    contribution.setGoal(this);
+  }
+
+  public void removeContribution(GoalTransaction contribution) {
+    contributions.remove(contribution);
+    contribution.setGoal(null);
   }
 
     public FinancialGoal() {
     }
 
-    private FinancialGoal(FinancialGoal.Builder builder) {
+    private FinancialGoal(Builder builder) {
       this.user = builder.user;
       this.name = builder.name;
       this.description = builder.description;
@@ -74,7 +75,7 @@ public class FinancialGoal extends AuditableEntity{
       private LocalDate deadline;
       private GoalStatus status = GoalStatus.IN_PROGRESS;
       private LocalDateTime completedAt;
-      private Set<Transaction> contributions = new HashSet<>();
+      private Set<GoalTransaction> contributions = new HashSet<>();
 
     public Builder user(User user) {
       this.user = user;
@@ -111,7 +112,7 @@ public class FinancialGoal extends AuditableEntity{
       return this;
     }
 
-    public Builder contributions(Set<Transaction> contributions) {
+    public Builder contributions(Set<GoalTransaction> contributions) {
       this.contributions = contributions;
       return this;
     }
@@ -177,11 +178,11 @@ public class FinancialGoal extends AuditableEntity{
     this.completedAt = completedAt;
   }
 
-  public Set<Transaction> getContributions() {
+  public Set<GoalTransaction> getContributions() {
     return contributions;
   }
 
-  public void setContributions(Set<Transaction> contributions) {
+  public void setContributions(Set<GoalTransaction> contributions) {
     this.contributions = contributions;
   }
 }

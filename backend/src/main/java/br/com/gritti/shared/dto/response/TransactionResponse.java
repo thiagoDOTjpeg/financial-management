@@ -2,32 +2,38 @@ package br.com.gritti.shared.dto.response;
 
 import br.com.gritti.domain.enums.PaymentType;
 import br.com.gritti.domain.enums.TransactionType;
-import br.com.gritti.domain.model.*;
+import br.com.gritti.shared.dto.response.summary.CategorySummaryResponse;
+import br.com.gritti.shared.dto.response.summary.InstallmentSummaryResponse;
+import br.com.gritti.shared.dto.response.summary.RecurringTransactionSummaryResponse;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.UUID;
 
+@Relation(collectionRelation = "transaction")
 public class TransactionResponse {
-  private Category category;
+  private UUID id;
+  private CategorySummaryResponse category;
   private String description;
   private BigDecimal amount;
-  private LocalDateTime transactionDate;
+  private LocalDate transactionDate;
   private TransactionType transactionType;
   private PaymentType paymentType;
   private BankAccountResponse bankAccount;
   private InvoiceResponse invoice;
-  private Installment installment;
-  private RecurringTransaction recurringTransaction;
+  private InstallmentSummaryResponse installment;
+  private RecurringTransactionSummaryResponse recurringTransaction;
   private Integer installmentNumber;
   private String notes;
 
   public TransactionResponse() {
   }
 
-  public TransactionResponse(Category category, String description, BigDecimal amount,
-                            LocalDateTime transactionDate, TransactionType transactionType, PaymentType paymentType,
-                             BankAccountResponse bankAccount, InvoiceResponse invoice, Installment installment, RecurringTransaction recurringTransaction,
-                            Integer installmentNumber, String notes) {
+  public TransactionResponse(UUID id, CategorySummaryResponse category, String description, BigDecimal amount, LocalDate transactionDate,
+                             TransactionType transactionType, PaymentType paymentType, BankAccountResponse bankAccount, InvoiceResponse invoice,
+                             InstallmentSummaryResponse installment, RecurringTransactionSummaryResponse recurringTransaction, Integer installmentNumber, String notes) {
+    this.id = id;
     this.category = category;
     this.description = description;
     this.amount = amount;
@@ -41,11 +47,20 @@ public class TransactionResponse {
     this.installmentNumber = installmentNumber;
     this.notes = notes;
   }
-  public Category getCategory() {
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public CategorySummaryResponse getCategory() {
     return category;
   }
 
-  public void setCategory(Category category) {
+  public void setCategory(CategorySummaryResponse category) {
     this.category = category;
   }
 
@@ -65,11 +80,11 @@ public class TransactionResponse {
     this.amount = amount;
   }
 
-  public LocalDateTime getTransactionDate() {
+  public LocalDate getTransactionDate() {
     return transactionDate;
   }
 
-  public void setTransactionDate(LocalDateTime transactionDate) {
+  public void setTransactionDate(LocalDate transactionDate) {
     this.transactionDate = transactionDate;
   }
 
@@ -105,19 +120,19 @@ public class TransactionResponse {
     this.invoice = invoice;
   }
 
-  public Installment getInstallment() {
+  public InstallmentSummaryResponse getInstallment() {
     return installment;
   }
 
-  public void setInstallment(Installment installment) {
+  public void setInstallment(InstallmentSummaryResponse installment) {
     this.installment = installment;
   }
 
-  public RecurringTransaction getRecurringTransaction() {
+  public RecurringTransactionSummaryResponse getRecurringTransaction() {
     return recurringTransaction;
   }
 
-  public void setRecurringTransaction(RecurringTransaction recurringTransaction) {
+  public void setRecurringTransaction(RecurringTransactionSummaryResponse recurringTransaction) {
     this.recurringTransaction = recurringTransaction;
   }
 

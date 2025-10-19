@@ -17,10 +17,12 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-  @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.username = :username")
+  @Query("SELECT u FROM User u WHERE u.username = :username")
+  @EntityGraph(attributePaths = {"roles", "subscription"})
   Optional<User> findByUsername(String username);
 
-  @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.id = :userId")
+  @Query("SELECT u FROM User u WHERE u.id = :userId")
+  @EntityGraph(attributePaths = {"roles", "subscription"})
   Optional<User> findByIdWithRoles(@Param("userId") UUID userId);
 
   Optional<User> findByEmail(String email);
@@ -41,6 +43,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   void softDelete(@Param("id") UUID id);
 
   @Query("SELECT u FROM User u WHERE u.id = :id AND u.deletedAt IS NULL")
+  @EntityGraph(attributePaths = {"roles", "subscription"})
   Optional<User> findByIdAndNotDeleted(@Param("id") UUID id);
 
   @Override

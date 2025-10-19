@@ -9,10 +9,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "categories")
-public class Category extends AuditableEntity{
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+public class Category extends AuditableEntity{@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "user_id", nullable = false)
+private User user;
 
   @Column(nullable = false, length = 100)
   private String name;
@@ -42,6 +41,7 @@ public class Category extends AuditableEntity{
 
   @OneToMany(mappedBy = "category")
   private Set<Budget> budgets = new HashSet<>();
+
 
   public boolean isSubCategory() {
     return parentCategory != null;

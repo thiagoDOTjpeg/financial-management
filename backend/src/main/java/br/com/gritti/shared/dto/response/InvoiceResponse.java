@@ -1,15 +1,18 @@
 package br.com.gritti.shared.dto.response;
 
 import br.com.gritti.domain.enums.InvoiceStatus;
+import br.com.gritti.shared.dto.response.summary.CardSummaryResponse;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Relation(collectionRelation = "invoice")
 public class InvoiceResponse extends RepresentationModel<InvoiceResponse> {
-  private CardResponse card;
+  private UUID id;
+  private CardSummaryResponse card;
   private LocalDate billingMonth;
   private LocalDate closingDate;
   private LocalDate dueDate;
@@ -19,7 +22,8 @@ public class InvoiceResponse extends RepresentationModel<InvoiceResponse> {
   public InvoiceResponse() {
   }
 
-  public InvoiceResponse(CardResponse card, LocalDate billingMonth, LocalDate closingDate, LocalDate dueDate, InvoiceStatus status, LocalDateTime paidAt) {
+  public InvoiceResponse(UUID id, CardSummaryResponse card, LocalDate billingMonth, LocalDate closingDate, LocalDate dueDate, InvoiceStatus status, LocalDateTime paidAt) {
+    this.id = id;
     this.card = card;
     this.billingMonth = billingMonth;
     this.closingDate = closingDate;
@@ -28,11 +32,19 @@ public class InvoiceResponse extends RepresentationModel<InvoiceResponse> {
     this.paidAt = paidAt;
   }
 
-  public CardResponse getCard() {
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public CardSummaryResponse getCard() {
     return card;
   }
 
-  public void setCard(CardResponse card) {
+  public void setCard(CardSummaryResponse card) {
     this.card = card;
   }
 

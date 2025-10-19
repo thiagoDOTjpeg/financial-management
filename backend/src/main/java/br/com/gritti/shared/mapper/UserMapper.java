@@ -4,6 +4,7 @@ import br.com.gritti.domain.model.Role;
 import br.com.gritti.domain.model.User;
 import br.com.gritti.shared.dto.request.user.CreateUserRequest;
 import br.com.gritti.shared.dto.response.UserResponse;
+import br.com.gritti.shared.dto.response.summary.UserSummaryResponse;
 
 import java.util.stream.Collectors;
 
@@ -42,6 +43,15 @@ public class UserMapper {
       );
     }
 
+    return response;
+  }
+
+  public static UserSummaryResponse toSummaryResponse(User user) {
+    UserSummaryResponse response = new UserSummaryResponse();
+    response.setId(user.getId());
+    response.setUsername(user.getUsername());
+    response.setEmail(user.getEmail());
+    response.setFullName(user.getFullName());
     return response;
   }
 

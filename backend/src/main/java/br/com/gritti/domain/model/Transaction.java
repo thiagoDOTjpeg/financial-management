@@ -4,6 +4,7 @@ import br.com.gritti.domain.enums.TransactionType;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,7 +25,7 @@ public class Transaction extends AuditableEntity{
   private BigDecimal amount;
 
   @Column(name = "transaction_date", nullable = false)
-  private LocalDateTime transactionDate;
+  private LocalDate transactionDate;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "transaction_type", nullable = false, length = 10)
@@ -95,7 +96,7 @@ public class Transaction extends AuditableEntity{
     private Category category;
     private String description;
     private BigDecimal amount;
-    private LocalDateTime transactionDate;
+    private LocalDate transactionDate;
     private TransactionType transactionType;
     private PaymentType paymentType;
     private BankAccount bankAccount;
@@ -125,7 +126,7 @@ public class Transaction extends AuditableEntity{
       return this;
     }
 
-    public Builder transactionDate(LocalDateTime transactionDate) {
+    public Builder transactionDate(LocalDate transactionDate) {
       this.transactionDate = transactionDate;
       return this;
     }
@@ -206,11 +207,11 @@ public class Transaction extends AuditableEntity{
     this.amount = amount;
   }
 
-  public LocalDateTime getTransactionDate() {
+  public LocalDate getTransactionDate() {
     return transactionDate;
   }
 
-  public void setTransactionDate(LocalDateTime transactionDate) {
+  public void setTransactionDate(LocalDate transactionDate) {
     this.transactionDate = transactionDate;
   }
 

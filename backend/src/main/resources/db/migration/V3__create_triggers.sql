@@ -213,53 +213,75 @@ CREATE TRIGGER trg_generate_installment_transactions
 COMMENT ON FUNCTION generate_installment_transactions() IS
 'Gera automaticamente todas as transações quando um parcelamento é criado';
 
--- =====================================================
--- 5. TRIGGER: GERAR TRANSAÇÕES RECORRENTES
--- =====================================================
--- Gera transações mensais para recorrências ativas
-
-CREATE OR REPLACE FUNCTION generate_recurring_transactions()
-RETURNS VOID AS $$
+CREATE OR REPLACE FUNCTION generate_all_recurring_transactions()
+RETURNS TRIGGER AS $$
 DECLARE
-v_recurring RECORD;
-    v_next_date DATE;
+v_current_date DATE;
+    v_end_date DATE;
     v_invoice_id UUID;
     v_billing_month DATE;
+    v_iteration INTEGER := 0;
+    v_max_iterations INTEGER := 1200; -- Máximo de 100 anos (proteção contra loop infinito)
 BEGIN
-    -- Buscar recorrências ativas que precisam gerar transação
-FOR v_recurring IN
-SELECT rt.*
-FROM recurring_transactions rt
-WHERE rt.is_active = true
-  AND rt.deleted_at IS NULL
-  AND (rt.end_date IS NULL OR rt.end_date >= CURRENT_DATE)
-  AND rt.frequency = 'MONTHLY'
-  AND NOT EXISTS (
-    SELECT 1
-    FROM transactions t
-    WHERE t.recurring_transaction_id = rt.id
-      AND DATE_TRUNC('month', t.transaction_date) = DATE_TRUNC('month', CURRENT_DATE)
-      AND t.deleted_at IS NULL
-)
-    LOOP
-        -- Calcular próxima data
-        v_next_date := DATE_TRUNC('month', CURRENT_DATE) + (v_recurring.day_of_month - 1 || ' days')::INTERVAL;
+    -- Definir data de início
+    v_current_date := NEW.start_date;
 
--- Se for pagamento em cartão, buscar fatura
-IF v_recurring.payment_type = 'CREDIT' AND v_recurring.card_id IS NOT NULL THEN
-            v_billing_month := DATE_TRUNC('month', v_next_date);
+    -- Definir data fim (se null, gera apenas próximos 24 meses)
+    IF NEW.end_date IS NULL THEN
+        v_end_date := CURRENT_DATE + INTERVAL '24 months';
+ELSE
+        v_end_date := NEW.end_date;
+END IF;
+
+    -- Gerar transações baseado na frequência
+CASE NEW.frequency
+
+        -- ═══════════════════════════════════════════════════════
+        -- FREQUÊNCIA MENSAL
+        -- ═══════════════════════════════════════════════════════
+        WHEN 'MONTHLY' THEN
+            WHILE v_current_date <= v_end_date AND v_iteration < v_max_iterations LOOP
+
+                -- Buscar/criar fatura se for CREDIT
+                v_invoice_id := NULL;
+                IF NEW.payment_type = 'CREDIT' AND NEW.card_id IS NOT NULL THEN
+                    v_billing_month := DATE_TRUNC('month', v_current_date);
 
 SELECT id INTO v_invoice_id
 FROM invoices
-WHERE card_id = v_recurring.card_id
+WHERE card_id = NEW.card_id
   AND billing_month = v_billing_month
   AND deleted_at IS NULL
     LIMIT 1;
-ELSE
-            v_invoice_id := NULL;
+
+-- Se não encontrou fatura, criar uma nova
+IF v_invoice_id IS NULL THEN
+                        INSERT INTO invoices (
+                            id,
+                            card_id,
+                            billing_month,
+                            closing_date,
+                            due_date,
+                            status,
+                            created_at,
+                            created_by
+                        )
+SELECT
+    gen_random_uuid(),
+    NEW.card_id,
+    v_billing_month,
+    DATE_TRUNC('month', v_billing_month) + (c.closing_day - 1 || ' days')::INTERVAL,
+    DATE_TRUNC('month', v_billing_month) + '1 month'::INTERVAL + (c.due_day - 1 || ' days')::INTERVAL,
+    'OPEN',
+    CURRENT_TIMESTAMP,
+    NEW.created_by
+FROM cards c
+WHERE c.id = NEW.card_id
+    RETURNING id INTO v_invoice_id;
+END IF;
 END IF;
 
-        -- Criar transação
+                -- Criar transação
 INSERT INTO transactions (
     id,
     user_id,
@@ -276,26 +298,201 @@ INSERT INTO transactions (
     created_by
 ) VALUES (
              gen_random_uuid(),
-             v_recurring.user_id,
-             v_recurring.category_id,
-             v_recurring.description,
-             v_recurring.amount,
-             v_next_date,
+             NEW.user_id,
+             NEW.category_id,
+             NEW.description,
+             NEW.amount,
+             v_current_date,
              'EXPENSE',
-             v_recurring.payment_type,
-             v_recurring.bank_account_id,
+             NEW.payment_type,
+             NEW.bank_account_id,
              v_invoice_id,
-             v_recurring.id,
+             NEW.id,
              CURRENT_TIMESTAMP,
-             'system'
+             NEW.created_by
          );
 
+-- Avançar para próximo mês
+v_current_date := v_current_date + INTERVAL '1 month';
+                v_iteration := v_iteration + 1;
 END LOOP;
+
+        -- ═══════════════════════════════════════════════════════
+        -- FREQUÊNCIA SEMANAL
+        -- ═══════════════════════════════════════════════════════
+WHEN 'WEEKLY' THEN
+            WHILE v_current_date <= v_end_date AND v_iteration < v_max_iterations LOOP
+
+                -- Buscar/criar fatura se for CREDIT
+                v_invoice_id := NULL;
+                IF NEW.payment_type = 'CREDIT' AND NEW.card_id IS NOT NULL THEN
+                    v_billing_month := DATE_TRUNC('month', v_current_date);
+
+SELECT id INTO v_invoice_id
+FROM invoices
+WHERE card_id = NEW.card_id
+  AND billing_month = v_billing_month
+  AND deleted_at IS NULL
+    LIMIT 1;
+END IF;
+
+                -- Criar transação
+INSERT INTO transactions (
+    id,
+    user_id,
+    category_id,
+    description,
+    amount,
+    transaction_date,
+    transaction_type,
+    payment_type,
+    bank_account_id,
+    invoice_id,
+    recurring_transaction_id,
+    created_at,
+    created_by
+) VALUES (
+             gen_random_uuid(),
+             NEW.user_id,
+             NEW.category_id,
+             NEW.description,
+             NEW.amount,
+             v_current_date,
+             'EXPENSE',
+             NEW.payment_type,
+             NEW.bank_account_id,
+             v_invoice_id,
+             NEW.id,
+             CURRENT_TIMESTAMP,
+             NEW.created_by
+         );
+
+-- Avançar para próxima semana
+v_current_date := v_current_date + INTERVAL '7 days';
+                v_iteration := v_iteration + 1;
+END LOOP;
+
+        -- ═══════════════════════════════════════════════════════
+        -- FREQUÊNCIA QUINZENAL
+        -- ═══════════════════════════════════════════════════════
+WHEN 'BIWEEKLY' THEN
+            WHILE v_current_date <= v_end_date AND v_iteration < v_max_iterations LOOP
+
+                v_invoice_id := NULL;
+                IF NEW.payment_type = 'CREDIT' AND NEW.card_id IS NOT NULL THEN
+                    v_billing_month := DATE_TRUNC('month', v_current_date);
+
+SELECT id INTO v_invoice_id
+FROM invoices
+WHERE card_id = NEW.card_id
+  AND billing_month = v_billing_month
+  AND deleted_at IS NULL
+    LIMIT 1;
+END IF;
+
+INSERT INTO transactions (
+    id,
+    user_id,
+    category_id,
+    description,
+    amount,
+    transaction_date,
+    transaction_type,
+    payment_type,
+    bank_account_id,
+    invoice_id,
+    recurring_transaction_id,
+    created_at,
+    created_by
+) VALUES (
+             gen_random_uuid(),
+             NEW.user_id,
+             NEW.category_id,
+             NEW.description,
+             NEW.amount,
+             v_current_date,
+             'EXPENSE',
+             NEW.payment_type,
+             NEW.bank_account_id,
+             v_invoice_id,
+             NEW.id,
+             CURRENT_TIMESTAMP,
+             NEW.created_by
+         );
+
+-- Avançar 14 dias
+v_current_date := v_current_date + INTERVAL '14 days';
+                v_iteration := v_iteration + 1;
+END LOOP;
+
+        -- ═══════════════════════════════════════════════════════
+        -- FREQUÊNCIA ANUAL
+        -- ═══════════════════════════════════════════════════════
+WHEN 'YEARLY' THEN
+            WHILE v_current_date <= v_end_date AND v_iteration < v_max_iterations LOOP
+
+                v_invoice_id := NULL;
+                IF NEW.payment_type = 'CREDIT' AND NEW.card_id IS NOT NULL THEN
+                    v_billing_month := DATE_TRUNC('month', v_current_date);
+
+SELECT id INTO v_invoice_id
+FROM invoices
+WHERE card_id = NEW.card_id
+  AND billing_month = v_billing_month
+  AND deleted_at IS NULL
+    LIMIT 1;
+END IF;
+
+INSERT INTO transactions (
+    id,
+    user_id,
+    category_id,
+    description,
+    amount,
+    transaction_date,
+    transaction_type,
+    payment_type,
+    bank_account_id,
+    invoice_id,
+    recurring_transaction_id,
+    created_at,
+    created_by
+) VALUES (
+             gen_random_uuid(),
+             NEW.user_id,
+             NEW.category_id,
+             NEW.description,
+             NEW.amount,
+             v_current_date,
+             'EXPENSE',
+             NEW.payment_type,
+             NEW.bank_account_id,
+             v_invoice_id,
+             NEW.id,
+             CURRENT_TIMESTAMP,
+             NEW.created_by
+         );
+
+-- Avançar 1 ano
+v_current_date := v_current_date + INTERVAL '1 year';
+                v_iteration := v_iteration + 1;
+END LOOP;
+END CASE;
+
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-COMMENT ON FUNCTION generate_recurring_transactions() IS
-'Gera transações mensais para todas as recorrências ativas. Executar via scheduler diário.';
+CREATE TRIGGER trg_generate_all_recurring_transactions
+    AFTER INSERT ON recurring_transactions
+    FOR EACH ROW
+    WHEN (NEW.deleted_at IS NULL)
+    EXECUTE FUNCTION generate_all_recurring_transactions();
+
+COMMENT ON FUNCTION generate_all_recurring_transactions() IS
+'Gera TODAS as transações recorrentes de uma vez quando a recorrência é criada.
+Se end_date = NULL, gera apenas próximos 24 meses.';
+
 
 -- =====================================================
 -- 6. TRIGGER: ENVIAR ALERTA DE ORÇAMENTO
@@ -617,9 +814,6 @@ BEGIN
     -- Marcar faturas como vencidas
     PERFORM mark_invoices_overdue();
 
-    -- Gerar transações recorrentes
-    PERFORM generate_recurring_transactions();
-
     -- Criar alertas de vencimento
     PERFORM create_invoice_due_alerts();
 
@@ -658,12 +852,6 @@ SELECT cron.schedule(
                'SELECT mark_invoices_overdue()'
        );
 
--- 5. Agendar geração de transações recorrentes (todo dia às 03:00)
-SELECT cron.schedule(
-               'generate-recurring-transactions',
-               '0 3 * * *',
-               'SELECT generate_recurring_transactions()'
-       );
 
 -- 6. Agendar alertas de vencimento (todo dia às 08:00)
 SELECT cron.schedule(

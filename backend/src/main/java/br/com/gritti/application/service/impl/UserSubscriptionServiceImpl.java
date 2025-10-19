@@ -40,7 +40,7 @@ public class UserSubscriptionServiceImpl implements UserSubscriptionService {
   @Override
   @Transactional
   public UserSubscriptionResponse createUserSubscription(UUID userId, CreateUserSubscriptionRequest request) {
-    SubscriptionPlan plan = subscriptionPlanRepository.findByIdActivePlan(request.getPlanId()).orElseThrow(() -> new ResourceNotFoundException("Nenhum plano ativo foi encontrado"));
+    SubscriptionPlan plan = subscriptionPlanRepository.findByIdActivePlan(request.planId()).orElseThrow(() -> new ResourceNotFoundException("Nenhum plano ativo foi encontrado"));
     User user = userRepository.findByIdWithRoles(userId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
     Optional<UserSubscription> existingUserSubscription = userSubscriptionRepository.findActiveSubscriptionByUserIdWithDetails(userId, SubscriptionStatus.ACTIVE);
     existingUserSubscription.ifPresent(existingUserSubscription1 -> {
