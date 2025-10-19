@@ -3,6 +3,7 @@ package br.com.gritti.infra.controller;
 import br.com.gritti.application.service.impl.AuthServiceImpl;
 import br.com.gritti.domain.vo.AccountCredentials;
 import br.com.gritti.domain.vo.Token;
+import br.com.gritti.infra.controller.contract.AuthApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,8 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
-public class AuthController {
+public class AuthController implements AuthApi {
   private final AuthServiceImpl authServiceImpl;
 
   @Autowired
@@ -19,8 +19,8 @@ public class AuthController {
     this.authServiceImpl = authServiceImpl;
   }
 
-  @PostMapping("/signin")
-  public ResponseEntity<Token> signin(@RequestBody AccountCredentials data) {
+  @Override
+  public ResponseEntity<Token> signin(AccountCredentials data) {
     if(data == null || data.username() == null || data.username().isBlank() || data.password() == null || data.password().isBlank()) {
       throw new BadCredentialsException("Invalid credentials");
     }
@@ -28,8 +28,8 @@ public class AuthController {
     return ResponseEntity.ok(token);
   }
 
-  @PostMapping("/refresh")
-  public ResponseEntity<Token> refreshToken(@RequestHeader("Authorization") String refreshToken) {
+  @Override
+  public ResponseEntity<Token> refreshToken(String refreshToken) {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
     if(refreshToken == null || refreshToken.isEmpty() || username == null || username.isEmpty()) {
       throw new BadCredentialsException("Invalid client request!");

@@ -2,7 +2,6 @@ package br.com.gritti.shared.dto.response;
 
 import br.com.gritti.domain.enums.InvoiceStatus;
 import br.com.gritti.shared.dto.response.summary.CardSummaryResponse;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDate;
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Relation(collectionRelation = "invoice")
-public class InvoiceResponse extends RepresentationModel<InvoiceResponse> {
+public class InvoiceResponse {
   private UUID id;
   private CardSummaryResponse card;
   private LocalDate billingMonth;
