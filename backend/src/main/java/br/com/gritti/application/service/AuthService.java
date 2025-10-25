@@ -5,5 +5,5 @@ import br.com.gritti.domain.vo.Token;
 
 public interface AuthService {
    Token signin(AccountCredentials data);
-   Token refreshToken(String username, String refreshToken);
+   Token refreshToken(String refreshToken);
 }

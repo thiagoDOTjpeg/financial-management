@@ -41,25 +41,4 @@ public record CreateTransactionRequest(
         Integer dayOfMonth,
         LocalDate recurringEndDate,
         UUID goalId
-) {
-  @Override
-  public String toString() {
-    return "CreateTransactionRequest{" +
-            "categoryId=" + categoryId +
-            ", description='" + description + '\'' +
-            ", amount=" + amount +
-            ", transactionDate=" + transactionDate +
-            ", transactionType=" + transactionType +
-            ", paymentType=" + paymentType +
-            ", bankAccountId=" + bankAccountId +
-            ", cardId=" + cardId +
-            ", notes='" + notes + '\'' +
-            ", installments=" + installments +
-            ", isRecurring=" + isRecurring +
-            ", frequency=" + frequency +
-            ", dayOfMonth=" + dayOfMonth +
-            ", recurringEndDate=" + recurringEndDate +
-            ", goalId=" + goalId +
-            '}';
-  }
-}
+) { }

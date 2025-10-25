@@ -1,6 +1,6 @@
 package br.com.gritti.infra.security;
 
-import br.com.gritti.domain.model.User;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +23,13 @@ public class AuthenticatedUserIdResolver implements HandlerMethodArgumentResolve
   @Override
   public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    User user = (User) authentication.getPrincipal();
-    return  user.getId();
+    Object principal = authentication.getPrincipal();
+    if (principal instanceof DecodedJWT jwt) {
+      String userIdStr = jwt.getClaim("userId").asString();
+      if (userIdStr != null) {
+        return UUID.fromString(userIdStr);
+      }
+    }
+    throw new IllegalStateException("Não foi possível resolver o ID do usuário a partir do principal de autenticação.");
   }
 }

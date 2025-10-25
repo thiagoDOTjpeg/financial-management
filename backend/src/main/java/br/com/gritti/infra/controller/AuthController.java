@@ -30,11 +30,10 @@ public class AuthController implements AuthApi {
 
   @Override
   public ResponseEntity<Token> refreshToken(String refreshToken) {
-    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    if(refreshToken == null || refreshToken.isEmpty() || username == null || username.isEmpty()) {
+    if(refreshToken == null || refreshToken.isEmpty()) {
       throw new BadCredentialsException("Invalid client request!");
     }
-    Token token = authServiceImpl.refreshToken(username, refreshToken);
+    Token token = authServiceImpl.refreshToken(refreshToken);
     return ResponseEntity.ok(token);
   }
 }

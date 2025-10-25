@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -18,15 +19,21 @@ public interface UserSubscriptionRepository extends JpaRepository<UserSubscripti
   @Query("UPDATE UserSubscription us SET us.cancelledAt = CURRENT_TIMESTAMP WHERE us.user.id = :userId")
   void cancelUserSubscription(UUID userId);
 
-  @Query("SELECT us FROM UserSubscription us WHERE us.user.id = :userId")
+  @Query("SELECT us FROM UserSubscription us " +
+          "LEFT JOIN FETCH us.plan " +
+          "LEFT JOIN FETCH us.user u " +
+          "LEFT JOIN FETCH u.roles " +
+          "WHERE u.id = :userId")
   Optional<UserSubscription> getUserSubscriptionByUserId(UUID userId);
 
   @Query("SELECT CASE WHEN COUNT(us) > 0 THEN TRUE ELSE FALSE END FROM UserSubscription us WHERE us.user.id = :userId")
   Boolean verifyUserSubscription(UUID userId);
 
   @Query("SELECT us FROM UserSubscription us " +
-          "LEFT JOIN FETCH us.user u LEFT JOIN FETCH us.plan LEFT JOIN FETCH u.roles LEFT JOIN FETCH u.subscription " +
-          "WHERE us.user.id = :userId AND us.status = :status")
+          "LEFT JOIN FETCH us.plan " +
+          "LEFT JOIN FETCH us.user u " +
+          "LEFT JOIN FETCH u.roles " +
+          "WHERE u.id = :userId AND us.status = :status")
   Optional<UserSubscription> findActiveSubscriptionByUserIdWithDetails(UUID userId, SubscriptionStatus status);
 
 }

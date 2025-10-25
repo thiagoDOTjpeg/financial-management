@@ -7,7 +7,9 @@ import br.com.gritti.domain.repository.UserRepository;
 import br.com.gritti.domain.vo.AccountCredentials;
 import br.com.gritti.domain.vo.Token;
 import br.com.gritti.infra.security.jwt.TokenProvider;
+import br.com.gritti.shared.exception.ResourceNotFoundException;
 import br.com.gritti.shared.exception.UserIsInactiveException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,13 +37,13 @@ public class AuthServiceImpl implements AuthService {
     String username = data.username();
     String password = data.password();
     User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
-    if(user.getAccountStatus() == AccountStatus.INACTIVE) throw new UserIsInactiveException("O Usuário está inativo");
+    if(user.getAccountStatus().equals(AccountStatus.INACTIVE)) throw new UserIsInactiveException("O Usuário está inativo");
 
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
       Token tokenResponse;
-      tokenResponse = tokenProvider.createToken(username, user.getPermissions());
+      tokenResponse = tokenProvider.createToken(user);
       user.setLastLogin(LocalDateTime.now());
       userRepository.save(user);
       return tokenResponse;
@@ -51,7 +53,13 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public Token refreshToken(String username, String refreshToken) {
-    return null;
+  public Token refreshToken(String refreshToken) {
+    try {
+      Token tokenResponse;
+      tokenResponse = tokenProvider.refreshToken(refreshToken);
+      return tokenResponse;
+    } catch (Exception e) {
+      throw new BadCredentialsException("Refresh token inválido");
+    }
   }
 }

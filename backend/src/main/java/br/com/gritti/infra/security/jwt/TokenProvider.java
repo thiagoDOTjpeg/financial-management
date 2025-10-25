@@ -1,5 +1,7 @@
 package br.com.gritti.infra.security.jwt;
 
+import br.com.gritti.domain.model.User;
+import br.com.gritti.domain.repository.UserRepository;
 import br.com.gritti.domain.vo.Token;
 import br.com.gritti.shared.exception.InvalidJWTAuthenticationException;
 import br.com.gritti.shared.exception.ResourceNotFoundException;
@@ -14,14 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenProvider {
@@ -31,11 +38,11 @@ public class TokenProvider {
   @Value("${security.jwt.token.expire-length}")
   private long validityInMilliseconds;
 
-  private final UserDetailsService userDetailsService;
+  private final UserRepository userRepository;
 
   @Autowired
-  public TokenProvider(UserDetailsService userDetailsService) {
-    this.userDetailsService = userDetailsService;
+  public TokenProvider(UserRepository userRepository) {
+    this.userRepository = userRepository;
   }
 
   Algorithm algorithm = null;
@@ -46,34 +53,39 @@ public class TokenProvider {
     algorithm = Algorithm.HMAC256(secretKey);
   }
 
-  public Token createToken(String username, List<String> permissions) {
+  public Token createToken(User user) {
     Date now = new Date();
     Date validity = new Date(now.getTime() + validityInMilliseconds);
-    var accessToken = createAccessToken(username, permissions, now, validity);
-    var refreshToken = createRefreshToken(username, permissions, now);
-    return new Token(username, true, now, validity, accessToken, refreshToken);
+    var accessToken = createAccessToken(user.getUsername(), user.getPermissions(), now, validity, user.getId().toString());
+    var refreshToken = createRefreshToken(user.getUsername(), user.getPermissions(), now, user.getId().toString());
+    return new Token(user.getUsername(), true, now, validity, accessToken, refreshToken);
   }
 
   public Token refreshToken(String refreshToken) {
-    if(!refreshToken.startsWith("Bearer ")) throw new InvalidJWTAuthenticationException("Invalid refresh token");
+    if(!refreshToken.startsWith("Bearer ")) throw new InvalidJWTAuthenticationException("Refresh token inválido");
     refreshToken = refreshToken.substring("Bearer ".length());
 
     JWTVerifier verifier = JWT.require(algorithm).build();
     DecodedJWT jwt = verifier.verify(refreshToken);
     String username = jwt.getSubject();
+    User user = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+    user.setLastLogin(LocalDateTime.now());
+    userRepository.save(user);
     List<String> permissions = jwt.getClaim("permissions").asList(String.class);
+    String userId = jwt.getClaim("userId").asString();
 
     Date now = new Date();
     Date validity = new Date(now.getTime() + validityInMilliseconds);
-    String accessToken = createAccessToken(username, permissions, now, validity);
+    String accessToken = createAccessToken(username, permissions, now, validity, userId);
 
     return new Token(username, true, now, validity, accessToken, refreshToken);
   }
 
-  private String createAccessToken(String username, List<String> permissions, Date now, Date validity) {
+  private String createAccessToken(String username, List<String> permissions, Date now, Date validity, String userId) {
     String issuerUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
     return JWT.create()
             .withClaim("permissions", permissions)
+            .withClaim("userId", userId)
             .withIssuedAt(now)
             .withExpiresAt(validity)
             .withSubject(username)
@@ -82,10 +94,11 @@ public class TokenProvider {
             .strip();
   }
 
-  private String createRefreshToken(String username, List<String> permissions, Date now) {
+  private String createRefreshToken(String username, List<String> permissions, Date now, String userId) {
     Date validityRefreshToken = new Date(now.getTime() + validityInMilliseconds * 3);
     return JWT.create()
             .withClaim("permissions", permissions)
+            .withClaim("userId", userId)
             .withIssuedAt(now)
             .withExpiresAt(validityRefreshToken)
             .withSubject(username)
@@ -93,15 +106,16 @@ public class TokenProvider {
             .strip();
   }
 
-  @Transactional()
   public Authentication getAuthentication(String token) {
     DecodedJWT decodedJWT = decodeToken(token);
-    try{
-      UserDetails userDetails = userDetailsService.loadUserByUsername(decodedJWT.getSubject());
-      return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    } catch (ResourceNotFoundException ex) {
-      throw new InvalidJWTAuthenticationException(ex.getMessage());
-    }
+
+    List<String> permissions = decodedJWT.getClaim("permissions").asList(String.class);
+
+    List<GrantedAuthority> authorities = permissions.stream()
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
+
+    return new UsernamePasswordAuthenticationToken(decodedJWT, "", authorities);
   }
 
   private DecodedJWT decodeToken(String token) {
@@ -122,14 +136,14 @@ public class TokenProvider {
     try {
       DecodedJWT decodedJWT = decodeToken(token);
       if(decodedJWT.getExpiresAt().before(new Date())) {
-        throw new InvalidJWTAuthenticationException("Expired JWT token");
+        throw new InvalidJWTAuthenticationException("Token de acesso expirou");
       }
       return true;
     } catch (Exception e) {
       if(e instanceof InvalidJWTAuthenticationException) {
         throw e;
       }
-      throw new InvalidJWTAuthenticationException("Expired or Invalid token!!");
+      throw new InvalidJWTAuthenticationException("Token expirado ou inválido!!");
     }
   }
 }
